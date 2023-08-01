@@ -16,6 +16,8 @@
     <content url="file://$MODULE_DIR$" />
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
+    <orderEntry type="module" module-name="wetransfer_src_2023-08-01_0828" />
+    <orderEntry type="module" module-name="frontju" />
   </component>
   <component name="PyDocumentationSettings">
     <option name="format" value="PLAIN" />

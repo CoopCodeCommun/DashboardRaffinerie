@@ -3,6 +3,8 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/.idea/DashboardRaffinerie.iml" filepath="$PROJECT_DIR$/.idea/DashboardRaffinerie.iml" />
+      <module fileurl="file://$USER_HOME$/Téléchargements/frontju/.idea/frontju.iml" filepath="$USER_HOME$/Téléchargements/frontju/.idea/frontju.iml" />
+      <module fileurl="file://$USER_HOME$/Téléchargements/wetransfer_src_2023-08-01_0828/.idea/wetransfer_src_2023-08-01_0828.iml" filepath="$USER_HOME$/Téléchargements/wetransfer_src_2023-08-01_0828/.idea/wetransfer_src_2023-08-01_0828.iml" />
     </modules>
   </component>
 </project>

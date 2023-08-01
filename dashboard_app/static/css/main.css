@@ -1,0 +1,126 @@
+
+.case.menu_lateral {
+    font-family: 'Itim', cursive;
+    color: white;
+    font-size: larger;
+    border-radius: 20px;
+
+}
+
+.titre {
+    font-size: medium;
+}
+
+.en-tete {
+    font-size: 0.9em;
+    text-align: center;
+    white-space: nowrap;
+}
+
+.case {
+    font-family: 'Itim', cursive;
+    color: white;
+    border-radius: 15px;
+    border-collapse: separate;
+    border-spacing: 2px;
+    width: auto;
+
+
+}
+
+.padding-class {
+    padding: .375rem;
+}
+
+.case_moyen {
+    border-collapse: separate;
+    border-spacing: 10px;
+    width: 100%;
+
+}
+
+.case.case_petite {
+    height: 25px;
+    border-radius: 8px;
+    border-spacing: 10px;
+    min-width: 40px;
+    width: auto;
+    line-height: 1em;
+
+
+}
+
+.case.case_fonce {
+    background: rgba(0, 0, 0, .1);
+
+}
+
+.case.case_clair {
+    background: rgba(255, 255, 255, .2);
+    width: 100%;
+    height: 100%;
+}
+
+.case.case_input {
+    background: rgba(255, 255, 255, .7);
+    border: 0px;
+    width: 50px;
+    color: rgba(0, 0, 0, .6);
+
+}
+
+.case.case_dropdown {
+    background: rgba(255, 255, 255, .7);
+    border: 0px;
+    width: 50px;
+    color: rgba(0, 0, 0, .6);
+
+}
+
+.sidebar {
+    width: auto;
+}
+
+
+.case.h-100 {
+    height: 100%;
+    height: auto;
+}
+
+
+.table-container table {
+    width: 100%; /* This will make the table fill its container */
+    height: 100%;
+}
+
+.table-container {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+}
+
+
+.table-container .case.case_clair {
+    flex-grow: 1;
+}
+
+.rose {
+    background-color: #eb8cac;
+}
+
+.jaune {
+    background-color: #bfa20f;
+}
+
+.orange {
+    background-color: #de9e21;
+}
+
+.bleu {
+    background-color: #4796b9;
+}
+
+.vert {
+    background-color: #39b1ab;
+}
+  
