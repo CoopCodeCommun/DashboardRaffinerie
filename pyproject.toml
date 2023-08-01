@@ -16,6 +16,7 @@ django-browser-reload = "^1.11.0"
 djangorestframework = "^3.14.0"
 markdown = "^3.4.4"
 django-filter = "^23.2"
+ipdb = "^0.13.13"
 
 
 [build-system]

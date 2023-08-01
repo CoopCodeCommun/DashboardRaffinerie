@@ -1,7 +1,18 @@
 from django.urls import path
-from . import views
+from .views import index, user_api, user_solo_api, user_viewset
 from django.conf import settings
+from rest_framework import routers
+
+
+
+
 
 urlpatterns = [
-    path('', views.index, name='index')
+    # ex :  curl http://localhost:8000/api/list_user/
+    path('api/list_user/', user_api.as_view(), name='list_user'),
+
+    # ex :  curl http://localhost:8000/api/user_solo/fb021856-973c-4d17-810d-d0cc4c8f3f84/
+    path('api/user_solo/<uuid:uuid>/', user_solo_api.as_view(), name='user_solo_api'),
+
+    path('', index, name='index'),
 ]
