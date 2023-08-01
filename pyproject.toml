@@ -1,0 +1,15 @@
+[tool.poetry]
+name = "dashboardraffinerie"
+version = "0.1.0"
+description = "Dashboard pour la Raffinerie"
+authors = ["Code Commun & La Raffinerie"]
+license = "AGPLv3"
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "^3.10"
+
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
