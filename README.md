@@ -7,19 +7,22 @@ Tableau de bord imaginé par Julien pour la Raffinerie.
 
 https://codimd.communecter.org/yxDYGactSfmNg87kOV0FgA#
 
+## Installation de l'environnement de developpement.
 
-## Installation Frontend
+#### Prérequis :
+
+- Python 3.10 :
+  - https://www.python.org/downloads
+- Poetry : 
+  - https://python-poetry.org/docs/#installing-with-the-official-installer
+- Git :
+  - https://git-scm.com/downloads
+
+#### Installation 
 
 ```bash
-cd front_vuejs
-npm install
-npm run serve
-```
-
-
-## Installation Backend
-
-```bash
+git clone https://github.com/CoopCodeCommun/DashboardRaffinerie
+cd DashboardRaffinerie
 poetry install
 poetry run python manage.py migrate
 poetry run python manage.py createsuperuser
