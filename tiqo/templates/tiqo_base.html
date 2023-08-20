@@ -1,7 +1,5 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
-
 {% load static %}
-
 <html lang="fr">
 <head>
     <meta content="text/html; charset=UTF-8" http-equiv="Content-Type"/>
@@ -13,15 +11,20 @@
     <link rel="stylesheet" href="{% static 'loopple/assets/css/loopple/loopple.css' %}"/>
     <title>TiQO</title>
 </head>
-<body>
+<body class="g-sidenav-show">
 
-{% include 'tiqo_navbar.html' %}
+{% include 'tiqo_leftmenu.html' %}
 
 {# C'est ici que se chargera toute les autres pages qui commencent par "extend tiqo_base.html"#}
-{% block content %}{% endblock content %}
+<div class="main-content" id="panel">
+    {% include 'tiqo_navbar.html' %}
+
+    {% block content %}{% endblock content %}
+</div>
+
 {% block script %} {% endblock script %}
 
-<script src="{% static 'js/fa-42d5adcbca.js' %}"></script>
+{#<script src="{% static 'js/fa-42d5adcbca.js' %}"></script>#}
 <script src="{% static 'js/popper.min.js' %}"></script>
 <script src="{% static 'js/bootstrap.min.js' %}"></script>
 <script src="{% static 'js/chartjs.min.js' %}"></script>

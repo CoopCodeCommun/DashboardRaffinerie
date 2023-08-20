@@ -20,6 +20,8 @@ from django.conf import settings
 from rest_framework import routers
 
 from dashboard_app.views import user_viewset
+from django.conf.urls.static import  static
+
 router = routers.DefaultRouter()
 
 # Exemple :
@@ -40,3 +42,5 @@ urlpatterns = [
 
 if settings.DEBUG:
     urlpatterns += path('__reload__/', include("django_browser_reload.urls")),
+
+urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

@@ -6,6 +6,6 @@ from django.shortcuts import render
 
 def index(request):
     context = {
-        'user_email': request.user.email if request.user.is_authenticated else 'Anonymous',
+        'user': request.user if request.user.is_authenticated else None,
     }
     return render(request, 'tiqo_index.html', context=context)

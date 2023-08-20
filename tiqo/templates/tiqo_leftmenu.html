@@ -1,0 +1,81 @@
+{% load static %}
+<nav class="sidenav navbar navbar-vertical navbar-expand-xs border-0 border-radius-xl my-3 fixed-start position-absolute ms-3 bg-white loopple-fixed-start"
+     id="sidenav-main"><i
+        class="fas fa-times p-3 cursor-pointer text-secondary opacity-5 position-absolute end-0 top-0 d-none d-xl-none"
+        aria-hidden="true" id="iconSidenav"></i>
+    <a class="navbar-brand m-0" href="javascript:;">
+        <svg viewBox="0 0 48 48" xmlns="http://www.w3.org/2000/svg" class="navbar-brand-img h-100">
+            <g fill="none" stroke="#000000" stroke-linecap="round" stroke-linejoin="round" stroke-width="4">
+                <path d="M8 12a4 4 0 1 0 0-8a4 4 0 0 0 0 8Zm2 30a6 6 0 1 0 0-12a6 6 0 0 0 0 12Zm28 2a6 6 0 1 0 0-12a6 6 0 0 0 0 12ZM22 28a8 8 0 1 0 0-16a8 8 0 0 0 0 16Zm12-16a4 4 0 1 0 0-8a4 4 0 0 0 0 8Z"
+                      clip-rule="evenodd"/>
+                <path d="m11 11l4 4m15-3l-2 2m6 19.5L28 26m-14 5l4-4"/>
+            </g>
+        </svg>
+        <span class="ms-1 font-weight-bold">TiQO</span>
+    </a>
+
+    <hr class="horizontal dark mt-0">
+    {# USER #}
+    <div class="d-flex align-items-center justify-content-cente ms-4 ps-2">
+        <img src="{{ user.picture.sm_crop.url }}" class="avatar avatar-sm">
+        <div class="ms-2">
+            <h6 class="text-sm mb-0">{{ user.username }}</h6>
+            <p class="text-xs mb-0">Animateur</p>
+        </div>
+    </div>
+
+    <hr class="horizontal dark">
+
+    <div class="collapse navbar-collapse  w-auto" id="sidenav-collapse-main">
+        <ul class="navbar-nav">
+
+            <li class="nav-item">
+                <a class="nav-link active" href="/tiqo/dashboard">
+                    <div class="icon icon-shape icon-sm shadow border-radius-md bg-white text-center me-2 d-flex align-items-center justify-content-center">
+                        <svg width="512" height="512" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                            <path fill="#000000"
+                                  d="M16.038 0h6.052v17.229h-.702v-4.333h-.413v4.333h-.29v-2.521h-.412v2.52h-.29v-4.04h-.413v4.04h-.289V13.98h-.414v3.25h-.33v-2.521h-.371v2.52h-.331v-3.791h-.413v3.792h-.289v-4.333h-.414v4.333h-.701c.02-5.73.02-11.457.02-17.229ZM8.995 7.624h6.01v9.605h-.66v-2.23h-.414v2.23h-.288v-3.5h-.414v3.5h-.289v-3.5h-.413v3.5h-.33v-2.77h-.372v2.77h-.331v-2.77h-.413v2.77h-.289V14.23h-.414v3h-.289v-3.793h-.412v3.793h-.703c.02-2.687.02-6.958.02-9.605zM7.28 12.896h-.414v4.29h-.288v-1.978h-.414v1.98h-.33v-2.772h-.372v2.77h-.33v-4.04h-.414v4.04H4.43v-2.228h-.414v2.229h-.289v-3.25h-.414v3.25h-.289v-3.75h-.412v3.75H1.91V11.54h6.011v5.646h-.66c.02-1.395.02-2.833.02-4.291zm5.969 5.5h.371V24h-.371Zm4.213 0h.33v5.52h-.33zm-7.436 5.396h-.33v-5.398h.33v5.397zm7.064-5.397v5.397h-.33v-5.398h.33zm-4.544 0h.33v5.23h-.33zm6.342 0h.33v5.23h-.33zm-9.894 0h.33v4.897h-.33v-4.898ZM19.92 23.25h-.33v-4.856h.33v4.855zm-9.17-.042h-.33v-4.833h.33zm4.254-.042h-.33v-4.79h.33v4.791zm-3.511-.374h-.372v-4.417h.372zm9.852.208h-.33v-4.625h.33zm-9.191-.208h-.33v-4.417h.33zm3.883-4.397h.331v4.417h-.33Zm-9.852 4.063v-4.082h.371v4.083h-.371Zm11.98-.042v-4.04h.371v4.041h-.371zM4.8 18.396h.33v4.25H4.8v-4.252Zm16.916 0h.372v4h-.372v-4.002ZM6.91 22.415v-4.04h.33v4.041h-.33Zm-1.426-.042v-3.998h.33v4h-.33Zm15.162 0h-.331v-3.998h.33v4zm-16.96-.04h-.33v-3.917h.33zm-.701-.23h-.372v-3.709h.372Zm10.967-3.709h.372v3.625h-.372zm-5.97 3.793h-.33v-3.793h.33zm-6.009-3.794h.33v3.584h-.33zm2.128 0h.33v3.584H4.1z"></path>
+                        </svg>
+                    </div>
+                    <span class="nav-link-text ms-1">Dashboard</span>
+                </a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link  " href="javascript:;">
+                    <div class="icon icon-shape icon-sm shadow border-radius-md bg-white text-center me-2 d-flex align-items-center justify-content-center">
+                        <svg width="512" height="512" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                            <path fill="#000000"
+                                  d="M11.5 1L2 6v2h19V6m-5 4v7h3v-7M2 22h19v-3H2m8-9v7h3v-7m-9 0v7h3v-7H4Z"></path>
+                        </svg>
+                    </div>
+                    <span class="nav-link-text ms-1">Transactions Qonto</span>
+                </a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link  " href="javascript:;">
+                    <div class="icon icon-shape icon-sm shadow border-radius-md bg-white text-center me-2 d-flex align-items-center justify-content-center">
+                        <svg width="448" height="512" viewBox="0 0 448 512" xmlns="http://www.w3.org/2000/svg">
+                            <path fill="#ac3a87"
+                                  d="M224 96a160 160 0 1 0 0 320a160 160 0 1 0 0-320zm224 160a224 224 0 1 1-448 0a224 224 0 1 1 448 0z"></path>
+                        </svg>
+                    </div>
+                    <span class="nav-link-text ms-1">Odoo</span>
+                </a>
+            </li>
+            <li class="nav-item mt-3">
+                <h6 class="ps-4 ms-2 text-uppercase text-xs font-weight-bolder opacity-6">Account pages</h6>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link  " href="javascript:;">
+                    <div class="icon icon-shape icon-sm shadow border-radius-md bg-white text-center me-2 d-flex align-items-center justify-content-center">
+                        <svg width="512" height="512" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                            <path fill="#000000"
+                                  d="M12 4a4 4 0 0 1 4 4a4 4 0 0 1-4 4a4 4 0 0 1-4-4a4 4 0 0 1 4-4m0 10c4.42 0 8 1.79 8 4v2H4v-2c0-2.21 3.58-4 8-4Z"></path>
+                        </svg>
+                    </div>
+                    <span class="nav-link-text ms-1">Users</span>
+                </a>
+            </li>
+        </ul>
+    </div>
+</nav>

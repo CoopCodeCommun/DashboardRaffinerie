@@ -20,7 +20,7 @@ def index(request):
     avec un contexte qui contient le nom de l'utilisateur
     """
     context = {
-        'name': request.user.email if request.user.is_authenticated else 'Anonymous',
+        'user': request.user if request.user.is_authenticated else None,
     }
     return render(request, 'example.html', context=context)
 
