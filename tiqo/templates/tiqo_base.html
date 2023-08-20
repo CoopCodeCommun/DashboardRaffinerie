@@ -1,0 +1,26 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+
+{% load static %}
+
+<html lang="fr">
+<head>
+    <meta content="text/html; charset=UTF-8" http-equiv="Content-Type"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="{% static 'loopple/assets/css/theme.css' %}"/>
+{#    <link rel="stylesheet" href="{% static 'css/main.css' %}"/>#}
+    <title>TiQO</title>
+</head>
+<body>
+
+{% include 'tiqo_navbar.html' %}
+
+{# C'est ici que se chargera toute les autres pages qui commencent par "extend tiqo_base.html"#}
+{% block content %}{% endblock content %}
+{% block script %} {% endblock script %}
+
+
+<!-- Bootstrap JS, Popper.js, and jQuery -->
+</body>
+</html>
+
+

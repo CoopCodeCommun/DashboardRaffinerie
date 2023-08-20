@@ -40,6 +40,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'dashboard_app',
     'dashboard_user',
+    'tiqo',
     'solo',
     'django_extensions',
     'rest_framework',
