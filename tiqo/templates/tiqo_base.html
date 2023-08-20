@@ -1,5 +1,7 @@
-<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 {% load static %}
+{% load django_htmx %}
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<!--suppress RequiredAttributes -->
 <html lang="fr">
 <head>
     <meta content="text/html; charset=UTF-8" http-equiv="Content-Type"/>
@@ -25,16 +27,18 @@
 {% block script %} {% endblock script %}
 
 {#<script src="{% static 'js/fa-42d5adcbca.js' %}"></script>#}
-<script src="{% static 'js/popper.min.js' %}"></script>
-<script src="{% static 'js/bootstrap.min.js' %}"></script>
-<script src="{% static 'js/chartjs.min.js' %}"></script>
-<script src="{% static 'js/Chart.extension.js' %}"></script>
-<script src="{% static 'js/soft-ui-dashboard.min.js' %}"></script>
-
-<script src="{% static 'js/example_chart.js' %}"></script>
-<script src="{% static 'loopple/assets/js/loopple/loopple.js' %}"></script>
-
 <!-- Bootstrap JS, Popper.js, and jQuery -->
+<script src="{% static 'js/popper.min.js' %}" defer></script>
+<script src="{% static 'js/bootstrap.min.js' %}" defer></script>
+<script src="{% static 'js/chartjs.min.js' %}" defer></script>
+<script src="{% static 'js/Chart.extension.js' %}" defer></script>
+<script src="{% static 'js/soft-ui-dashboard.min.js' %}" defer></script>
+
+<script src="{% static 'js/example_chart.js' %}" defer></script>
+<script src="{% static 'loopple/assets/js/loopple/loopple.js' %}" defer></script>
+
+<script src="{% static 'js/htmx.min.js' %}" defer></script>
+{% django_htmx_script %}
 </body>
 </html>
 
