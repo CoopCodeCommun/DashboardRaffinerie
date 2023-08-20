@@ -1,28 +1,32 @@
 {% load static %}
 <nav class="sidenav navbar navbar-vertical navbar-expand-xs border-0 border-radius-xl my-3 fixed-start position-absolute ms-3 bg-white loopple-fixed-start"
-     id="sidenav-main"><i
-        class="fas fa-times p-3 cursor-pointer text-secondary opacity-5 position-absolute end-0 top-0 d-none d-xl-none"
-        aria-hidden="true" id="iconSidenav"></i>
-    <a class="navbar-brand m-0" href="javascript:;">
+     id="sidenav-main" hx-target="#main" hx-swap="outerHTML" hx-push-url="true">
+    <svg width="20" height="20" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"
+         class="cursor-pointer text-secondary opacity-5 position-absolute end-0 top-0 d-none d-xl-none"
+         aria-hidden="true" id="iconSidenav">
+        <path fill="#000000"
+              d="M18.36 19.78L12 13.41l-6.36 6.37l-1.42-1.42L10.59 12L4.22 5.64l1.42-1.42L12 10.59l6.36-6.36l1.41 1.41L13.41 12l6.36 6.36z"></path>
+    </svg>
+    <a class="navbar-brand m-0" href="">
         <svg viewBox="0 0 48 48" xmlns="http://www.w3.org/2000/svg" class="navbar-brand-img h-100">
             <g fill="none" stroke="#000000" stroke-linecap="round" stroke-linejoin="round" stroke-width="4">
                 <path d="M8 12a4 4 0 1 0 0-8a4 4 0 0 0 0 8Zm2 30a6 6 0 1 0 0-12a6 6 0 0 0 0 12Zm28 2a6 6 0 1 0 0-12a6 6 0 0 0 0 12ZM22 28a8 8 0 1 0 0-16a8 8 0 0 0 0 16Zm12-16a4 4 0 1 0 0-8a4 4 0 0 0 0 8Z"
-                      clip-rule="evenodd"/>
-                <path d="m11 11l4 4m15-3l-2 2m6 19.5L28 26m-14 5l4-4"/>
+                      clip-rule="evenodd"></path>
+                <path d="m11 11l4 4m15-3l-2 2m6 19.5L28 26m-14 5l4-4"></path>
             </g>
         </svg>
         <span class="ms-1 font-weight-bold">TiQO</span>
     </a>
 
-    <hr class="horizontal dark mt-0">
+    {#    <hr class="horizontal dark mt-0">#}
     {# USER #}
-    <div class="d-flex align-items-center justify-content-cente ms-4 ps-2">
-        <img src="{{ user.picture.sm_crop.url }}" class="avatar avatar-sm">
-        <div class="ms-2">
-            <h6 class="text-sm mb-0">{{ user.username }}</h6>
-            <p class="text-xs mb-0">Animateur</p>
-        </div>
-    </div>
+    {#    <div class="d-flex align-items-center justify-content-cente ms-4 ps-2">#}
+    {#        <img src="{{ user.picture.sm_crop.url }}" class="avatar avatar-sm">#}
+    {#        <div class="ms-2">#}
+    {#            <h6 class="text-sm mb-0">{{ user.username }}</h6>#}
+    {#            <p class="text-xs mb-0">Animateur</p>#}
+    {#        </div>#}
+    {#    </div>#}
 
     <hr class="horizontal dark">
 
@@ -30,7 +34,7 @@
         <ul class="navbar-nav">
 
             <li class="nav-item">
-                <a class="nav-link active" href="/tiqo/dashboard">
+                <a class="nav-link" hx-get="/tiqo/dashboard/" href="/tiqo/dashboard/">
                     <div class="icon icon-shape icon-sm shadow border-radius-md bg-white text-center me-2 d-flex align-items-center justify-content-center">
                         <svg width="512" height="512" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
                             <path fill="#000000"
@@ -41,7 +45,7 @@
                 </a>
             </li>
             <li class="nav-item">
-                <a class="nav-link  " href="javascript:;">
+                <a class="nav-link  " hx-get="/tiqo/qonto/" href="/tiqo/qonto/">
                     <div class="icon icon-shape icon-sm shadow border-radius-md bg-white text-center me-2 d-flex align-items-center justify-content-center">
                         <svg width="512" height="512" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
                             <path fill="#000000"
@@ -52,7 +56,7 @@
                 </a>
             </li>
             <li class="nav-item">
-                <a class="nav-link  " href="javascript:;">
+                <a class="nav-link  " hx-get="/tiqo/odoo/" href="/tiqo/odoo/">
                     <div class="icon icon-shape icon-sm shadow border-radius-md bg-white text-center me-2 d-flex align-items-center justify-content-center">
                         <svg width="448" height="512" viewBox="0 0 448 512" xmlns="http://www.w3.org/2000/svg">
                             <path fill="#ac3a87"
@@ -66,7 +70,7 @@
                 <h6 class="ps-4 ms-2 text-uppercase text-xs font-weight-bolder opacity-6">Account pages</h6>
             </li>
             <li class="nav-item">
-                <a class="nav-link  " href="javascript:;">
+                <a class="nav-link  " hx-get="/tiqo/user/" href="/tiqo/user/">
                     <div class="icon icon-shape icon-sm shadow border-radius-md bg-white text-center me-2 d-flex align-items-center justify-content-center">
                         <svg width="512" height="512" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
                             <path fill="#000000"

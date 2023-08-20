@@ -2093,10 +2093,14 @@ progress {
     color: #fff;
     border-color: #485976;
 }
+
 .table-responsive {
     overflow-x: auto;
+    height: 50%;
+    overflow-y: scroll;
     -webkit-overflow-scrolling: touch;
 }
+
 @media (max-width: 575.98px) {
     .table-responsive-sm {
         overflow-x: auto;

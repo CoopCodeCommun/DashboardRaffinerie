@@ -1,0 +1,8 @@
+{% for person in page.object_list %}
+    <tr {% if page.has_next %}{% if forloop.last %} hx-get="{% url 'transaction_scroll' %}?page={{ page.next_page_number }}"
+                              hx-trigger="revealed" hx-swap="afterend" {% endif %}{% endif %}>
+        <td>{{ person.id }}</td>
+        <td>{{ person.name }}</td>
+        <td>{{ person.email }}</td>
+    </tr>
+{% endfor %}

@@ -1,0 +1,39 @@
+{% extends base_template %}
+
+{% load static %}
+{% load tz %}
+
+{% block main %}
+    <section>
+        <table class="table-responsive">
+            <thead>
+            <tr>
+                <th>id</th>
+                <th>name</th>
+                <th>email</th>
+            </tr>
+            </thead>
+            <tbody>
+            {% for person in page.object_list %}
+                <tr {% if page.has_next %}{% if forloop.last %} hx-get="{% url 'transaction_scroll' %}?page={{ page.next_page_number }}"
+                                          hx-trigger="revealed"
+                                          hx-swap="afterend" {% endif %}{% endif %}>
+                    <td>{{ person.id }}</td>
+                    <td>{{ person.name }}</td>
+                    <td>{{ person.email }}</td>
+                </tr>
+            {% empty %}
+                <tr>
+                    <td colspan="2">
+                        No people on this page.
+                    </td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </section>
+
+{% endblock main %}
+
+{% block script %}
+{% endblock script %}

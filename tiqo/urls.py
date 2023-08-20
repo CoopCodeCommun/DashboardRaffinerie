@@ -1,10 +1,10 @@
 from django.urls import path
-from .views import index
-from django.conf import settings
-from rest_framework import routers
-
-
+from .views import dashboard, qonto, odoo, user, transaction_scroll
 
 urlpatterns = [
-    path('', index, name='tiqo_index'),
+    path('dashboard/', dashboard, name='dashboard'),
+    path('qonto/', qonto, name='qonto'),
+    path('transaction_scroll/', transaction_scroll, name='transaction_scroll'),
+    path('odoo/', odoo, name='odoo'),
+    path('user/', user, name='user'),
 ]
