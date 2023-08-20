@@ -63,7 +63,7 @@
 
 .case.case_input {
     background: rgba(255, 255, 255, .7);
-    border: 0px;
+    /*border: 0px;*/
     width: 50px;
     color: rgba(0, 0, 0, .6);
 
@@ -71,7 +71,7 @@
 
 .case.case_dropdown {
     background: rgba(255, 255, 255, .7);
-    border: 0px;
+    /*border: 0px;*/
     width: 50px;
     color: rgba(0, 0, 0, .6);
 
@@ -83,7 +83,7 @@
 
 
 .case.h-100 {
-    height: 100%;
+    /*height: 100%;*/
     height: auto;
 }
 

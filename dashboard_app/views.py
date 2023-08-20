@@ -26,6 +26,8 @@ def index(request):
 
 
 
+### TEST API AVEC MODEL USER ###
+
 @permission_classes([AllowAny])
 class user_api(APIView):
     def get(self, request):
@@ -68,3 +70,6 @@ class user_viewset(viewsets.ViewSet):
     def get_permissions(self):
         permission_classes = [AllowAny]
         return [permission() for permission in permission_classes]
+
+
+### FIN TEST API AVEC MODEL USER ###
