@@ -1,4 +1,3 @@
-import time
 from dataclasses import dataclass
 
 from django.http import HttpRequest, HttpResponse
@@ -36,7 +35,7 @@ people = [Person(id=i, name=faker.name(), email=faker.email()) for i in range(1,
 
 def qonto(request: HtmxHttpRequest) -> HttpResponse:
     page_num = request.GET.get("page", "1")
-    page = Paginator(object_list=people, per_page=10).get_page(page_num)
+    page = Paginator(object_list=people, per_page=40).get_page(page_num)
 
     context = {
         'base_template': "_partial.html" if request.htmx else "_base.html",
@@ -47,9 +46,9 @@ def qonto(request: HtmxHttpRequest) -> HttpResponse:
 
 
 def transaction_scroll(request: HtmxHttpRequest) -> HttpResponse:
-    time.sleep(1)
+    # time.sleep(1)
     page_num = request.GET.get("page", "1")
-    page = Paginator(object_list=people, per_page=10).get_page(page_num)
+    page = Paginator(object_list=people, per_page=40).get_page(page_num)
     context = {
         "page": page,
     }
