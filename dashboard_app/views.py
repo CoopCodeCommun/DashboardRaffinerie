@@ -22,9 +22,18 @@ def index(request):
     context = {
         'name': request.user.email if request.user.is_authenticated else 'Anonymous',
     }
-    return render(request, 'base.html', context=context)
+    return render(request, 'example.html', context=context)
 
 
+def suivi_budgetaire(request):
+    """
+    Livre un template HTML suivi_budgetaire.html
+    Extension du template base.html
+    """
+    context = {
+        'name': request.user.email if request.user.is_authenticated else 'Anonymous',
+    }
+    return render(request, 'suivi_budgetaire.html', context=context)
 
 ### TEST API AVEC MODEL USER ###
 

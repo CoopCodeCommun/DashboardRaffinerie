@@ -1,0 +1,30 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+
+{% load static %}
+
+<html lang="fr">
+<head>
+    <meta content="text/html; charset=UTF-8" http-equiv="Content-Type"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="{% static 'css/main.css' %}"/>
+    <title>Dashboard Raffinerie</title>
+</head>
+
+<body>
+<p class="parag">Coucou {{ name }}</p>
+<div>
+    <img src="{% static '/img/logoraffinerie.jpg' %}" alt="Logo Raffinerie" class="" loading="lazy">
+</div>
+
+{#liste des url possibles :#}
+<ul>
+    <li><a href="{% url 'index' %}">index</a></li>
+    <li><a href="{% url 'suivi_budgetaire' %}">suivi_budgetaire</a></li>
+</ul>
+<script src='{% static "js/main.js" %}' type="javascript"></script>
+{% block script %} {% endblock script %}
+
+</body>
+</html>
+
+
