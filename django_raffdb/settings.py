@@ -46,6 +46,9 @@ INSTALLED_APPS = [
     'rest_framework',
 ]
 
+if DEBUG:
+    INSTALLED_APPS += ['django_browser_reload']
+
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
@@ -55,6 +58,9 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
+
+if DEBUG:
+    MIDDLEWARE += ['django_browser_reload.middleware.BrowserReloadMiddleware']
 
 ROOT_URLCONF = 'django_raffdb.urls'
 

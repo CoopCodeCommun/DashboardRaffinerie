@@ -15,8 +15,28 @@ Including another URLconf
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
 from django.contrib import admin
-from django.urls import path
+from django.urls import path, include
+from django.conf import settings
+from rest_framework import routers
+
+from dashboard_app.views import user_viewset
+router = routers.DefaultRouter()
+
+# Exemple :
+# curl http://localhost:8000/apiuser/
+# curl http://localhost:8000/apiuser/fb021856-973c-4d17-810d-d0cc4c8f3f84/
+router.register(r'apiuser', user_viewset, basename='user')
+
+
 
 urlpatterns = [
-    path('admin/', admin.site.urls),
+    path("admin/", admin.site.urls),
+    path("api-auth/", include('rest_framework.urls')),
+    path("", include('dashboard_app.urls')),
+    path("tiqo/", include('tiqo.urls')),
+    # path('', include(router.urls)),
+
 ]
+
+if settings.DEBUG:
+    urlpatterns += path('__reload__/', include("django_browser_reload.urls")),
