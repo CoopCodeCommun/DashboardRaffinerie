@@ -4,9 +4,9 @@ const appData = {
     menuOptions: ['vélo', 'Groupe Culture', 'Micro recyclerie', 'champignonnière'],
     // les différents menu dans la barre latéral
     sidebarOptions: [
-    { icon: 'bi bi-bar-chart-line', text: 'Tableau de bord' },
+    { icon: 'bi bi-bar-chart-line', text: 'Tableau de bord', link: 'dashboard_app/templates/tableau_de_bord.html'},
     { icon: 'bi bi-person-video2', text: 'organigramme des rôles' },
-    
+    { icon: 'bi bi-currency-euro', text: 'Suivi budgétaire', link: 'dashboard_app/templates/suivi_budgetaire.html' },
     { icon: 'bi bi-piggy-bank', text: 'Plan de trésorerie' },
     { icon: 'bi bi-cash-coin', text: 'Suivi subventions' },
     { icon: 'bi bi-file-music', text: 'Suivi évenements' },
@@ -274,6 +274,20 @@ button.addEventListener('click', function() {
 
 // Ajouter le style 'case_clair' au bouton actuellement cliqué
     button.classList.add('case_clair');
+
+  // Charger le contenu dans le bloc de contenu
+  if (menuItem.link) {
+$.ajax({
+  url: 'chemin/vers/une/page.html', 
+  success: function(data) { 
+    console.log('Success:', data); 
+    $('#content-block-id').html(data); 
+  }, 
+  error: function(error) { 
+    console.error('Error:', error); 
+  }
+});
+  }
 });
 
 const icon = document.createElement('i');
