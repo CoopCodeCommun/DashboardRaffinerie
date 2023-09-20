@@ -42,7 +42,7 @@ def qonto(request: HtmxHttpRequest) -> HttpResponse:
         'user': request.user if request.user.is_authenticated else None,
         "page": page,
     }
-    return render(request, 'tiqo_qonto.html', context=context)
+    return render(request, 'scroll_infini_example/tiqo_qonto.html', context=context)
 
 
 def transaction_scroll(request: HtmxHttpRequest) -> HttpResponse:
@@ -52,7 +52,7 @@ def transaction_scroll(request: HtmxHttpRequest) -> HttpResponse:
     context = {
         "page": page,
     }
-    return render(request, 'tiqo_transaction_scroll.html', context=context)
+    return render(request, 'scroll_infini_example/tiqo_transaction_scroll.html', context=context)
 
 def odoo(request):
     context = {

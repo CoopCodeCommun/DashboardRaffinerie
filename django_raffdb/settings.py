@@ -46,6 +46,7 @@ INSTALLED_APPS = [
     'rest_framework',
     'stdimage',
     'django_htmx',
+    'django_tables2',
 ]
 
 if DEBUG:
