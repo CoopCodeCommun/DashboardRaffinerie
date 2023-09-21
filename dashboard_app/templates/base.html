@@ -16,7 +16,13 @@
 {% include 'navbar.html' %}
 
 {# C'est ici que se chargera toute les autres pages qui commencent par "extend base.html"#}
-{% block content %}{% endblock content %}
+{#{% block content %}{% endblock content %}#}
+{% block content %}
+  <div id="content-block-id">
+    <!-- Le contenu des pages étendues ira ici -->
+  </div>
+{% endblock content %}
+
 {% block script %} {% endblock script %}
 
 
