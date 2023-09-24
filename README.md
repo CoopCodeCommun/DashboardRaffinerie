@@ -44,3 +44,9 @@ La page se recharge automatiquement si une modification est detectée dans les t
 #### Documentation technique
 
 Work in progres ...
+
+
+#### Temps de travail
+
+Jonas | 01/08/23 | 1 journée | Installation de l'environnement de developpement Django
+Jonas | 24/09/23 | 1/2 journée | Déploiement version de préprod
