@@ -1,233 +1,6 @@
-// les différentes data
-const appData = {
-    //les différent pôles dans le menu supérieur
-    menuOptions: ['vélo', 'Groupe Culture', 'Micro recyclerie', 'champignonnière'],
-    // les différents menu dans la barre latéral
-    sidebarOptions: [
-    { icon: 'bi bi-bar-chart-line', text: 'Tableau de bord', link: 'dashboard_app/templates/tableau_de_bord.html'},
-    { icon: 'bi bi-person-video2', text: 'organigramme des rôles' },
-    { icon: 'bi bi-currency-euro', text: 'Suivi budgétaire', link: 'dashboard_app/templates/suivi_budgetaire.html' },
-    { icon: 'bi bi-piggy-bank', text: 'Plan de trésorerie' },
-    { icon: 'bi bi-cash-coin', text: 'Suivi subventions' },
-    { icon: 'bi bi-file-music', text: 'Suivi évenements' },
-    { icon: 'bi bi-list-ol', text: 'Suivi volontariat' },
-    { icon: 'bi bi-people', text: 'Répertoire Raffineur.euses' },
-    { icon: 'bi bi-clipboard-data', text: 'Tableau de bord perso' },
-    { icon: 'bi bi-book', text: 'Documentation' },
-    ],
 
-    //suivi budgétaire
-        //données membre du collectif
-        titre_membres: "",
-        total_membres: false,
-        newline_membres: true,
-        rows_membres: [{ name: 'Paul' },{ name: 'Jessica' },{ name: 'Bob' },{ name: 'Marcel' }],
-        columns_membres: [
-            { name: 'à valider', },
-            { name: 'à facturer',  },
-            { name: 'à payer',  },
-        ],
+//////////////////////////// menu //////////////////////////
 
-        //données recap depenses
-        titre_recap_depenses : "Dépenses",
-        total_recap_depenses: false,
-        newline_recap_depenses: false,
-        rows_recap_depenses: [{ name:'bienveillance' },{ name: 'presta int.' },{ name: 'presta.ext / achats' },{ name: 'dépenses int.'}],
-        columns_recap_depenses: [
-            { name: 'prév', }, 
-            { name: 'dépensé', },
-            { name: 'reste à dépensé',},
-        ],
-
-        //données recap recettes
-        titre_recap_recettes : "Recettes",
-        total_recap_recettes: true,
-        newline_recap_recettes: false,
-        rows_recap_recettes: ['suventions / app', 'prestations', 'ventes', 'recette int'].map(name => ({ name })),
-        columns_recap_recettes: [
-            { name: 'prév.',}, 
-            { name: 'encaissé',},
-            { name: 'reste à encaisser',},
-        ],
-
-        //données prévisionnel bienveillance
-    titre_prev_bienveillance : "Prévisionnel",
-    total_prev_bienveillance: true,
-    newline_prev_bienveillance: true,
-    rows_prev_bienveillance: ['bienvei- llance'].map(name => ({ name })),
-    columns_prev_bienveillance: [
-      { name: 'Montant', input: true,},
-    ],
-
-    //données réel bienveillance
-    titre_reel_bienveillance : "Réel",
-    total_reel_bienveillance: true,
-    newline_reel_bienveillance: true,
-    rows_reel_bienveillance: ['Paul', 'Jessica', 'kevin'].map(name => ({ name })),
-    columns_reel_bienveillance: [
-      { name: 'date', input: true, shouldTotal: false  },
-      { name: 'propo.', input: true, },
-      { name: 'validé', input: true, },
-      { name: 'factu.', input: true, },
-      { name: 'payé', },
-    ],
-
-    //données prévisionnel prestations internes
-    titre_prev_prestations_internes : "Prévisionnel",
-    total_prev_prestations_internes: true,
-    newline_prev_prestations_internes: true,
-    rows_prev_prestations_internes: ['bienveillance', 'animation ateliers', 'entretien matériel'].map(name => ({ name })),
-    columns_prev_prestations_internes: [
-      { name: 'Montant', input: true, },
-    ],
-
-    //données réel prestation interne
-    titre_reel_prestations_internes : "Réel",
-    total_reel_prestations_internes: true,
-    newline_reel_prestations_internes: true,
-    rows_reel_prestations_internes: [ 'Jessica', 'kevin'].map(name => ({ name })),
-    columns_reel_prestations_internes: [
-      { name: 'date', input: true, shouldTotal: false}, 
-      { name: 'propo.', input: true, },
-      { name: 'validé', input: true, },
-      { name: 'factu.', input: true, },
-      { name: 'payé', input: false, },
-    ],
-
-    //données prévisionnel prestations externes
-    titre_prev_prestations_externes : "Prévisionnel",
-    total_prev_prestations_externes: true,
-    newline_prev_prestations_externes: true,
-    rows_prev_prestations_externes: ['achat matériel','prestataires externes'].map(name => ({ name })),
-    columns_prev_prestations_externes: [
-      { name: 'Montant', input: true, }, 
-    ],
-
-    //données réel prestation externes
-    titre_reel_prestations_externes : "Réel",
-    total_reel_prestations_externes: true,
-    newline_reel_prestations_externes: false,
-    rows_reel_prestations_externes: [ 'Ravate', 'run market', 'SARL Payet'].map(name => ({ name })),
-    columns_reel_prestations_externes: [
-      { name: 'intitulé', shouldTotal: false },
-      { name: 'date', shouldTotal: false,},
-      { name: 'validé',},
-      { name: 'payé',},
-    ],
-
-    //données prévisionnel dépenses interne
-    titre_prev_depenses_internes : "Prévisionnel",
-    total_prev_depenses_internes: true,
-    newline_prev_depenses_internes: true,
-    rows_prev_depenses_internes: ['pôle culture','inter-formation', 'micro-recylerie'].map(name => ({ name })),
-    columns_prev_depenses_internes: [
-      { name: 'Montant', input: true, }, 
-    ],
-
-    //données réel dépenses interne
-    titre_reel_depenses_internes : "Réel",
-    total_reel_depenses_internes: true,
-    newline_reel_depenses_internes: true,
-    rows_reel_depenses_internes: [ 'Dépenses interne'].map(name => ({ name })),
-    columns_reel_depenses_internes: [
-      { name: 'pôle', dropdown: true,  options: ['Option 1', 'Option 2', 'Option 3'], shouldTotal: false, },
-      { name: 'date', input: true, shouldTotal: false,},
-      { name: 'montant', input: true,  },          
-    ],
-
-    //données suivi recap dépenses
-    titre_suivi_recap_depenses : "Recap",
-    total_suivi_recap_depenses: false,
-    newline_suivi_recap_depenses: false,
-    rows_suivi_recap_depenses: [ 'Recap'].map(name => ({ name })),
-    columns_suivi_recap_depenses: [
-      { name: 'prévisionnel', },
-      { name: 'réel', },
-      { name: 'rest à dépenser', },          
-    ],
-
-     //données prévisionnel subvention
-    titre_prev_subvention : "Prévisionnel",
-    total_prev_subvention: true,
-    newline_prev_subvention: true,
-    rows_prev_subvention: ['subventions'].map(name => ({ name })),
-    columns_prev_subvention: [
-      { name: 'Montant', input: true, }, // La colonne par défaut est sans input
-    ],
-
-     //données réel subvention
-    titre_reel_subvention : "Réel",
-    total_reel_subvention : true,
-    newline_reel_subvention : false,
-    rows_reel_subvention: [ 'Région', 'Mairie'].map(name => ({ name })),
-    columns_reel_subvention: [
-      { name: 'Date',  shouldTotal: false},
-      { name: 'Montant', },          
-    ],
-
-    //données prévisionnel prestations
-    titre_prev_prestations : "Prévisionnel",
-    total_prev_prestations: true,
-    newline_prev_prestations: true,
-    rows_prev_prestations: ['divers prestations'].map(name => ({ name })),
-    columns_prev_prestations: [
-      { name: 'Montant', input: true,  }, 
-    ],
-
-     //données réel prestations
-    titre_reel_prestations : "Réel",
-    total_reel_prestations: true,
-    newline_reel_prestations: false,
-    rows_reel_prestations: [ 'asso rvp', 'SARL dudu'].map(name => ({ name })),
-    columns_reel_prestations: [
-      { name: 'Date', shouldTotal: false},
-      { name: 'Montant', },          
-    ],
-
-
-     //données prévisionnel ventes
-    titre_prev_ventes : "Prévisionnel",
-    total_prev_ventes: true,
-    newline_prev_ventes: true,
-    rows_prev_ventes: ['Ventes en direct'].map(name => ({ name })),
-    columns_prev_ventes: [
-        { name: 'Montant', input: true,}, 
-    ],
-
-     //données réel ventes
-    titre_reel_ventes : "Réel",
-    total_reel_ventes: true,
-    newline_reel_ventes: false,
-    rows_reel_ventes: [ 'vente en direct', 'asso hoareau'].map(name => ({ name })),
-    columns_reel_ventes: [
-      { name: 'Date', shouldTotal: false},
-      { name: 'Montant', },          
-    ],
-
-
-     //données prévisionnel recettes internes
-    titre_prev_recettes_internes : "Prévisionnel",
-    total_prev_recettes_internes: true,
-    newline_prev_recettes_internes: true,
-    rows_prev_recettes_internes: ['divers pôles'].map(name => ({ name })),
-    columns_prev_recettes_internes: [
-      { name: 'Montant', input: true, }, // La colonne par défaut est sans input
-    ],
-
-     //données réel dépenses internes
-    titre_reel_recettes_internes : "Réel",
-    total_reel_recettes_internes: true,
-    newline_reel_recettes_internes: true,
-    rows_reel_recettes_internes: [ ' ', ' '].map(name => ({ name })),
-    columns_reel_recettes_internes: [
-      { name: 'Pôles', dropdown: true, shouldTotal: false},
-      { name: 'Date', input: true, shouldTotal: false},
-      { name: 'Montant', input: true, },          
-    ],
-
-};
-
-// menu 
 function showLoginForm() {
     document.getElementById('loginForm').style.display = 'block';
 }
@@ -239,7 +12,7 @@ function updateButtonText(element) {
     document.getElementById('dropdownMenuButton').textContent = buttonText;
 }
 
-// Générer les options du menu déroulant
+// Générer les options du menu déroulant de la navbar
 const dropdownMenu = document.getElementById('dropdownMenuOptions');
 appData.menuOptions.forEach(option => {
     const optionElement = document.createElement('a');
@@ -251,60 +24,80 @@ appData.menuOptions.forEach(option => {
     };
     dropdownMenu.appendChild(optionElement);
 });
+
 function updateButtonText(text) {
     document.getElementById('dropdownMenuButton').textContent = text;
 }
 
-    // Générer les éléments du menu latéral
-const sidebarMenu = document.getElementById('sidebarMenu');
 
-appData.sidebarOptions.forEach(menuItem => {
-const li = document.createElement('li');
-li.className = 'nav-item';
+//////////////////////////////// Générer les éléments du menu latéral ////////////////////////
 
-const button = document.createElement('button');
-button.className = 'btn m-1 b-0';
+ 
+document.addEventListener("DOMContentLoaded", function() {
 
-// Gestionnaire d'événement pour ajouter le style 'case_clair' lors du clic
-button.addEventListener('click', function() {
-     // Retirer le style 'case_clair' de tous les autres boutons
-    sidebarMenu.querySelectorAll('.btn').forEach(btn => {
-        btn.classList.remove('case_clair');
+    const sidebarMenu = document.getElementById('sidebarMenu');
+    if (!sidebarMenu) {
+        console.error("L'élément avec l'ID 'sidebarMenu' n'a pas été trouvé.");
+        return;
+    }
+
+    appData.sidebarOptions.forEach(option => {
+        const li = document.createElement('li');
+        li.className = 'nav-item';
+
+        const button = document.createElement('button');
+        button.className = 'btn m-1 b-0';
+
+        if (option.link && window.location.href.includes(option.link)) {
+            button.classList.add('case_clair');
+        }
+
+        button.addEventListener('click', () => {
+            sidebarMenu.querySelectorAll('.btn').forEach(btn => btn.classList.remove('case_clair'));
+            button.classList.add('case_clair');
+            if (option.link) {
+                window.location.href = option.link;
+            }
+        });
+
+        if (option.icon) {
+            const icon = document.createElement('i');
+            icon.className = option.icon;
+            button.appendChild(icon);
+        }
+
+        const textSpan = document.createElement('span');
+        textSpan.className = 'font-weight-bold';
+        textSpan.textContent = ` ${option.text}`;
+
+        if (!option.link) {
+            textSpan.style.textDecoration = 'line-through';
+        }
+
+        button.appendChild(textSpan);
+        li.appendChild(button);
+        sidebarMenu.appendChild(li);
+    });
 });
 
-// Ajouter le style 'case_clair' au bouton actuellement cliqué
-    button.classList.add('case_clair');
+// création des tableaux avec les données de datas.js
+let groupeTableaux;
+if (window.location.href.includes('suivi_budgetaire')) {
+    groupeTableaux = tableaux.suivi_budgetaire;
+} else if (window.location.href.includes('subventions')) {
+    groupeTableaux = tableaux.subventions;
+} 
 
-  // Charger le contenu dans le bloc de contenu
-  if (menuItem.link) {
-$.ajax({
-  url: 'chemin/vers/une/page.html', 
-  success: function(data) { 
-    console.log('Success:', data); 
-    $('#content-block-id').html(data); 
-  }, 
-  error: function(error) { 
-    console.error('Error:', error); 
-  }
-});
-  }
-});
+for (let nom_tableau in groupeTableaux) {
+    if (groupeTableaux.hasOwnProperty(nom_tableau)) {
+        let tableauData = groupeTableaux[nom_tableau];
+        let containerId = nom_tableau;
+        createTableComplete(tableauData.titre, tableauData.rows, tableauData.columns, containerId, tableauData.total, tableauData.newline);
+    }
+}
 
-const icon = document.createElement('i');
-icon.className = menuItem.icon;
-button.appendChild(icon);
+///////////////////////////   ouvrir/fermer une section  /////////////:::
 
-const textNode = document.createTextNode(` ${menuItem.text}`);
-const textSpan = document.createElement('span');
-textSpan.className = 'font-weight-bold';
-textSpan.appendChild(textNode);
-button.appendChild(textSpan);
-
-li.appendChild(button);
-sidebarMenu.appendChild(li);
-});
-
-//ouvrir/fermer une section
 function toggleContent(element) {
 const contentDiv = element.nextElementSibling;
 const toggleSign = element.querySelector("#toggleSign");
@@ -317,6 +110,8 @@ if (contentDiv.style.display === "none" || !contentDiv.style.display) {
     toggleSign.textContent = "+";
 }
 }
+
+///////////////////////////////
 
 //créer une section avec titre toggle
 class CreateToggle extends HTMLElement {
@@ -350,9 +145,9 @@ toggleContent = () => {
 customElements.define('create-toggle', CreateToggle);
 
 
+/////////////////////////// Creation tableau ////////////////////////////////
 
 
-// Creation tableau
 function createTableComplete(titre, rows, columns, containerId, total, newline) {
 const container = document.getElementById(containerId);
 
@@ -648,32 +443,10 @@ updateTotals(table, columns);
 }
 }
 
-// Appel des focntions de tableaux
-createTableComplete(appData.titre_membres, appData.rows_membres, appData.columns_membres, 'tableau_membre_collectif', appData.total_membres, appData.newline_membres);
-createTableComplete(appData.titre_recap_depenses, appData.rows_recap_depenses, appData.columns_recap_depenses, 'tableau_recap_depenses', appData.total_recap_depenses, appData.newline_recap_depenses);
-createTableComplete(appData.titre_recap_recettes, appData.rows_recap_recettes, appData.columns_recap_recettes, 'tableau_recap_recettes', appData.total_recap_recettes, appData.newline_recap_recettes);
 
-// suivi détaillé
-createTableComplete(appData.titre_prev_bienveillance, appData.rows_prev_bienveillance, appData.columns_prev_bienveillance, 'tableau_prev_bienveillance', appData.total_prev_bienveillance, appData.newline_prev_bienveillance);
-createTableComplete(appData.titre_reel_bienveillance, appData.rows_reel_bienveillance, appData.columns_reel_bienveillance, 'tableau_reel_bienveillance', appData.total_reel_bienveillance, appData.newline_reel_bienveillance);
-createTableComplete(appData.titre_prev_prestations_internes, appData.rows_prev_prestations_internes, appData.columns_prev_prestations_internes, 'tableau_prev_prestations_internes', appData.total_prev_prestations_internes, appData.newline_prev_prestations_internes);
-createTableComplete(appData.titre_reel_prestations_internes, appData.rows_reel_prestations_internes, appData.columns_reel_prestations_internes, 'tableau_reel_prestations_internes', appData.total_reel_prestations_internes, appData.newline_reel_prestations_internes);
-createTableComplete(appData.titre_prev_prestations_externes, appData.rows_prev_prestations_externes, appData.columns_prev_prestations_externes, 'tableau_prev_prestations_externes', appData.total_prev_prestations_externes, appData.newline_prev_prestations_externes );
-createTableComplete(appData.titre_reel_prestations_externes, appData.rows_reel_prestations_externes, appData.columns_reel_prestations_externes, 'tableau_reel_prestations_externes', appData.total_reel_prestations_externes, appData.newline_reel_prestations_externes);
-createTableComplete(appData.titre_prev_depenses_internes, appData.rows_prev_depenses_internes, appData.columns_prev_depenses_internes, 'tableau_prev_depenses_internes', appData.total_prev_depenses_internes, appData.newline_prev_depenses_internes);
-createTableComplete(appData.titre_reel_depenses_internes, appData.rows_reel_depenses_internes, appData.columns_reel_depenses_internes, 'tableau_reel_depenses_internes', appData.total_reel_depenses_internes, appData.newline_reel_depenses_internes);
-createTableComplete(appData.titre_prev_subvention, appData.rows_prev_subvention, appData.columns_prev_subvention, 'tableau_prev_subvention', appData.total_prev_subvention, appData.newline_prev_subvention);
-createTableComplete(appData.titre_reel_subvention, appData.rows_reel_subvention, appData.columns_reel_subvention, 'tableau_reel_subvention', appData.total_reel_subvention, appData.newline_reel_subvention);
-createTableComplete(appData.titre_prev_prestations, appData.rows_prev_prestations, appData.columns_prev_prestations, 'tableau_prev_prestations', appData.total_prev_prestations, appData.newline_prev_prestations);
-createTableComplete(appData.titre_reel_prestations, appData.rows_reel_prestations, appData.columns_reel_prestations, 'tableau_reel_prestations', appData.total_reel_prestations, appData.newline_reel_prestations);
-createTableComplete(appData.titre_prev_ventes, appData.rows_prev_ventes, appData.columns_prev_ventes, 'tableau_prev_ventes', appData.total_prev_ventes, appData.newline_prev_ventes);
-createTableComplete(appData.titre_reel_ventes, appData.rows_reel_ventes, appData.columns_reel_ventes, 'tableau_reel_ventes', appData.total_reel_ventes, appData.newline_reel_ventes);
-createTableComplete(appData.titre_prev_recettes_internes, appData.rows_prev_recettes_internes, appData.columns_prev_recettes_internes, 'tableau_prev_recettes_internes', appData.total_prev_recettes_internes, appData.newline_prev_recettes_internes);
-createTableComplete(appData.titre_reel_recettes_internes, appData.rows_reel_recettes_internes, appData.columns_reel_recettes_internes, 'tableau_reel_recettes_internes', appData.total_reel_recettes_internes, appData.newline_reel_recettes_internes);
+//////////////////////////// fonction ouvrir/fermer un tableau /////////////////////////////
 
 
-
-//fonction ouvrir/fermer un tableau
 function toggleSection(element) {
 const content = element.nextElementSibling;
 if (content.style.display === "none" || !content.style.display) {
@@ -686,5 +459,5 @@ if (content.style.display === "none" || !content.style.display) {
 }
 
  document.addEventListener("DOMContentLoaded", function() {
-// Vos appels à createTableComplete vont ici
+
 });
