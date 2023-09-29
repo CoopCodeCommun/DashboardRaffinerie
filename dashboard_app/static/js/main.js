@@ -688,4 +688,3 @@ if (content.style.display === "none" || !content.style.display) {
  document.addEventListener("DOMContentLoaded", function() {
 // Vos appels à createTableComplete vont ici
 });
-
