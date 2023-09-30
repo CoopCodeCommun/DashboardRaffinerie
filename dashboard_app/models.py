@@ -34,3 +34,6 @@ class Contact(models.Model):
     user = models.ForeignKey('dashboard_user.CustomUser',
                              on_delete=models.PROTECT,
                              null=True, blank=True)
+
+    def __str__(self):
+        return self.email

@@ -6,6 +6,7 @@
     <meta charset="UTF-8">
     <title>Contacts</title>
     <link rel="stylesheet" href="{% static 'materialize/css/materialize.min.css' %}"/>
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
 </head>
 <body class="container">
 <div style="margin: 1em 0 1em 0">
@@ -15,12 +16,39 @@
         pour rendre tout ça joli, mais tu prends ce que tu veux :)
     </span>
 </div>
-<div>
+
+<div id="import">
+    <span>Nombre de contacts : {{ contacts.count }}</span>
     <a class="waves-effect waves-light btn">Charger depuis Odoo</a>
 </div>
-<div>
-    <span>Nombre de contacts : {{ contacts.count }}</span>
+
+<div id="cards">
+    {% for contact in contacts %}
+
+        <div class="row">
+            <div class="col s12 m6 l3">
+                <div class="card">
+                    <div class="card-image waves-effect waves-block waves-light">
+                        <img class="activator" src="https://picsum.photos/300/150">
+                    </div>
+                    <div class="card-content">
+                        <span class="card-title activator grey-text text-darken-4">{{ contact.prenom }} {{ contact.nom }}<i
+                                class="material-icons right">more_vert</i></span>
+                    </div>
+                    <div class="card-reveal">
+                <span class="card-title grey-text text-darken-4">{{ contact.prenom }} {{ contact.nom }}<i
+                        class="material-icons right">close</i></span>
+                        <div>{{ contact.email }}</div>
+                        <div>{{ contact.tel }}</div>
+                        <div>{{ contact.adresse }}</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    {% endfor %}
+
 </div>
+
 <script type="text/javascript" src="{% static 'materialize/js/materialize.min.js' %}"></script>
 </body>
 
