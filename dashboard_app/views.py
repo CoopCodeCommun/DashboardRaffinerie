@@ -45,6 +45,38 @@ def subventions(request):
     }
     return render(request, 'subventions.html', context=context)
 
+def organigramme(request):
+    """
+    Livre un template HTML organigramme.html
+    Extension du template base.html
+    """
+    context = {
+        'name': request.user.email if request.user.is_authenticated else 'Anonymous',
+    }
+    return render(request, 'organigramme.html', context=context)
+
+def repertoire(request):
+    """
+    Livre un template HTML organigramme.html
+    Extension du template base.html
+    """
+    context = {
+        'name': request.user.email if request.user.is_authenticated else 'Anonymous',
+    }
+    return render(request, 'repertoire.html', context=context)
+
+def objectifs_indicateurs(request):
+    """
+    Livre un template HTML organigramme.html
+    Extension du template base.html
+    """
+    context = {
+        'name': request.user.email if request.user.is_authenticated else 'Anonymous',
+    }
+    return render(request, 'objectifs_indicateurs.html', context=context)
+
+
+
 ### TEST API AVEC MODEL USER ###
 
 @permission_classes([AllowAny])

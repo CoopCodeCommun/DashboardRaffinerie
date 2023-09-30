@@ -1,0 +1,24 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load tz %}
+
+{% block content %}
+
+    <div class="container-fluid">
+        <!-- Menu Lateral et Tableau -->
+        <div class="row">
+            <!-- Menu Lateral -->
+            {% include 'menu_lateral.html' %}
+
+            
+        </div>
+    </div>
+
+
+{% endblock content %}
+
+{% block script %}
+    <script src='{% static "js/datas.js" %}'></script>
+    <script src='{% static "js/main.js" %}'></script>
+   
+{% endblock script %}

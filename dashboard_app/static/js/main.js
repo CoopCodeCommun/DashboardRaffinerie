@@ -80,13 +80,13 @@ document.addEventListener("DOMContentLoaded", function() {
     });
 });
 
-// création des tableaux avec les données de datas.js
+// création des tableaux avec les données de datas.js, vérifie quel page est affiché et charge les données des tableaux corespondants
 let groupeTableaux;
-if (window.location.href.includes('suivi_budgetaire')) {
-    groupeTableaux = tableaux.suivi_budgetaire;
-} else if (window.location.href.includes('subventions')) {
-    groupeTableaux = tableaux.subventions;
-} 
+if (window.location.href.includes('suivi_budgetaire')) {groupeTableaux = tableaux.suivi_budgetaire;} 
+else if (window.location.href.includes('subventions')) {groupeTableaux = tableaux.subventions;} 
+else if (window.location.href.includes('repertoire')) {groupeTableaux = tableaux.repertoire;} 
+else if (window.location.href.includes('organigramme')) {groupeTableaux = tableaux.organigramme;}
+else if (window.location.href.includes('objectifs_indicateurs')) {groupeTableaux = tableaux.objectifs_indicateurs;}  
 
 for (let nom_tableau in groupeTableaux) {
     if (groupeTableaux.hasOwnProperty(nom_tableau)) {
@@ -111,9 +111,7 @@ if (contentDiv.style.display === "none" || !contentDiv.style.display) {
 }
 }
 
-///////////////////////////////
-
-//créer une section avec titre toggle
+/////////////////////////////// créer une section avec titre qui se replie /////////////////////////
 class CreateToggle extends HTMLElement {
 connectedCallback() {
     this.style.cursor = "pointer";
@@ -146,7 +144,6 @@ customElements.define('create-toggle', CreateToggle);
 
 
 /////////////////////////// Creation tableau ////////////////////////////////
-
 
 function createTableComplete(titre, rows, columns, containerId, total, newline) {
 const container = document.getElementById(containerId);
@@ -266,6 +263,9 @@ rows.forEach(row => {
     }
 });
 
+
+//option création de nouvelle ligne
+
 if (newline) {
     const addButtonRow = document.createElement('tr');
     const addButtonCell = document.createElement('td');
@@ -308,6 +308,8 @@ if (newline) {
     addButtonRow.appendChild(addButtonCell);
     table.appendChild(addButtonRow);
 }
+
+//option création d'un pied de tableau qui fait les totaux des colonnes
 
 if (total) {
 const totalRow = document.createElement('tr');
@@ -409,6 +411,9 @@ inputTitle.className = "form-control case_clair case_petite";  // Style d'input
 
 th.appendChild(inputTitle);
 tr.appendChild(th);
+
+
+// style de case en fonction du type de case
 
 columns.forEach(column => {
     const td = document.createElement('td');
