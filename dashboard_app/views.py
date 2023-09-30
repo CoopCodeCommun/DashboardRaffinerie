@@ -6,6 +6,7 @@ from rest_framework.permissions import AllowAny, IsAuthenticated, IsAdminUser
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
+from dashboard_app.models import Contact
 from dashboard_app.serializers import UserSerializer
 
 
@@ -44,6 +45,22 @@ def subventions(request):
         'name': request.user.email if request.user.is_authenticated else 'Anonymous',
     }
     return render(request, 'subventions.html', context=context)
+
+
+### PAGE D'EXAMPLE ###
+
+def contacts(request):
+    # On va chercher tout les objets de la table Contact
+    # de la base de donnée (models.puy)
+    contacts = Contact.objects.all()
+
+    context = {
+        'contacts':contacts
+    }
+    return render(request, 'contacts.html', context=context)
+
+
+
 
 ### TEST API AVEC MODEL USER ###
 

@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+{% load static %}
+
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <title>Contacts</title>
+    <link rel="stylesheet" href="{% static 'materialize/css/materialize.min.css' %}"/>
+</head>
+<body class="container">
+<div style="margin: 1em 0 1em 0">
+    <span>
+        J'utilise ici le framework : <a href="https://materializecss.com"
+                                        target="_blank">https://materializecss.com</a>
+        pour rendre tout ça joli, mais tu prends ce que tu veux :)
+    </span>
+</div>
+<div>
+    <a class="waves-effect waves-light btn">Charger depuis Odoo</a>
+</div>
+<div>
+    <span>Nombre de contacts : {{ contacts.count }}</span>
+</div>
+<script type="text/javascript" src="{% static 'materialize/js/materialize.min.js' %}"></script>
+</body>
+
+</html>
