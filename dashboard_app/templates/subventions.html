@@ -1,0 +1,39 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load tz %}
+
+{% block content %}
+
+    <div class="container-fluid">
+        <!-- Menu Lateral et Tableau -->
+        <div class="row">
+            <!-- Menu Lateral -->
+            {% include 'menu_lateral.html' %}
+
+            <!-- suivi budgétaire -->
+            <div class="col-md-10 ">
+                <!-- membre + recap -->
+                <section class="row">
+                    <!-- membre du collectif -->
+                    <section class="col-md-12" style="display: flex;  align-items: stretch;">
+                        <div class="rose p-2 case">
+                            <create-toggle title="Données de base"></create-toggle>
+                            <div class="contentToShowHide">
+                                <div id="tableau_donnees_base_subventions"></div>
+                            </div>
+                        </div>
+                    </section>
+                                 
+                </section>
+            </div>
+        </div>
+    </div>
+
+
+{% endblock content %}
+
+{% block script %}
+    <script src='{% static "js/datas.js" %}'></script>
+    <script src='{% static "js/main.js" %}'></script>
+   
+{% endblock script %}

@@ -35,6 +35,16 @@ def suivi_budgetaire(request):
     }
     return render(request, 'suivi_budgetaire.html', context=context)
 
+def subventions(request):
+    """
+    Livre un template HTML subventions.html
+    Extension du template base.html
+    """
+    context = {
+        'name': request.user.email if request.user.is_authenticated else 'Anonymous',
+    }
+    return render(request, 'subventions.html', context=context)
+
 ### TEST API AVEC MODEL USER ###
 
 @permission_classes([AllowAny])

@@ -1,0 +1,300 @@
+const appData = {
+    //les différent pôles dans le menu supérieur
+    menuOptions: ['vélo', 'Groupe Culture', 'Micro recyclerie', 'champignonnière'],
+    
+    // les différents menu dans la barre latéral
+    sidebarOptions: [
+    { icon: 'bi bi-bar-chart-line', text: 'Tableau de bord'},
+    { icon: 'bi bi-person-video2', text: 'organigramme des rôles' },
+    { icon: 'bi bi-currency-euro', text: 'Suivi budgétaire', link: '/suivi_budgetaire/' },
+    { icon: 'bi bi-cash-coin', text: 'Suivi subventions', link: '/subventions/' },
+    { icon: 'bi bi-piggy-bank', text: 'Plan de trésorerie' },
+    { icon: 'bi bi-file-music', text: 'Suivi évenements' },
+    { icon: 'bi bi-list-ol', text: 'Suivi volontariat' },
+    { icon: 'bi bi-people', text: 'Répertoire Raffineur.euses' },
+    { icon: 'bi bi-clipboard-data', text: 'Tableau de bord perso' },
+    { icon: 'bi bi-book', text: 'Documentation' },
+    ],
+
+};
+
+////////////////////// données des tableaux //////////////////////////
+
+// total = true : ajoute "Total" en pied de tableau
+// newline = true : ajouter un "ajouter" ligne en bas de tableau
+
+let tableaux = {
+    suivi_budgetaire: {
+    
+    //suivi budgétaire
+
+        //recap membres du collectif
+        tableau_membre_collectif: {
+            titre: "", 
+            total: false, 
+            newline: true, 
+            rows: [{ name: 'Paul' },{ name: 'Jessica' }, { name: 'Bob' },{ name: 'Marcel' }],
+            columns: [
+                { name: 'à valider' },
+                { name: 'à facturer' },
+                { name: 'à payer' }
+            ]
+        },
+    
+        //données recap depenses
+            tableau_recap_depenses : {
+            titre : "Dépenses",
+            total : false,
+            newline : false,
+            rows : [{ name:'bienveillance' },{ name: 'presta int.' },{ name: 'presta.ext / achats' },{ name: 'dépenses int.'}],
+            columns : [
+                { name: 'prév', }, 
+                { name: 'dépensé', },
+                { name: 'reste à dépensé',},
+            ],  
+        },  
+
+        //données recap recettes
+        tableau_recap_recettes : {
+            titre : "Recettes",
+            total: true,
+            newline: false,
+            rows: ['suventions / app', 'prestations', 'ventes', 'recette int'].map(name => ({ name })),
+            columns: [
+                { name: 'prév.',}, 
+                { name: 'encaissé',},
+                { name: 'reste à encaisser',},
+            ],
+        },
+
+        //données prévisionnel bienveillance
+        tableau_prev_bienveillance : {
+            titre : "Prévisionnel",
+            total: true,
+            newline: true,
+            rows: ['bienvei- llance'].map(name => ({ name })),
+            columns: [
+            { name: 'Montant', input: true,},
+            ],
+        },
+
+        //données réel bienveillance
+        tableau_reel_bienveillance :{
+            titre : "Réel",
+            total: true,
+            newline: true,
+            rows: ['Paul', 'Jessica', 'kevin'].map(name => ({ name })),
+            columns: [
+                { name: 'date', input: true, shouldTotal: false  },
+                { name: 'propo.', input: true, },
+                { name: 'validé', input: true, },
+                { name: 'factu.', input: true, },
+                { name: 'payé', },
+            ],
+        },
+
+        //données prévisionnel prestations internes
+        tableau_prev_prestations_internes:{
+            titre : "Prévisionnel",
+            total: true,
+            newline: true,
+            rows: ['bienveillance', 'animation ateliers', 'entretien matériel'].map(name => ({ name })),
+            columns: [
+            { name: 'Montant', input: true, },
+            ], 
+        },  
+
+        //données réel prestation interne
+        tableau_reel_prestations_internes:{
+            titre : "Réel",
+            total: true,
+            newline: true,
+            rows: [ 'Jessica', 'kevin'].map(name => ({ name })),
+            columns: [
+                { name: 'date', input: true, shouldTotal: false}, 
+                { name: 'propo.', input: true, },
+                { name: 'validé', input: true, },
+                { name: 'factu.', input: true, },
+                { name: 'payé', input: false, },
+            ],
+        },
+
+        //données prévisionnel prestations externes
+        tableau_prev_prestations_externes:{    
+            titre : "Prévisionnel",
+            total: true,
+            newline: true,
+            rows: ['achat matériel','prestataires externes'].map(name => ({ name })),
+            columns: [
+                { name: 'Montant', input: true, }, 
+            ],
+        },
+
+        //données réel prestation externes
+        tableau_reel_prestations_externes:{    
+            titre : "Réel",
+            total: true,
+            newline: false,
+            rows: [ 'Ravate', 'run market', 'SARL Payet'].map(name => ({ name })),
+            columns: [
+                { name: 'intitulé', shouldTotal: false },
+                { name: 'date', shouldTotal: false,},
+                { name: 'validé',},
+                { name: 'payé',},
+            ],
+        },
+
+        //données prévisionnel dépenses interne
+        tableau_prev_depenses_internes:{    
+            titre: "Prévisionnel",
+            total: true,
+            newline: true,
+            rows: ['pôle culture','inter-formation', 'micro-recylerie'].map(name => ({ name })),
+            columns: [
+                { name: 'Montant', input: true, }, 
+            ],
+        },
+
+        //données réel dépenses interne
+        tableau_reel_depenses_internes:{    
+            titre: "Réel",
+            total: true,
+            newline: true,
+            rows: [ 'Dépenses interne'].map(name => ({ name })),
+            columns: [
+                { name: 'pôle', dropdown: true,  options: ['Option 1', 'Option 2', 'Option 3'], shouldTotal: false, },
+                { name: 'date', input: true, shouldTotal: false,},
+                { name: 'montant', input: true,  },          
+            ],
+        },
+
+        //données suivi recap dépenses
+        tableau_suivi_recap_depenses:{    
+            titre: "Recap",
+            total: false,
+            newline: false,
+            rows: [ 'Recap'].map(name => ({ name })),
+            columns: [
+                { name: 'prévisionnel', },
+                { name: 'réel', },
+                { name: 'rest à dépenser', },          
+            ],
+        },
+
+        //données prévisionnel subvention
+        tableau_prev_subvention:{    
+            titre: "Prévisionnel",
+            total: true,
+            newline: true,
+            rows: ['subventions'].map(name => ({ name })),
+            columns: [
+                { name: 'Montant', input: true, }, // La colonne par défaut est sans input
+            ],
+        },
+
+        //données réel subvention
+        tableau_reel_subvention:{    
+            titre: "Réel",
+            total: true,
+            newline: false,
+            rows: [ 'Région', 'Mairie'].map(name => ({ name })),
+            columns: [
+                { name: 'Date',  shouldTotal: false},
+                { name: 'Montant', },          
+            ],
+        },
+
+        //données prévisionnel prestations
+        tableau_prev_prestations:{    
+            titre : "Prévisionnel",
+            total: true,
+            newline: true,
+            rows: ['divers prestations'].map(name => ({ name })),
+            columns: [
+                { name: 'Montant', input: true,  }, 
+            ],
+        },
+
+        //données réel prestations
+        tableau_reel_prestations:{
+            titre : "Réel",
+            total: true,
+            newline: false,
+            rows: [ 'asso rvp', 'SARL dudu'].map(name => ({ name })),
+            columns: [
+                { name: 'Date', shouldTotal: false},
+                { name: 'Montant', },          
+            ],
+        },
+
+
+        //données prévisionnel ventes
+        tableau_prev_ventes:{    
+            titre: "Prévisionnel",
+            total: true,
+            newline: true,
+            rows: ['Ventes en direct'].map(name => ({ name })),
+            columns: [
+                    { name: 'Montant', input: true,}, 
+            ],
+        },
+
+        //données réel ventes
+        tableau_reel_ventes:{   
+            titre: "Réel",
+            total: true,
+            newline: false,
+            rows: [ 'vente en direct', 'asso hoareau'].map(name => ({ name })),
+            columns: [
+                { name: 'Date', shouldTotal: false},
+                { name: 'Montant', },          
+            ],
+        },
+
+
+        //données prévisionnel recettes internes
+        tableau_prev_recettes_internes:{    
+            titre: "Prévisionnel",
+            total: true,
+            newline: true,
+            rows: ['divers pôles'].map(name => ({ name })),
+            columns: [
+                { name: 'Montant', input: true, }, // La colonne par défaut est sans input
+            ],
+        },
+
+        //données réel dépenses internes
+        tableau_reel_recettes_internes:{    
+            titre: "Réel",
+            total: true,
+            newline: true,
+            rows: [ ' ', ' '].map(name => ({ name })),
+            columns: [
+                { name: 'Pôles', dropdown: true, shouldTotal: false},
+                { name: 'Date', input: true, shouldTotal: false},
+                { name: 'Montant', input: true, },          
+            ],
+        },
+
+    },
+    
+//////////////////////////// data subventions /////////////////////
+ 
+
+    subventions: {
+     
+        //données de base subventions
+        tableau_donnees_base_subventions : {
+            titre: "",
+            total: false,
+            newline: false,
+            rows: [{ name: 'Région - investissement' },{ name: 'mairie - fonctionnement' }],
+            columns: [
+                { name: 'Référent',  },
+                { name: 'Partenaire',  },
+                { name: 'service',  },
+                ],
+        },
+    },
+
+};
