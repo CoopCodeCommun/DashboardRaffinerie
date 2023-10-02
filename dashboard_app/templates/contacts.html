@@ -5,51 +5,144 @@
 <head>
     <meta charset="UTF-8">
     <title>Contacts</title>
-    <link rel="stylesheet" href="{% static 'materialize/css/materialize.min.css' %}"/>
-    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <link rel="stylesheet" href="{% static 'bootstrap/bootstrap.5.3.2.min.css' %}"/>
+
+    <!-- Icons -->
+    <link rel="stylesheet" href="{% static 'material-dashboard-master/assets/css/nucleo-icons.css' %}"/>
+    <link rel="stylesheet" href="{% static 'material-dashboard-master/assets/css/nucleo-svg.css' %}"/>
+    <link rel="stylesheet" href="{% static 'material-dashboard-master/assets/css/material-dashboard.css' %}"/>
+    <link rel="stylesheet" href="{% static 'css/main.css' %}"/>
 </head>
 <body class="container">
+
+{#Tu as ici la version sombre :#}
+{#<body class="container dark-version">#}
+
 <div style="margin: 1em 0 1em 0">
-    <span>
-        J'utilise ici le framework : <a href="https://materializecss.com"
-                                        target="_blank">https://materializecss.com</a>
-        pour rendre tout ça joli, mais tu prends ce que tu veux :)
-    </span>
+    <p>
+        Pour rendre tout ça joli, j'utilise ici bootstrap 5 avec des composants de creative-tim. Mais tu prends ce que
+        tu veux :)
+    </p>
+    <p>Tu peux aussi utiliser la version sombre en ajoutant la classe "dark-version" dans le body</p>
+    <ul>
+        <li><a href="https://demos.creative-tim.com/material-dashboard/pages/dashboard.html" target="_blank">Creative
+            Tim : Material Dashboard 2</a></li>
+        <li><a href="https://www.creative-tim.com/learning-lab/bootstrap/quick-start/material-dashboard"
+               target="_blank">Documentation</a></li>
+    </ul>
+
 </div>
 
-<div id="import">
-    <span>Nombre de contacts : {{ contacts.count }}</span>
-    <a class="waves-effect waves-light btn">Charger depuis Odoo</a>
+<div id="import" hx-ext="loading-states">
+    <button hx-get="/reload_contact_from_odoo/" type="button" class="btn bg-gradient-info"
+            hx-target="#body_table_contact"
+            hx-swap="innerHTML">
+        Mise à jour depuis Odoo
+    </button>
 </div>
 
-<div id="cards">
-    {% for contact in contacts %}
+<div class="card">
+    <div class="table-responsive">
+        <table class="table align-items-center mb-0">
+            <thead>
+            <tr>
+                <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Contact
+                    : {{ contacts.count }}</th>
+                <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">Organisation</th>
+                <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Badge
+                </th>
+                <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Adresse
+                </th>
+                <th class="text-secondary opacity-7"></th>
+            </tr>
+            </thead>
+            <tbody id="body_table_contact">
+                {% include 'htmx/tableau_contact.html' %}
+            </tbody>
+        </table>
+    </div>
+</div>
 
-        <div class="row">
-            <div class="col s12 m6 l3">
-                <div class="card">
-                    <div class="card-image waves-effect waves-block waves-light">
-                        <img class="activator" src="https://picsum.photos/300/150">
-                    </div>
-                    <div class="card-content">
-                        <span class="card-title activator grey-text text-darken-4">{{ contact.prenom }} {{ contact.nom }}<i
-                                class="material-icons right">more_vert</i></span>
-                    </div>
-                    <div class="card-reveal">
-                <span class="card-title grey-text text-darken-4">{{ contact.prenom }} {{ contact.nom }}<i
-                        class="material-icons right">close</i></span>
-                        <div>{{ contact.email }}</div>
-                        <div>{{ contact.tel }}</div>
-                        <div>{{ contact.adresse }}</div>
-                    </div>
-                </div>
+
+<!-- Modal -->
+<div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+     aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title font-weight-normal" id="exampleModalLabel">Fiche contact</h5>
+                <button type="button" class="btn-close text-dark" data-bs-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <p>Texte a changer en js</p>
+                <p>...</p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn bg-gradient-secondary" data-bs-dismiss="modal">Fermer</button>
+                <button type="button" class="btn bg-gradient-primary">Sauvegarder</button>
             </div>
         </div>
-    {% endfor %}
-
+    </div>
 </div>
 
-<script type="text/javascript" src="{% static 'materialize/js/materialize.min.js' %}"></script>
+<div data-loading="flex" class="spinner-overlay" style="display: none">
+    <div class="spinner"></div>
+</div>
+
+
+<script src="{% static 'js/htmx.min.js' %}"></script>
+<script src="{% static 'js/loading-states.js' %}"></script>
+<script src="{% static 'js/jquery_3.5.1.js' %}"></script>
+<script src="{% static 'js/popper.1.16.0.js' %}"></script>
+<script src="{% static 'bootstrap/bootstrap.5.3.2.bundle.min.js' %}"></script>
+<script src="{% static 'material-dashboard-master/assets/js/material-dashboard.js' %}"></script>
+
+<style>
+    .htmx-settling img {
+        opacity: 0;
+    }
+
+    img {
+        transition: opacity 300ms ease-in;
+    }
+
+    /* Styles pour la div du spinner */
+
+    .spinner-overlay {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(0, 0, 0, 0.7); /* Opacité du fond */
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        z-index: 9999; /* Assure que le spinner est au-dessus du reste du contenu */
+    }
+
+    /* Styles pour le spinner lui-même (vous pouvez utiliser une image, un GIF animé, etc.) */
+    .spinner {
+        border: 4px solid rgba(255, 255, 255, 0.3);
+        border-radius: 50%;
+        border-top: 10px solid #3498db;
+        width: 100px;
+        height: 100px;
+        animation: spin 1s linear infinite; /* Animation de rotation */
+    }
+
+    @keyframes spin {
+        0% {
+            transform: rotate(0deg);
+        }
+        100% {
+            transform: rotate(360deg);
+        }
+    }
+</style>
+
 </body>
 
 </html>

@@ -1,0 +1,6 @@
+{% if contact.image.thumb.url %}
+    <img alt="logo du profil" src="{{ contact.image.thumb.url }}" class="avatar avatar-sm me-3">
+{% else %}
+    <img alt="logo du profil" src="https://picsum.photos/960/540" class="avatar avatar-sm me-3">
+{% endif %}
+

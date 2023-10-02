@@ -17,6 +17,9 @@
     <orderEntry type="jdk" jdkName="Poetry (DashboardRaffinerie) (2)" jdkType="Python SDK" />
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="module" module-name="wetransfer_src_2023-08-01_0828" />
+    <orderEntry type="library" name="popper.js" level="application" />
+    <orderEntry type="library" name="jquery" level="application" />
+    <orderEntry type="module" module-name="Qonto-to-Odoo" />
   </component>
   <component name="PyDocumentationSettings">
     <option name="format" value="PLAIN" />

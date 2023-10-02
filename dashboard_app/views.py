@@ -1,5 +1,8 @@
+import time
+
 from django.contrib.auth import get_user_model
-from django.shortcuts import render
+from django.shortcuts import render, redirect
+from django.utils.html import format_html
 from rest_framework import status, viewsets
 from rest_framework.decorators import permission_classes
 from rest_framework.permissions import AllowAny, IsAuthenticated, IsAdminUser
@@ -7,6 +10,7 @@ from rest_framework.response import Response
 from rest_framework.views import APIView
 
 from dashboard_app.models import Contact
+from dashboard_app.odoo_api import OdooApi
 from dashboard_app.serializers import UserSerializer
 
 
@@ -36,6 +40,7 @@ def suivi_budgetaire(request):
     }
     return render(request, 'suivi_budgetaire.html', context=context)
 
+
 def subventions(request):
     """
     Livre un template HTML subventions.html
@@ -52,60 +57,45 @@ def subventions(request):
 def contacts(request):
     # On va chercher tout les objets de la table Contact
     # de la base de donnée (models.puy)
-    contacts = Contact.objects.all()
+    # Pour l'exemple, on ne prend que ceux qui sont "Membership"
+    contacts = Contact.objects.filter(type='M')
 
     context = {
-        'contacts':contacts
+        'contacts': contacts
     }
     return render(request, 'contacts.html', context=context)
 
 
 
-
-### TEST API AVEC MODEL USER ###
-
 @permission_classes([AllowAny])
-class user_api(APIView):
-    def get(self, request):
-        """
-        API REST qui n'utile pas de serializer
-        """
-        User = get_user_model()
-        serializer = UserSerializer(User.objects.all(), many=True)
-
-        return Response(serializer.data, status=status.HTTP_200_OK)
-
-@permission_classes([AllowAny])
-class user_solo_api(APIView):
+class reload_contact_from_odoo(APIView):
     def get(self, request, uuid=None):
-        User = get_user_model()
-        serializer = UserSerializer(User.objects.get(pk=uuid))
+        # Mise à jour la base de donnée depuis Odoo
+        # requete appellé par le bouton "Mise à jour depuis Odoo"
 
-        return Response(serializer.data, status=status.HTTP_200_OK)
+        # pour simuler le spinner :
+        time.sleep(2)
 
+        # Mise à jour la base de donnée depuis Odoo
+        odooApi = OdooApi()
+        # odooApi.get_all_contacts()
 
-
-class user_viewset(viewsets.ViewSet):
-    """
-    API CRUD : create read update delete
-    Exemple :
-    GET /api/user/ : liste des utilisateurs
-    GET /api/user/<uuid>/ : utilisateur avec primary key <uuid>
-    """
-
-    def list(self, request):
-        User = get_user_model()
-        serializer = UserSerializer(User.objects.all(), many=True)
-        return Response(serializer.data)
-
-    def retrieve(self, request, pk=None):
-        User = get_user_model()
-        serializer = UserSerializer(User.objects.get(pk=pk))
-        return Response(serializer.data)
-
-    def get_permissions(self):
-        permission_classes = [AllowAny]
-        return [permission() for permission in permission_classes]
+        # On va chercher tous les objects Contact
+        # dans la base de donnée mise à jour
+        context = {
+            'contacts': Contact.objects.all()
+        }
+        return render(request, 'htmx/tableau_contact.html', context=context)
 
 
-### FIN TEST API AVEC MODEL USER ###
+
+# HTMX USE CASES
+
+@permission_classes([AllowAny])
+class lazy_loading_profil_image(APIView):
+    def get(self, request, uuid=None):
+        context = {
+            'contact': Contact.objects.get(pk=uuid)
+        }
+        return render(request, 'htmx/lazy_loading.html', context=context)
+
