@@ -25,10 +25,11 @@ FERNET_KEY = os.environ.get('FERNET_KEY', 'WcpG29CrdUZ2yeiJ-plBjPWJ9GjNwCEVa-hyJ
 DEBUG = True
 
 if DEBUG:
-    ALLOWED_HOSTS = ['*', 'https://dashboard.laraffinerie.re']
+    ALLOWED_HOSTS = ['*', 'dashboard.laraffinerie.re']
+    CSRF_TRUSTED_ORIGINS = ['*']
 else:
-    ALLOWED_HOSTS = ['https://dashboard.laraffinerie.re']
-
+    ALLOWED_HOSTS = ['dashboard.laraffinerie.re']
+    CSRF_TRUSTED_ORIGINS = ['dashboard.laraffinerie.re']
 # Application definition
 
 INSTALLED_APPS = [
