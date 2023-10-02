@@ -2,7 +2,6 @@
 
 Tableau de bord imaginé par Julien pour la Raffinerie.
 
-
 ## Document de travail :
 
 https://codimd.communecter.org/yxDYGactSfmNg87kOV0FgA#
@@ -12,13 +11,13 @@ https://codimd.communecter.org/yxDYGactSfmNg87kOV0FgA#
 #### Prérequis :
 
 - Python 3.10 :
-  - https://www.python.org/downloads
-- Poetry : 
-  - https://python-poetry.org/docs/#installing-with-the-official-installer
+    - https://www.python.org/downloads
+- Poetry :
+    - https://python-poetry.org/docs/#installing-with-the-official-installer
 - Git :
-  - https://git-scm.com/downloads
+    - https://git-scm.com/downloads
 
-#### Installation 
+#### Installation
 
 ```bash
 git clone https://github.com/CoopCodeCommun/DashboardRaffinerie
@@ -45,9 +44,12 @@ La page se recharge automatiquement si une modification est detectée dans les t
 
 Work in progres ...
 
-
 #### Temps de travail
 
-Jonas | 01/08/23 | 1 journée | Installation de l'environnement de developpement Django
-Jonas | 24/09/23 | 1/2 journée | Déploiement version de préprod
-Jonas | 02/10/23 | 1 journée | Ajout de la base de donnée Contact et fichier d'exemple htmx
+
+
+| Auteur | Date     | Durée       | Description                                                  |   |
+|--------|----------|-------------|--------------------------------------------------------------|---|
+| Jonas  | 01/08/23 | 1 journée   | Installation de l'environnement de developpement Django      |
+| Jonas  | 02/10/23 | 1 journée   | Ajout de la base de donnée Contact et fichier d'exemple htmx |
+| Jonas  | 24/09/23 | 1/2 journée | Déploiement version de préprod                               |
