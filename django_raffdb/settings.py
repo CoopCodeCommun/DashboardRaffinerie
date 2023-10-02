@@ -26,6 +26,11 @@ DEBUG = True
 
 if DEBUG:
     ALLOWED_HOSTS = ['*', 'https://dashboard.laraffinerie.re']
+    CSRF_TRUSTED_ORIGINS = [
+        "http://0.0.0.0",
+        "http://localhost",
+        'https://dashboard.laraffinerie.re',
+    ]
 else:
     ALLOWED_HOSTS = ['dashboard.laraffinerie.re']
     CSRF_TRUSTED_ORIGINS = ['https://dashboard.laraffinerie.re']
@@ -140,4 +145,3 @@ MEDIA_URL = '/media/'
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 AUTH_USER_MODEL = 'dashboard_user.CustomUser'
-
