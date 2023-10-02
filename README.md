@@ -50,3 +50,4 @@ Work in progres ...
 
 Jonas | 01/08/23 | 1 journée | Installation de l'environnement de developpement Django
 Jonas | 24/09/23 | 1/2 journée | Déploiement version de préprod
+Jonas | 02/10/23 | 1 journée | Ajout de la base de donnée Contact et fichier d'exemple htmx
