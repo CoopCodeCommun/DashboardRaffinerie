@@ -1,0 +1,39 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load tz %}
+
+{% block content %}
+
+<div class="container-fluid">
+    <!-- Menu Lateral et Tableau -->
+    <div class="row">
+        <!-- Menu Lateral -->
+        {% include 'menu_lateral.html' %}
+        
+        <!-- suivi budgétaire -->
+            <div class="col-md-10 ">
+        <!-- membre + recap -->
+        <section class="row">
+            <!-- membre du collectif -->
+            <section class="col-md-5" style="display: flex;  align-items: stretch;">
+                <div class="rose p-2 case">
+                    <create-toggle title="Organigramme"></create-toggle>
+                    <div class="contentToShowHide">
+                        <div id="tableau_organigramme"></div>
+                    </div>
+                </div>
+            </section>
+
+        
+    </div>
+</div>
+
+
+
+{% endblock content %}
+
+{% block script %}
+    <script src='{% static "js/datas.js" %}'></script>
+    <script src='{% static "js/main.js" %}'></script>
+   
+{% endblock script %}

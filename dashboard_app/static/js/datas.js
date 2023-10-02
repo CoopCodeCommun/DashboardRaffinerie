@@ -5,13 +5,14 @@ const appData = {
     // les différents menu dans la barre latéral
     sidebarOptions: [
     { icon: 'bi bi-bar-chart-line', text: 'Tableau de bord'},
-    { icon: 'bi bi-person-video2', text: 'organigramme des rôles' },
+    { icon: 'bi bi-person-video2', text: 'Organigramme', link: '/organigramme/'  },
+    { icon: 'bi bi-person-video2', text: 'Objectifs indicateurs', link: '/objectifs_indicateurs/'  },
     { icon: 'bi bi-currency-euro', text: 'Suivi budgétaire', link: '/suivi_budgetaire/' },
     { icon: 'bi bi-cash-coin', text: 'Suivi subventions', link: '/subventions/' },
     { icon: 'bi bi-piggy-bank', text: 'Plan de trésorerie' },
     { icon: 'bi bi-file-music', text: 'Suivi évenements' },
     { icon: 'bi bi-list-ol', text: 'Suivi volontariat' },
-    { icon: 'bi bi-people', text: 'Répertoire Raffineur.euses' },
+    { icon: 'bi bi-people', text: 'Répertoire Raffineur.euses', link: '/repertoire/'  },
     { icon: 'bi bi-clipboard-data', text: 'Tableau de bord perso' },
     { icon: 'bi bi-book', text: 'Documentation' },
     ],
@@ -22,6 +23,12 @@ const appData = {
 
 // total = true : ajoute "Total" en pied de tableau
 // newline = true : ajouter un "ajouter" ligne en bas de tableau
+
+// pour les colonnes
+// pas de critères particulier, les cellules sont grisées et non modifiables
+//input: true, les cellules sont modifiable
+//shouldTotal: false si Total=True, le total ne se fait pas sur cette colonne
+//dropdown: true,  options: ['Option 1', 'Option 2', 'Option 3'], les cellule sont à choix multiple
 
 let tableaux = {
     suivi_budgetaire: {
@@ -290,11 +297,98 @@ let tableaux = {
             newline: false,
             rows: [{ name: 'Région - investissement' },{ name: 'mairie - fonctionnement' }],
             columns: [
-                { name: 'Référent',  },
-                { name: 'Partenaire',  },
-                { name: 'service',  },
-                ],
+                { name: 'Référent',input: true,},
+                { name: 'Partenaire',input: true,},
+                { name: 'service',input: true,},
+                { name: 'référence',input: true,},
+            ],
+        },
+
+        //données de base subventions
+        tableau_historique_subventions : {
+            titre: "",
+            total: false,
+            newline: false,
+            rows: [{ name: 'Région - investissement' },{ name: 'mairie - fonctionnement' }],
+            columns: [
+                { name: 'Demandée le',input: true,   },
+                { name: 'Acceptée le',input: true,   },
+                { name: 'Notifiée le',input: true,   },
+                { name: 'référence',input: true,   },
+            ],
         },
     },
+
+    //////////////////////////// data repertoire /////////////////////
+ 
+
+    repertoire: {
+     
+        //repertoire
+        tableau_repertoire : {
+            titre: "",
+            total: false,
+            newline: false,
+            rows: [{ name: 'Jessica'},{ name: 'Hugo'},{ name: 'Patricia'},{ name: 'George'},{ name: 'Paula'}],
+            columns: [
+                { name: 'telephone'},
+                { name: 'mail'},
+            ],
+        },
+    },
+
+//////////////////////////// data organigramme /////////////////////
+ 
+
+    organigramme: {
+     
+        //repertoire
+        tableau_organigramme : {
+            titre: "",
+            total: false,
+            newline: false,
+            rows: [{ name: 'Jessica'},{ name: 'Hugo'},{ name: 'Patricia'},{ name: 'George'},{ name: 'Paula'}],
+            columns: [
+                { name: 'Code analytique'},
+                { name: 'garant du cadre',input: true,},
+                { name: 'référent budget / subventions',input: true,},
+                { name: 'référent tâche / planning',input: true,},
+            ],
+        },
+    },    
+
+    objectifs_indicateurs: {
+     
+        //objectifs_indicateurs
+        tableau_objectifs_indicateurs : {
+            titre: "",
+            total: false,
+            newline: false,
+            rows: [{ name: ''}],
+            columns: [
+                { name: 'Objectifs',input: true,},
+                { name: 'Indicateurs',input: true,},
+                { name: 'comment on mesure?',input: true,},
+            ],
+        },
+
+        //indicateurs_valeurs
+        tableau_indicateurs_valeurs : {
+            titre: "",
+            total: false,
+            newline: false,
+            rows: [{ name: ''}],
+            columns: [
+                { name: 'valeur initiale',input: true,},
+                { name: 'valeur minimal',input: true,},
+                { name: 'valeur satisfaisante',input: true,},
+                { name: 'valeur max',input: true,},
+            ],
+        },
+
+
+
+
+    }, 
 
 };
