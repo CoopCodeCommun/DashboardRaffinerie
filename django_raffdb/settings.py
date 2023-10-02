@@ -26,7 +26,6 @@ DEBUG = True
 
 if DEBUG:
     ALLOWED_HOSTS = ['*', 'https://dashboard.laraffinerie.re']
-    CSRF_TRUSTED_ORIGINS = ['*', 'https://dashboard.laraffinerie.re']
 else:
     ALLOWED_HOSTS = ['dashboard.laraffinerie.re']
     CSRF_TRUSTED_ORIGINS = ['https://dashboard.laraffinerie.re']
