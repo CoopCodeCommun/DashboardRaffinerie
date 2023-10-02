@@ -1,6 +1,6 @@
 #bin/bash
 
-export PATH="/home/fedow/.local/bin:$PATH"
+export PATH="/home/user1/.local/bin:$PATH"
 alias collect="poetry run python3 manage.py collectstatic --noinput"
 alias rsp="poetry run python3 manage.py runserver 0.0.0.0:8000"
 alias rsp80="poetry run python3 manage.py runserver 0.0.0.0:80"
