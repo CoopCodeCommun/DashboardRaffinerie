@@ -77,7 +77,7 @@ class reload_contact_from_odoo(APIView):
         time.sleep(2)
 
         # Mise à jour la base de donnée depuis Odoo
-        odooApi = OdooApi()
+        # odooApi = OdooApi()
         # odooApi.get_all_contacts()
 
         # On va chercher tous les objects Contact
