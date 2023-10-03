@@ -58,7 +58,7 @@ class Contact(models.Model):
                              null=True, blank=True)
 
     def __str__(self):
-        return self.email
+        return self.email or self.email or self.id_odoo
 
 
 
