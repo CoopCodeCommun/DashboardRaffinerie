@@ -1,0 +1,47 @@
+<div class="dropdown mt-5">
+    <button class="btn bg-gradient-info dropdown-toggle" type="button" id="dropdownMenuButton"
+            data-bs-toggle="dropdown" aria-expanded="false">
+        account.account
+    </button>
+    <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+        {% for account in AccountAccounts %}
+            <li><a class="dropdown-item" href="#">{{ account.code }} {{ account.name }}</a></li>
+        {% endfor %}
+    </ul>
+</div>
+
+<div class="dropdown mt-1">
+    <button class="btn bg-gradient-success dropdown-toggle" type="button" id="dropdownMenuButton"
+            data-bs-toggle="dropdown" aria-expanded="false">
+        account.journal
+    </button>
+    <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+        {% for journal in AccountJournals %}
+            <li><a class="dropdown-item" href="#">{{ journal.name }}</a></li>
+        {% endfor %}
+    </ul>
+</div>
+
+<div class="dropdown mt-1">
+    <button class="btn bg-gradient-primary dropdown-toggle" type="button" id="dropdownMenuButton"
+            data-bs-toggle="dropdown" aria-expanded="false">
+        AccountAnalytic.Group
+    </button>
+    <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+        {% for group in AccountAnalyticGroup %}
+            <li><a class="dropdown-item" href="#">{{ group.name }}</a></li>
+        {% endfor %}
+    </ul>
+</div>
+
+<div class="dropdown mt-1">
+    <button class="btn bg-gradient-warning dropdown-toggle" type="button" id="dropdownMenuButton"
+            data-bs-toggle="dropdown" aria-expanded="false">
+        AccountAnalytic.Account
+    </button>
+    <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+        {% for analytic_acc in AccountAnalyticAccount %}
+            <li><a class="dropdown-item" href="#">{{ analytic_acc.code }} {{ analytic_acc.name }}</a></li>
+        {% endfor %}
+    </ul>
+</div>

@@ -4,13 +4,10 @@ from django.contrib.sites import requests
 import requests
 from django.utils.text import slugify
 
-# from tiqo_parser.models import Configuration, Label, AccountJournal, AccountAnalyticGroup, AccountAnalyticAccount, \
-#     OdooContact, OdooArticles, Transaction, AccountAccount
-# from tiqo_parser.serializers import LabelsSerializer
-
 import logging
 
-from dashboard_app.models import Contact, Configuration
+from dashboard_app.models import Contact, Configuration, AccountAccount, AccountJournal, AccountAnalyticGroup, \
+    AccountAnalyticAccount
 from dashboard_app.utils import DecimalEncoder
 
 logger = logging.getLogger(__name__)
@@ -60,7 +57,6 @@ class OdooApi():
 
         return response
 
-
     def get_all_contacts(self):
         # Cherche tous les contacts de Odoo et les renseigne dans la DB
         url = f"{self.url}tibillet-api/xmlrpc/search_read"
@@ -72,7 +68,7 @@ class OdooApi():
         postdata["search_read_data"] = {
             "model": "res.partner",
             "filters": [],
-            "fields": ["name", "email", "id"],
+            "fields": ["name", "email", "id", "is_company", "phone", "city", "street", "zip", ],
         }
 
         postdata.update(self.params)
@@ -83,23 +79,35 @@ class OdooApi():
         session = requests.session()
         response = session.post(url, data=data, headers=headers)
         session.close()
+
         if response.status_code == 200:
             resp_json = response.json()
             for contact in resp_json.get('result'):
                 odoo_contact = Contact.objects.filter(id_odoo=contact.get('id'))
                 if odoo_contact.exists():
-                    print(f"Contact {contact.get('name')} already exists in DB. Updating it.")
-                    odoo_contact.update(
-                        name=contact.get('name'),
-                        email=contact.get('email'),
-                    )
+                    print(f"Contact {contact.get('name')} already exists in DB")
+                    # odoo_contact.update(
+                    #     name=contact.get('name'),
+                    #     email=contact.get('email'),
+                    # )
                 else:
-                    print(f"Contact {contact.get('name')} doesn't exist in DB. Creating it.")
-                    Contact.objects.create(
-                        name=contact.get('name'),
-                        email=contact.get('email'),
-                        id_odoo=contact.get('id'),
-                    )
+                    # Le contact n'existe pas, on le créé
+                    # On retire les champs "False"
+                    dict_contact = {key: value for key, value in contact.items() if value}
+                    adresse = []
+                    adresse.append(dict_contact.get('street')) if dict_contact.get('street') else None
+                    adresse.append(dict_contact.get('zip')) if dict_contact.get('zip') else None
+                    adresse.append(dict_contact.get('city')) if dict_contact.get('city') else None
+
+                    contact = {
+                        "id_odoo": contact.get('id'),
+                        "nom": contact.get('name') if contact.get('name') else None,
+                        "structure": contact.get('name') if contact.get('is_company') else None,
+                        "tel": contact.get('phone') if contact.get('phone') else None,
+                        "adresse": " ".join(adresse) if adresse else None,
+                        "email": contact.get('email') if contact.get('email') else None,
+                    }
+                    Contact.objects.create(**contact)
 
         return Contact.objects.all()
 
@@ -129,6 +137,132 @@ class OdooApi():
         session.close()
         return response.json()
 
+    def get_account_account(self):
+        url = f"{self.url}tibillet-api/xmlrpc/search_read"
+        headers = {
+            'content-type': 'application/json'
+        }
+
+        postdata = {}
+        postdata["search_read_data"] = {
+            "model": "account.account",
+            "filters": [],
+            "fields": ["name", "id", "code"],
+        }
+
+        postdata.update(self.params)
+        data = json.dumps({
+            "params": postdata,
+        }, cls=DecimalEncoder)
+
+        session = requests.session()
+        response = session.post(url, data=data, headers=headers)
+        session.close()
+        if response.status_code == 200:
+            resp_json = response.json()
+            for account in resp_json.get('result'):
+                # Si le compte existe déjà, on le met à jour
+                try:
+                    account_db = AccountAccount.objects.get(id_odoo=account['id'])
+                    account_db.name = account['name']
+                    account_db.code = account['code']
+                    account_db.save()
+
+                # Sinon on le créé
+                except AccountAccount.DoesNotExist:
+                    AccountAccount.objects.create(
+                        name=account['name'],
+                        code=account['code'],
+                        id_odoo=account['id'],
+                    )
+
+            return AccountAccount.objects.all()
+        raise Exception(f"Odoo server OFFLINE or BAD KEY : {response}")
+
+    def get_account_journal(self):
+        url = f"{self.url}tibillet-api/xmlrpc/account_journal"
+
+        headers = {
+            'content-type': 'application/json'
+        }
+
+        postdata = {}
+        postdata.update(self.params)
+        data = json.dumps({
+            "params": postdata,
+        }, cls=DecimalEncoder)
+
+        session = requests.session()
+        response = session.post(url, data=data, headers=headers)
+        session.close()
+
+        if response.status_code == 200:
+            resp_json = response.json()
+            for name, id_odoo in resp_json.get('result').items():
+                try:
+                    account_journal = AccountJournal.objects.get(id_odoo=id_odoo)
+                    account_journal.name = name
+                    account_journal.save()
+                except AccountJournal.DoesNotExist:
+                    AccountJournal.objects.create(
+                        name=name,
+                        id_odoo=id_odoo,
+                    )
+            return AccountJournal.objects.all()
+        raise Exception(f"Odoo server OFFLINE or BAD KEY : {response}")
+
+    def get_account_analytic(self):
+        url = f"{self.url}tibillet-api/xmlrpc/account_analytic"
+
+        headers = {
+            'content-type': 'application/json'
+        }
+
+        postdata = {}
+        postdata.update(self.params)
+        data = json.dumps({
+            "params": postdata,
+        }, cls=DecimalEncoder)
+
+        session = requests.session()
+        response = session.post(url, data=data, headers=headers)
+        session.close()
+
+        if response.status_code == 200:
+            resp_json = response.json()
+            accounts = resp_json.get('result')
+            for account in accounts:
+                # On gère d'abord les groupes
+                group = None
+                if account.get('group_id'):
+                    try:
+                        group = AccountAnalyticGroup.objects.get(id_odoo=account.get('group_id')[0])
+                        group.name = account.get('group_id')[1]
+                        group.save()
+                    except AccountAnalyticGroup.DoesNotExist:
+                        AccountAnalyticGroup.objects.create(
+                            id_odoo=account.get('group_id')[0],
+                            name=account.get('group_id')[1],
+                        )
+
+                # On gère ensuite les comptes analytiques
+                try:
+                    analytic = AccountAnalyticAccount.objects.get(id_odoo=account.get('id'))
+                    analytic.name = account.get('name')
+                    analytic.code = account.get('code')
+                    analytic.group = group
+                    analytic.save()
+                except AccountAnalyticAccount.DoesNotExist:
+                    AccountAnalyticAccount.objects.create(
+                        id_odoo=account.get('id'),
+                        name=account.get('name'),
+                        code=account.get('code'),
+                        group=group,
+                    )
+
+            return AccountAnalyticAccount.objects.all()
+
+        raise Exception(f"Odoo server OFFLINE or BAD KEY : {response}")
 
     """
     def get_all_articles(self):
@@ -219,108 +353,4 @@ class OdooApi():
                     return resp_json
 
         return response
-
-    def get_account_account(self):
-        # Cherche tous les contacts de Odoo et les renseigne dans la DB
-        url = f"{self.url}tibillet-api/xmlrpc/search_read"
-        headers = {
-            'content-type': 'application/json'
-        }
-
-        postdata = {}
-        postdata["search_read_data"] = {
-            "model": "account.account",
-            "filters": [],
-            "fields": ["name", "id", "code"],
-        }
-
-        postdata.update(self.params)
-        data = json.dumps({
-            "params": postdata,
-        }, cls=DecimalEncoder)
-
-        session = requests.session()
-        response = session.post(url, data=data, headers=headers)
-        session.close()
-        if response.status_code == 200:
-            resp_json = response.json()
-            for account in resp_json.get('result'):
-                account, created = AccountAccount.objects.get_or_create(
-                    name=account['name'],
-                    code=account['code'],
-                    id_odoo=account['id'],
-
-                )
-            return AccountAccount.objects.all()
-
-    def get_account_journal(self):
-        url = f"{self.url}tibillet-api/xmlrpc/account_journal"
-
-        headers = {
-            'content-type': 'application/json'
-        }
-
-        postdata = {}
-        postdata.update(self.params)
-        data = json.dumps({
-            "params": postdata,
-        }, cls=DecimalEncoder)
-
-        session = requests.session()
-        response = session.post(url, data=data, headers=headers)
-        session.close()
-
-        if response.status_code == 200:
-            resp_json = response.json()
-            for name, id_odoo in resp_json.get('result').items():
-                print(f'{str(name)} : {int(id_odoo)}')
-                AccountJournal.objects.get_or_create(
-                    name=name,
-                    id_odoo=id_odoo,
-                )
-            return AccountJournal.objects.all()
-
-        raise Exception(f"Odoo server OFFLINE or BAD KEY : {response}")
-
-    def get_account_analytic(self):
-        url = f"{self.url}tibillet-api/xmlrpc/account_analytic"
-
-        headers = {
-            'content-type': 'application/json'
-        }
-
-        postdata = {}
-        postdata.update(self.params)
-        data = json.dumps({
-            "params": postdata,
-        }, cls=DecimalEncoder)
-
-        session = requests.session()
-        response = session.post(url, data=data, headers=headers)
-        session.close()
-
-        if response.status_code == 200:
-            resp_json = response.json()
-            accounts = resp_json.get('result')
-            for account in accounts:
-                # On gère d'abord les groupes
-                group = None
-                if account.get('group_id'):
-                    group, created = AccountAnalyticGroup.objects.get_or_create(
-                        id_odoo=account.get('group_id')[0],
-                        name=account.get('group_id')[1],
-                    )
-
-                # On gère ensuite les comptes analytiques
-                account, created = AccountAnalyticAccount.objects.get_or_create(
-                    id_odoo=account.get('id'),
-                    name=account.get('name'),
-                    code=account.get('code'),
-                    group=group,
-                )
-
-            return AccountAnalyticAccount.objects.all()
-
-        raise Exception(f"Odoo server OFFLINE or BAD KEY : {response}")
     """
-

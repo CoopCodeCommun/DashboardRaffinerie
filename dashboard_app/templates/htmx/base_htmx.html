@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+{% load static %}
+
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <title>Contacts</title>
+    <link rel="stylesheet" href="{% static 'bootstrap/bootstrap.5.3.2.min.css' %}"/>
+
+    <!-- Icons -->
+    <link rel="stylesheet" href="{% static 'material-dashboard-master/assets/css/nucleo-icons.css' %}"/>
+    <link rel="stylesheet" href="{% static 'material-dashboard-master/assets/css/nucleo-svg.css' %}"/>
+    <link rel="stylesheet" href="{% static 'material-dashboard-master/assets/css/material-dashboard.css' %}"/>
+    <link rel="stylesheet" href="{% static 'css/main.css' %}"/>
+</head>
+<body class="container">
+
+{#Tu as ici la version sombre :#}
+{#<body class="container dark-version">#}
+{% block content %}
+{% endblock %}
+
+
+{% include 'htmx/modals.html' %}
+{% include 'htmx/spinner.html' %}
+
+
+<script src="{% static 'js/htmx.min.js' %}"></script>
+<script src="{% static 'js/loading-states.js' %}"></script>
+<script src="{% static 'js/jquery_3.5.1.js' %}"></script>
+<script src="{% static 'js/popper.1.16.0.js' %}"></script>
+<script src="{% static 'bootstrap/bootstrap.5.3.2.bundle.min.js' %}"></script>
+<script src="{% static 'material-dashboard-master/assets/js/material-dashboard.js' %}"></script>
+
+
+</body>
+
+</html>

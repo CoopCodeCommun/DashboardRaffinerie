@@ -9,7 +9,7 @@ from rest_framework.permissions import AllowAny, IsAuthenticated, IsAdminUser
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
-from dashboard_app.models import Contact
+from dashboard_app.models import Contact, AccountAccount, AccountJournal, AccountAnalyticGroup, AccountAnalyticAccount
 from dashboard_app.odoo_api import OdooApi
 from dashboard_app.serializers import UserSerializer
 
@@ -51,6 +51,7 @@ def subventions(request):
     }
     return render(request, 'subventions.html', context=context)
 
+
 def organigramme(request):
     """
     Livre un template HTML organigramme.html
@@ -61,6 +62,7 @@ def organigramme(request):
     }
     return render(request, 'organigramme.html', context=context)
 
+
 def repertoire(request):
     """
     Livre un template HTML organigramme.html
@@ -70,6 +72,7 @@ def repertoire(request):
         'name': request.user.email if request.user.is_authenticated else 'Anonymous',
     }
     return render(request, 'repertoire.html', context=context)
+
 
 def objectifs_indicateurs(request):
     """
@@ -82,22 +85,46 @@ def objectifs_indicateurs(request):
     return render(request, 'objectifs_indicateurs.html', context=context)
 
 
-
 ### TEST API AVEC MODEL USER ###
 
 ### PAGE D'EXAMPLE ###
+
+def odoo_account(request):
+    context = {
+        "AccountAccounts": AccountAccount.objects.all().order_by('code'),
+        "AccountJournals": AccountJournal.objects.all().order_by('name'),
+        "AccountAnalyticGroup": AccountAnalyticGroup.objects.all().order_by('name'),
+        "AccountAnalyticAccount": AccountAnalyticAccount.objects.all().order_by('code'),
+    }
+    return render(request, 'htmx/odoo_account.html', context=context)
+
+
+@permission_classes([AllowAny])
+class reload_account_from_odoo(APIView):
+    def get(self, request, uuid=None):
+        odooApi = OdooApi()
+        odooApi.get_account_account()
+        odooApi.get_account_journal()
+        odooApi.get_account_analytic()
+        context = {
+            "AccountAccounts": AccountAccount.objects.all().order_by('code'),
+            "AccountJournals": AccountJournal.objects.all().order_by('name'),
+            "AccountAnalyticGroup": AccountAnalyticGroup.objects.all().order_by('name'),
+            "AccountAnalyticAccount": AccountAnalyticAccount.objects.all().order_by('code'),
+        }
+        return render(request, 'htmx/odoo_account_button_dropdown.html', context=context)
+
 
 def contacts(request):
     # On va chercher tout les objets de la table Contact
     # de la base de donnée (models.puy)
     # Pour l'exemple, on ne prend que ceux qui sont "Membership"
-    contacts = Contact.objects.filter(type='M')
+    contacts = Contact.objects.all()
 
     context = {
-        'contacts': contacts
+        'contacts': contacts[:5]
     }
-    return render(request, 'contacts.html', context=context)
-
+    return render(request, 'htmx/odoo_contacts.html', context=context)
 
 
 @permission_classes([AllowAny])
@@ -107,19 +134,18 @@ class reload_contact_from_odoo(APIView):
         # requete appellé par le bouton "Mise à jour depuis Odoo"
 
         # pour simuler le spinner :
-        time.sleep(2)
+        # time.sleep(1)
 
         # Mise à jour la base de donnée depuis Odoo
-        # odooApi = OdooApi()
-        # odooApi.get_all_contacts()
+        odooApi = OdooApi()
+        contacts = odooApi.get_all_contacts()
 
         # On va chercher tous les objects Contact
         # dans la base de donnée mise à jour
         context = {
-            'contacts': Contact.objects.all()
+            'contacts': contacts[:10],
         }
-        return render(request, 'htmx/tableau_contact.html', context=context)
-
+        return render(request, 'htmx/odoo_contacts_table.html', context=context)
 
 
 # HTMX USE CASES
@@ -131,4 +157,3 @@ class lazy_loading_profil_image(APIView):
             'contact': Contact.objects.get(pk=uuid)
         }
         return render(request, 'htmx/lazy_loading.html', context=context)
-

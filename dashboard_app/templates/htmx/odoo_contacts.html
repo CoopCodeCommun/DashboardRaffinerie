@@ -1,0 +1,41 @@
+{% extends 'htmx/base_htmx.html' %}
+<!DOCTYPE html>
+{% load static %}
+
+
+{% block content %}
+
+    <div style="margin: 1em 0 1em 0">
+        <p>
+            Pour rendre tout ça joli, j'utilise ici bootstrap 5 avec des composants de creative-tim. Mais tu prends ce
+            que
+            tu veux :)
+        </p>
+        <p>Tu peux aussi utiliser la version sombre en ajoutant la classe "dark-version" dans le body</p>
+        <ul>
+            <li><a href="https://demos.creative-tim.com/material-dashboard/pages/dashboard.html" target="_blank">Creative
+                Tim : Material Dashboard 2</a></li>
+            <li><a href="https://www.creative-tim.com/learning-lab/bootstrap/quick-start/material-dashboard"
+                   target="_blank">Documentation</a></li>
+        </ul>
+    </div>
+
+    <h4 style="margin-top: 2em">Tableau contact : </h4>
+
+    <div id="import" hx-ext="loading-states">
+        <button hx-get="/reload_contact_from_odoo/" type="button" class="btn bg-gradient-info"
+                hx-target="#body_table_contact"
+                hx-swap="outerHTML">
+            Mise à jour des contacts depuis Odoo
+        </button>
+    </div>
+    <p>
+        Ce bouton va demander au serveur d'aller chercher les contacts dans Odoo.
+        Une fois les contacts mis à jour, le serveur renvoie uniquement le template "contacts_table.html" qui contient
+        le tableau suivant avec les nouveaux éléments.
+    </p>
+
+    {% include 'htmx/odoo_contacts_table.html' %}
+
+
+{% endblock %}

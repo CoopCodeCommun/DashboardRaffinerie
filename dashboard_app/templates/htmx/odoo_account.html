@@ -1,0 +1,22 @@
+{% extends 'htmx/base_htmx.html' %}
+<!DOCTYPE html>
+{% load static %}
+
+{% block content %}
+
+    <div id="import" hx-ext="loading-states">
+        <button hx-get="/reload_account_from_odoo/" type="button" class="btn bg-gradient-info my-4"
+                hx-target="#boutons_dropdown"
+                hx-swap="outerHTML">
+            Mise à jour des objects compte depuis Odoo
+        </button>
+    </div>
+    <p>
+        Ce bouton va demander au serveur d'aller chercher les différents compte dans Odoo.
+        Une fois mis à jour, le serveur renvoie uniquement le template "boutons_dropdown.html" qui
+        contient la "div" suivante avec les nouveaux éléments.
+    </p>
+    <div id="boutons_dropdown">
+        {% include 'htmx/odoo_account_button_dropdown.html' %}
+    </div>
+{% endblock %}

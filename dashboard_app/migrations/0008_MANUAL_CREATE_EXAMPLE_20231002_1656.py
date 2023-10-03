@@ -13,8 +13,7 @@ def add_example_contact(apps, schema_editor):
             email=fake.email(),
             id_odoo=fake.random_digit(),
             type= random.choice(('M','B')),
-            nom=fake.first_name(),
-            prenom=fake.last_name(),
+            nom=f"{fake.first_name()} {fake.last_name()}",
             structure=fake.company(),
             role=fake.job(),
             tel=fake.phone_number(),
@@ -31,5 +30,5 @@ class Migration(migrations.Migration):
     ]
 
     operations = [
-        migrations.RunPython(add_example_contact, reverse)
+        # migrations.RunPython(add_example_contact, reverse)
     ]

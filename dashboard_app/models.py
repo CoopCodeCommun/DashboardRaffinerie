@@ -23,13 +23,12 @@ class Badge(models.Model):
 
 class Contact(models.Model):
     uuid = models.UUIDField(primary_key=True, editable=False, default=uuid4)
-    # L'email est obligatoire
-    email = models.EmailField(max_length=100)
     id_odoo = models.SmallIntegerField()
-    type = models.CharField(choices=(('M', 'membership'), ('B', 'beneficiarie')), max_length=1)
+
+    email = models.EmailField(max_length=100, null=True, blank=True)
+    type = models.CharField(choices=(('M', 'membership'), ('B', 'beneficiarie')), max_length=1, default='B')
 
     nom = models.CharField(max_length=100, null=True, blank=True)
-    prenom = models.CharField(max_length=100, null=True, blank=True)
     structure = models.CharField(max_length=100, null=True, blank=True)
     role = models.CharField(max_length=100, null=True, blank=True)
     tel = models.CharField(max_length=100, null=True, blank=True)
@@ -63,6 +62,24 @@ class Contact(models.Model):
 
 
 
+class AccountAccount(models.Model):
+    uuid = models.UUIDField(primary_key=True, default=uuid4, editable=False, unique=True, db_index=False)
+    name = models.CharField(max_length=100, db_index=True)
+    code = models.CharField(max_length=100)
+    id_odoo = models.SmallIntegerField()
+
+    def __str__(self):
+        return f"{self.code} {self.name}"
+
+class AccountJournal(models.Model):
+    uuid = models.UUIDField(primary_key=True, default=uuid4, editable=False, unique=True, db_index=False)
+    name = models.CharField(max_length=100, db_index=True)
+    id_odoo = models.SmallIntegerField()
+
+    def __str__(self):
+        return self.name
+
+
 class AccountAnalyticGroup(models.Model):
     uuid = models.UUIDField(primary_key=True, default=uuid4, editable=False, unique=True, db_index=False)
     name = models.CharField(max_length=100, db_index=True)
@@ -74,9 +91,9 @@ class AccountAnalyticGroup(models.Model):
 
 class AccountAnalyticAccount(models.Model):
     uuid = models.UUIDField(primary_key=True, default=uuid4, editable=False, unique=True, db_index=False)
-    name = models.CharField(max_length=100, db_index=True)
-    code = models.CharField(max_length=100, db_index=True)
     id_odoo = models.SmallIntegerField()
+    name = models.CharField(max_length=100, db_index=True)
+    code = models.CharField(max_length=100)
     group = models.ForeignKey(AccountAnalyticGroup, on_delete=models.CASCADE, blank=True, null=True)
 
     def __str__(self):

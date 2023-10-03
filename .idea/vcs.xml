@@ -3,5 +3,6 @@
   <component name="VcsDirectoryMappings">
     <mapping directory="" vcs="Git" />
     <mapping directory="$PROJECT_DIR$/../Qonto-to-Odoo" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/../TiBillet-Odoo-module" vcs="Git" />
   </component>
 </project>
