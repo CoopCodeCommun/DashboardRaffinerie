@@ -147,6 +147,13 @@ class reload_contact_from_odoo(APIView):
         }
         return render(request, 'htmx/odoo_contacts_table.html', context=context)
 
+class modal_contact(APIView):
+    def get(self, request, uuid):
+        contact = Contact.objects.get(pk=uuid)
+        context = {
+            'contact': contact,
+        }
+        return render(request, 'htmx/odoo_contact_modal_edit.html', context=context)
 
 # HTMX USE CASES
 

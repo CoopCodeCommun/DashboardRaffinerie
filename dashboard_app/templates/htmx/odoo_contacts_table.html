@@ -17,7 +17,7 @@
                 <th class="text-secondary opacity-7"></th>
             </tr>
             </thead>
-            <tbody >
+            <tbody>
             {% for contact in contacts %}
                 <tr>
                     <td>
@@ -61,9 +61,12 @@
                         <span class="text-secondary text-xs font-weight-normal">{{ contact.adresse | default:"" }}</span>
                     </td>
                     <td class="align-middle">
-                        <a href="" class="text-secondary font-weight-normal text-xs" data-bs-toggle="modal"
-                           data-bs-target="#exampleModal"
-                           data-original-title="Edit user">
+                        <a href="" class="text-secondary font-weight-normal text-xs"
+                           hx-get="/modal_contact/{{ contact.uuid }}/"
+                           hx-target="#modals-here"
+                           hx-trigger="click"
+                           data-bs-toggle="modal"
+                           data-bs-target="#modals-here">
                             Editer
                         </a>
                     </td>
@@ -73,3 +76,15 @@
         </table>
     </div>
 </div>
+
+<div id="modals-here"
+    class="modal modal-blur fade"
+    style="display: none"
+    aria-hidden="false"
+    tabindex="-1">
+    <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
+        <div class="modal-content"></div>
+    </div>
+</div>
+
+
