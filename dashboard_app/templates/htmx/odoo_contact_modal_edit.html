@@ -7,9 +7,9 @@
                 <span aria-hidden="true">&times;</span>
             </button>
         </div>
-        <div class="modal-body">
+        <div class="modal-body" >
 
-            <form hx-put="/contact/{{ contact.uuid }}/" hx-target="this" hx-swap="outerHTML">
+            <form hx-put="/contact/{{ contact.uuid }}/" hx-target="this" hx-swap="outerHTML" hx-ext="loading-states">
                 <div class="input-group input-group-lg input-group-outline my-3">
                     <input type="text" class="form-control form-control-lg" value="{{ contact.email | default:"" }}" placeholder="{{ contact.email | default:"email" }}">
                 </div>
