@@ -58,7 +58,13 @@ class Contact(models.Model):
                              null=True, blank=True)
 
     def __str__(self):
-        return self.email or self.email or self.id_odoo
+        if self.nom:
+            return self.nom
+        elif self.structure:
+            return self.structure
+        elif self.email:
+            return self.email
+        return self.id_odoo
 
 
 
