@@ -46,8 +46,10 @@ Work in progres ...
 
 #### Temps de travail
 
-| Auteur | Date     | Durée       | Description                                                  |
-|--------|----------|-------------|--------------------------------------------------------------|
-| Jonas  | 01/08/23 | 1 journée   | Installation de l'environnement de developpement Django      |
-| Jonas  | 24/09/23 | 1/2 journée | Déploiement version de préprod                               |
-| Jonas  | 02/10/23 | 1 journée   | Ajout de la base de donnée Contact et fichier d'exemple htmx |
+| Auteur | Date     | Durée    | Description                                                               | Etat |
+|--------|----------|----------|---------------------------------------------------------------------------|------|
+| Jonas  | 01/02/23 | 5 jours  | Création TiQo : liaison et création Api Qonto et Api Odoo                 | Payé |
+| Jonas  | 01/08/23 | 1 jour   | Installation de l'environnement de developpement Django pour le dashboard |      |
+| Jonas  | 24/09/23 | 1/2 jour | Déploiement version de préprod                                            |      |
+| Jonas  | 02/10/23 | 1 jour   | Ajout de la base de donée Contact et fichier d'exemple htmx               |      |
+| Jonas  | 03/10/23 | 1 jour   | Base de donnée Account et API Odoo                                        |      |
