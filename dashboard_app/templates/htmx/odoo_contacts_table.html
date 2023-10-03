@@ -64,10 +64,12 @@
                         <a href="" class="text-secondary font-weight-normal text-xs"
                            hx-get="/modal_contact/{{ contact.uuid }}/"
                            hx-target="#modals-here"
+                           hx-swap="innerHTML"
                            hx-trigger="click"
                            data-bs-toggle="modal"
                            data-bs-target="#modals-here"
                            hx-ext="loading-states"
+                           _="on click remove #modal_from_django"
                         >
                             Editer
                         </a>

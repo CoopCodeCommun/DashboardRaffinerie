@@ -23,6 +23,16 @@
 
 {% include 'htmx/spinner.html' %}
 
+<div _="on load wait 2s then transition opacity to 0 then remove me">
+    Here is a temporary message!
+</div>
+
+<div _="on fadeAndRemove remove #rm">
+    <div _="on click trigger fadeAndRemove">
+        <span id="rm">remove me</span>
+        <span>but not me</span>
+    </div>
+</div>
 
 <script src="{% static 'js/htmx.min.js' %}"></script>
 <script src="{% static 'js/loading-states.js' %}"></script>
@@ -30,7 +40,7 @@
 <script src="{% static 'js/popper.1.16.0.js' %}"></script>
 <script src="{% static 'bootstrap/bootstrap.5.3.2.bundle.min.js' %}"></script>
 <script src="{% static 'material-dashboard-master/assets/js/material-dashboard.js' %}"></script>
-
+<script src="{% static 'js/hyperscript.0.9.11.min.js' %}"></script>
 
 </body>
 

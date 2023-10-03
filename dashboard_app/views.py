@@ -149,7 +149,7 @@ class reload_contact_from_odoo(APIView):
 
 class modal_contact(APIView):
     def get(self, request, uuid):
-        # time.sleep(2)
+        time.sleep(1)
         contact = Contact.objects.get(pk=uuid)
         context = {
             'contact': contact,
