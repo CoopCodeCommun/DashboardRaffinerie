@@ -1,7 +1,8 @@
 from django.urls import path
-from .views import index, user_api, user_solo_api, suivi_budgetaire, subventions, organigramme, repertoire, objectifs_indicateurs
+from .views import index, user_api, user_solo_api, suivi_budgetaire, subventions, organigramme, repertoire, objectifs_indicateurs, AccountAccountList
 from django.conf import settings
 from rest_framework import routers
+
 
 
 
@@ -20,4 +21,5 @@ urlpatterns = [
    path('repertoire/', repertoire, name='repertoire'),
    path('objectifs_indicateurs/', objectifs_indicateurs, name='objectifs_indicateurs'),
    path('', index, name='index'),
+   path('api/comptes/', AccountAccountList.as_view(), name='account-list'),
 ]

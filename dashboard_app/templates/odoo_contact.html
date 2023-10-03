@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+{% load static %}
+
+<div id="body_table_contact">
+    <div class="table-responsive">
+        <table class="table align-items-center mb-0">
+            <thead>
+            <tr>
+                <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Contact
+                    : {{ contacts.count }}</th>
+                <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">Organisation
+                </th>
+                <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Badge
+                </th>
+                <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Adresse
+                </th>
+                <th class="text-secondary opacity-7"></th>
+            </tr>
+            </thead>
+            <tbody>
+            {% for contact in contacts %}
+                <tr>
+                    <td>
+                        <div class="d-flex px-2 py-1">
+                            {# Ici, c'est un peu plus complexe :)#}
+                            {# j'ai testé un lazy loading avec htmx. #}
+                            {# Si ça t'intéresse, je t'explique quand tu veux :) #}
+                            {% if contact.image %}
+                                <div hx-get="/lazy_loading_profil_image/{{ contact.uuid }}/" hx-trigger="load">
+                                    <img alt="Result loading..." class="htmx-indicator avatar avatar-sm me-3"
+                                         width="150"
+                                         src="{% static 'img/bars.svg' %}"/>
+                                </div>
+                            {% else %}
+                                {% if contact.structure %}
+                                    <img alt="logo du profil" src="{% static 'img/baseline-home-work.svg' %}"
+                                         class="avatar avatar-sm me-3">
+                                {% else %}
+                                    <img alt="logo du profil" src="{% static 'img/user-4-fill.svg' %}"
+                                         class="avatar avatar-sm me-3">
+                                {% endif %}
+
+                            {% endif %}
+
+                            <div class="d-flex flex-column justify-content-center">
+                                <h6 class="mb-0 text-xs">{{ contact.nom }}</h6>
+                                <p class="text-xs text-secondary mb-0">{{ contact.email | default:"" }}</p>
+                            </div>
+                        </div>
+                    </td>
+                    <td>
+                        <p class="text-xs font-weight-bold mb-0">{{ contact.structure | default:"" }}</p>
+                        <p class="text-xs text-secondary mb-0">{{ contact.role | default:"" }}</p>
+                    </td>
+                    <td class="align-middle text-center text-sm">
+                        {% for badge in contact.badge.all %}
+                            <span class="badge badge-sm" style="background: {{ badge.color }}">{{ badge.name }}</span>
+                        {% endfor %}
+                    </td>
+                    <td class="align-middle text-center">
+                        <span class="text-secondary text-xs font-weight-normal">{{ contact.adresse | default:"" }}</span>
+                    </td>
+                    <td class="align-middle">
+                        <a href="" class="text-secondary font-weight-normal text-xs"
+                           hx-get="/modal_contact/{{ contact.uuid }}/"
+                           hx-target="#modals-here"
+                           hx-swap="innerHTML"
+                           hx-trigger="click"
+                           data-bs-toggle="modal"
+                           data-bs-target="#modals-here"
+                           hx-ext="loading-states"
+                           _="on click remove #modal_from_django"
+                        >
+                            Editer
+                        </a>
+                    </td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<div id="modals-here"
+     class="modal modal-blur fade"
+     style="display: none"
+     aria-hidden="false"
+     tabindex="-1">
+    <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
+        <div class="modal-content"></div>
+    </div>
+</div>

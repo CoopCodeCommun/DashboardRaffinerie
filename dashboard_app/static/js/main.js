@@ -82,10 +82,10 @@ document.addEventListener("DOMContentLoaded", function() {
 
 // création des tableaux avec les données de datas.js, vérifie quel page est affiché et charge les données des tableaux corespondants
 let groupeTableaux;
-if (window.location.href.includes('suivi_budgetaire')) {groupeTableaux = tableaux.suivi_budgetaire;} 
-else if (window.location.href.includes('subventions')) {groupeTableaux = tableaux.subventions;} 
+if (window.location.href.includes('subventions')) {groupeTableaux = tableaux.subventions;} 
 else if (window.location.href.includes('repertoire')) {groupeTableaux = tableaux.repertoire;} 
 else if (window.location.href.includes('organigramme')) {groupeTableaux = tableaux.organigramme;}
+else if (window.location.href.includes('suivi_budgetaire')) {groupeTableaux = tableaux.suivi_budgetaire;} 
 else if (window.location.href.includes('objectifs_indicateurs')) {groupeTableaux = tableaux.objectifs_indicateurs;}  
 
 for (let nom_tableau in groupeTableaux) {
@@ -464,5 +464,15 @@ if (content.style.display === "none" || !content.style.display) {
 }
 
  document.addEventListener("DOMContentLoaded", function() {
-
+    fetch('http://localhost:8000/api/comptes/')
+    .then(response => response.json())
+    .then(data => {
+        // Suppose que l'API renvoie un tableau de noms de comptes
+        menuOptions = data;
+        
+        // Après cette étape, vous pourrez utiliser `menuOptions` 
+        // pour n'importe quelle autre opération nécessaire dans votre script.
+    })
+    .catch(error => console.error('Erreur de fetch:', error));
 });
+

@@ -7,7 +7,14 @@ from rest_framework.response import Response
 from rest_framework.views import APIView
 
 from dashboard_app.serializers import UserSerializer
+from .serializers import AccountAccountSerializer
+from rest_framework import generics
+from dashboard_app.models import AccountAccount
 
+
+class AccountAccountList(generics.ListAPIView):
+    queryset = AccountAccount.objects.all()
+    serializer_class = AccountAccountSerializer
 
 # from rest_framework import routers, serializers, viewsets
 # from rest_framework import viewsets,
