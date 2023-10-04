@@ -52,4 +52,4 @@ Work in progres ...
 | Jonas  | 01/08/23 | 1 jour   | Installation de l'environnement de developpement Django pour le dashboard |      |
 | Jonas  | 24/09/23 | 1/2 jour | Déploiement version de préprod                                            |      |
 | Jonas  | 02/10/23 | 1 jour   | Ajout de la base de donée Contact et fichier d'exemple htmx               |      |
-| Jonas  | 03/10/23 | 1 jour   | Base de donnée Account et API Odoo                                        |      |
+| Jonas  | 03/10/23 | 1 jour   | Base de donnée Account et API Odoo & Api CRUD                             |      |
