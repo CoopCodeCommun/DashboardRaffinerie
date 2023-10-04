@@ -131,17 +131,21 @@ class OdooContactsAPI(viewsets.ViewSet):
             return render(request, 'htmx/odoo_contacts_table_row.html', context={'contact': contact})
 
         if request.query_params.get('modal'):
+            # Je simule un temps de chargement pour que tu puisse voir le spinner :)
+            time.sleep(0.5)
             return render(request, 'htmx/odoo_contacts_modal_info.html', context={'contact': contact})
 
         # ce n'est ni un modal ni un cancel
-        # Envoie dy formulaire de modification du contact
+        # Envoie du formulaire de modification du contact
         return render(request, 'htmx/odoo_contacts_edit_row.html', context={'contact': contact})
+
 
     def update(self, request, pk=None):
         # Le update est activé avec le hx-put du bouton save du tableau odoo contact
         contact = Contact.objects.get(pk=pk)
 
         # On récupère les données des formulaires et on remplace en base de donnée si nécessaire
+        # Pas très élégant, on passera par un serializer pour faire ça proprement
         if request.data.get('nom') != contact.nom:
             contact.nom = request.data.get('nom')
         if request.data.get('structure') != contact.structure:

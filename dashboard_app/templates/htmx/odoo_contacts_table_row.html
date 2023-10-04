@@ -58,6 +58,7 @@
         <img src="{% static 'img/edit.svg' %}" width="20" type="button"
              hx-trigger="edit"
              hx-get="/api/odoo_contacts/{{ contact.uuid }}/"
+             hx-ext="loading-states"
              _="on click
                              if .editing is not empty
                                Swal.fire({title: 'Edition active',

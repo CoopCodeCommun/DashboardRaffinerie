@@ -6,12 +6,9 @@
     <meta charset="UTF-8">
     <title>Exemples HTMX</title>
     <link rel="stylesheet" href="{% static 'bootstrap/bootstrap.5.3.2.min.css' %}"/>
-
-    <!-- Icons -->
-    <link rel="stylesheet" href="{% static 'material-dashboard-master/assets/css/nucleo-icons.css' %}"/>
-    <link rel="stylesheet" href="{% static 'material-dashboard-master/assets/css/nucleo-svg.css' %}"/>
     <link rel="stylesheet" href="{% static 'material-dashboard-master/assets/css/material-dashboard.css' %}"/>
     <link rel="stylesheet" href="{% static 'css/main.css' %}"/>
+
 </head>
 <body class="container">
 <p>Version sombre :
@@ -23,24 +20,11 @@
     </button>
 </p>
 
-{#Tu as ici la version sombre :#}
-{#<body class="container dark-version">#}
+
 {% block content %}
 {% endblock %}
 
-
 {% include 'htmx/spinner.html' %}
-
-{#<div _="on load wait 2s then transition opacity to 0 then remove me">#}
-{#    Here is a temporary message!#}
-{#</div>#}
-{##}
-{#<div _="on RemoveMe remove #rm">#}
-{#    <div _="on click trigger RemoveMe">#}
-{#        <span id="rm">remove me</span>#}
-{#        <span>but not me</span>#}
-{#    </div>#}
-{#</div>#}
 
 <script src="{% static 'js/htmx.min.js' %}"></script>
 <script src="{% static 'js/loading-states.js' %}"></script>
