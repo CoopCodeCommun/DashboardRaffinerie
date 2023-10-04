@@ -1,0 +1,74 @@
+{% load static %}
+<tr>
+    <td>
+        <div class="d-flex px-2 py-1">
+            {# Ici, c'est un peu plus complexe :)#}
+            {# j'ai testé un lazy loading avec htmx. #}
+            {# Si ça t'intéresse, je t'explique quand tu veux :) #}
+            {% if contact.image %}
+                <div hx-get="/lazy_loading_profil_image/{{ contact.uuid }}/" hx-trigger="load">
+                    <img alt="Result loading..." class="htmx-indicator avatar avatar-sm me-3"
+                         width="150"
+                         src="{% static 'img/bars.svg' %}"/>
+                </div>
+            {% else %}
+                {% if contact.structure %}
+                    <img alt="logo du profil" src="{% static 'img/baseline-home-work.svg' %}"
+                         class="avatar avatar-sm me-3">
+                {% else %}
+                    <img alt="logo du profil" src="{% static 'img/user-4-fill.svg' %}"
+                         class="avatar avatar-sm me-3">
+                {% endif %}
+
+            {% endif %}
+
+            <div class="d-flex flex-column justify-content-center">
+                <h6 class="mb-0 text-xs">{{ contact.nom }}</h6>
+                <p class="text-xs text-secondary mb-0">{{ contact.email | default:"" }}</p>
+            </div>
+        </div>
+    </td>
+    <td>
+        <p class="text-xs font-weight-bold mb-0">{{ contact.structure | default:"" }}</p>
+        <p class="text-xs text-secondary mb-0">{{ contact.role | default:"" }}</p>
+    </td>
+    <td class="align-middle text-center text-sm">
+        {% for badge in contact.badge.all %}
+            <span class="badge badge-sm" style="background: {{ badge.color }}">{{ badge.name }}</span>
+        {% endfor %}
+    </td>
+    <td class="align-middle text-center">
+        <span class="text-secondary text-xs font-weight-normal">{{ contact.adresse | default:"" }}</span>
+    </td>
+    <td class="align-middle">
+        <a href="" class="text-secondary font-weight-normal text-xs"
+           hx-get="/api/odoo_contacts/{{ contact.uuid }}/?modal=true"
+           hx-target="#modals-here"
+           hx-swap="innerHTML"
+           hx-trigger="click"
+           data-bs-toggle="modal"
+           data-bs-target="#modals-here"
+           hx-ext="loading-states"
+           _="on click remove #modal_from_django"
+        >
+            <img src="{% static 'img/view-grid-detail.svg' %}" width="20">
+        </a>
+    </td>
+    <td class="align-middle text-center">
+        <img src="{% static 'img/edit.svg' %}" width="20" type="button"
+             hx-trigger="edit"
+             hx-get="/api/odoo_contacts/{{ contact.uuid }}/"
+             _="on click
+                             if .editing is not empty
+                               Swal.fire({title: 'Edition active',
+                                          showCancelButton: true,
+                                          confirmButtonText: 'Yep, Je continue!',
+                                          text:'Hey! Vous êtes déja en édition, voulez vous continuer sur une nouvelle entrée?'})
+                               if the result's isConfirmed is false
+                                 halt
+                               end
+                               send cancel to .editing
+                             end
+                             trigger edit"/>
+    </td>
+</tr>

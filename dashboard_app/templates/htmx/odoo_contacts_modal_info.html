@@ -1,0 +1,20 @@
+<!-- Modal -->
+<div id="modal_from_django" class="modal-dialog modal-dialog-centered" role="document">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h5 class="modal-title font-weight-normal" id="exampleModalLabel">{{ contact.nom }}</h5>
+            <button type="button" class="btn-close text-dark" data-bs-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+        <div class="modal-body">
+            <ul>
+                <li>Nom : {{ contact.name | default:"" }}</li>
+                <li>Structure : {{ contact.structure | default:"" }}</li>
+                <li>email : {{ contact.email | default:"" }}</li>
+                <li>Adresse : {{ contact.adresse | default:"" }}</li>
+                <li>Tel : {{ contact.tel | default:"" }}</li>
+            </ul>
+        </div>
+    </div>
+</div>

@@ -16,7 +16,6 @@ from .serializers import AccountAnalyticGroupSerializer
 from dashboard_app.models import AccountAccount
 
 
-
 def index(request):
     """
     Livre un template HTML
@@ -118,6 +117,46 @@ class AccountAnalyticGroupAPI(viewsets.ViewSet):
         return [permission() for permission in permission_classes]
 
 
+class OdooContactsAPI(viewsets.ViewSet):
+    def retrieve(self, request, pk=None):
+        # Récupération du contact demandé
+        contact = Contact.objects.get(pk=pk)
+
+        # Le retrieve est activé avec un hx-get :
+        #     bouton cancel du tableau contact en mode écriture
+        #     bouton modal du tableau contact
+        #     bouton edit du tableau odoo contact
+
+        if request.query_params.get('cancel'):
+            return render(request, 'htmx/odoo_contacts_table_row.html', context={'contact': contact})
+
+        if request.query_params.get('modal'):
+            return render(request, 'htmx/odoo_contacts_modal_info.html', context={'contact': contact})
+
+        # ce n'est ni un modal ni un cancel
+        # Envoie dy formulaire de modification du contact
+        return render(request, 'htmx/odoo_contacts_edit_row.html', context={'contact': contact})
+
+    def update(self, request, pk=None):
+        # Le update est activé avec le hx-put du bouton save du tableau odoo contact
+        contact = Contact.objects.get(pk=pk)
+
+        # On récupère les données des formulaires et on remplace en base de donnée si nécessaire
+        if request.data.get('nom') != contact.nom:
+            contact.nom = request.data.get('nom')
+        if request.data.get('structure') != contact.structure:
+            contact.structure = request.data.get('structure')
+        if request.data.get('adresse') != contact.adresse:
+            contact.adresse = request.data.get('adresse')
+        contact.save()
+
+        return render(request, 'htmx/odoo_contacts_table_row.html', context={'contact': contact})
+
+    def get_permissions(self):
+        permission_classes = [AllowAny]
+        return [permission() for permission in permission_classes]
+
+
 # Page d'exemple d'implémentation de l'API
 def api_exemple(request):
     context = {}
@@ -125,8 +164,6 @@ def api_exemple(request):
 
 
 ### PAGE D'EXAMPLE HTMX ###
-
-
 
 
 def odoo_account(request):
@@ -186,14 +223,6 @@ class reload_contact_from_odoo(APIView):
         }
         return render(request, 'htmx/odoo_contacts_table.html', context=context)
 
-class modal_contact(APIView):
-    def get(self, request, uuid):
-        # time.sleep(1)
-        contact = Contact.objects.get(pk=uuid)
-        context = {
-            'contact': contact,
-        }
-        return render(request, 'htmx/odoo_contact_modal_edit.html', context=context)
 
 # HTMX USE CASES
 

@@ -1,0 +1,16 @@
+<tr hx-trigger='cancel' class='editing' hx-get="/api/odoo_contacts/{{ contact.uuid }}/?cancel=true">
+    <td><input name='nom' value='{{ contact.nom | default:"" }}'></td>
+    <td><input name='structure' value='{{ contact.structure | default:"" }}'></td>
+    <td>{{ contact.badge_stringify }}</td>
+    <td><input name='adresse' value='{{ contact.adresse | default:"" }}'></td>
+    <td>
+        <button class="btn btn-danger" hx-get="/api/odoo_contacts/{{ contact.uuid }}/?cancel=true">
+            Cancel
+        </button>
+    </td>
+    <td>
+        <button class="btn btn-danger" hx-put="/api/odoo_contacts/{{ contact.uuid }}/" hx-include="closest tr">
+            Save
+        </button>
+    </td>
+</tr>

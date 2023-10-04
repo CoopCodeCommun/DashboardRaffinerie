@@ -37,6 +37,8 @@ class Contact(models.Model):
     # Un lien vers la table Badge
     # Many2Many car plusieurs contacts peuvent avoir le même badge
     badge = models.ManyToManyField(Badge, related_name='contacts', blank=True)
+    def badge_stringify(self):
+        return ", ".join([str(badge) for badge in self.badge.all()])
 
     # Une image qui sera automatiquement convertie en JPG
     # avec la création de deux variations : 960x540 et un carré 270x270
