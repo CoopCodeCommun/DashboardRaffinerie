@@ -1,3 +1,5 @@
+
+
 const appData = {
     //les différent pôles dans le menu supérieur
     menuOptions: ['vélo', 'Groupe Culture', 'Micro recyclerie', 'champignonnière'],
@@ -293,14 +295,15 @@ let tableaux = {
         //données de base subventions
         tableau_donnees_base_subventions : {
             titre: "",
-            total: false,
-            newline: false,
+            total: true,
+            newline: true,
             rows: [{ name: 'Région - investissement' },{ name: 'mairie - fonctionnement' }],
             columns: [
-                { name: 'Référent',input: true,},
-                { name: 'Partenaire',input: true,},
+                { name: 'Référent',input: true, shouldTotal: false},
+                { name: 'Partenaire',input: true, shouldTotal: false},
                 { name: 'service',input: true,},
                 { name: 'référence',input: true,},
+                { name: 'date',input: true,},
             ],
         },
 
