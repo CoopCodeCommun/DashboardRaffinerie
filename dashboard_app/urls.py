@@ -13,6 +13,7 @@ urlpatterns = [
     # Pages d'exemple HTMX:
     path('contacts/', contacts, name="odoo_contacts"),
     path('odoo_account/', odoo_account, name="odoo_account"),
+
     path('lazy_loading_profil_image/<uuid:uuid>/', lazy_loading_profil_image.as_view(),
          name="lazy_loading_profil_image"),
     path('reload_contact_from_odoo/', reload_contact_from_odoo.as_view(), name="reload_contact_from_odoo"),

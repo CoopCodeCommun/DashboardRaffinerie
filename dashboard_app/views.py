@@ -126,6 +126,9 @@ def api_exemple(request):
 
 ### PAGE D'EXAMPLE HTMX ###
 
+
+
+
 def odoo_account(request):
     context = {
         "AccountAccounts": AccountAccount.objects.all().order_by('code'),
