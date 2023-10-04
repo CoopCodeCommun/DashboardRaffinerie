@@ -1,15 +1,13 @@
-from django.urls import path
+from django.urls import path, include
 from .views import index, suivi_budgetaire, subventions, contacts, lazy_loading_profil_image, \
     reload_contact_from_odoo, odoo_account, organigramme, repertoire, objectifs_indicateurs, reload_account_from_odoo, \
-    modal_contact
-from .views import index, user_api, user_solo_api, suivi_budgetaire, subventions, organigramme, repertoire, objectifs_indicateurs, AccountAccountList
+    modal_contact, AccountAnalyticGroupAPI
+from .views import index, suivi_budgetaire, subventions, organigramme, repertoire, objectifs_indicateurs, api_exemple
 from django.conf import settings
 from rest_framework import routers
 
-
-
-
-
+router = routers.DefaultRouter()
+router.register(r'account_analytic_group', AccountAnalyticGroupAPI, basename='account_analytic_group')
 
 urlpatterns = [
     # Pages d'exemple HTMX:
@@ -21,11 +19,19 @@ urlpatterns = [
     path('reload_account_from_odoo/', reload_account_from_odoo.as_view(), name="reload_account_from_odoo"),
     path('modal_contact/<uuid:uuid>/', modal_contact.as_view(), name="modal_contact"),
 
-   path('organigramme/', organigramme, name='organigramme'),
-   path('suivi_budgetaire/', suivi_budgetaire, name='suivi_budgetaire'),
-   path('subventions/', subventions, name='subventions'),
-   path('repertoire/', repertoire, name='repertoire'),
-   path('objectifs_indicateurs/', objectifs_indicateurs, name='objectifs_indicateurs'),
-   path('', index, name='index'),
-   path('api/comptes/', AccountAccountList.as_view(), name='account-list'),
+    # Pages de l'application Front de Julien :
+    path('organigramme/', organigramme, name='organigramme'),
+    path('suivi_budgetaire/', suivi_budgetaire, name='suivi_budgetaire'),
+    path('subventions/', subventions, name='subventions'),
+    path('repertoire/', repertoire, name='repertoire'),
+    path('objectifs_indicateurs/', objectifs_indicateurs, name='objectifs_indicateurs'),
+
+    # API Django-Rest-Framework
+    # Les routes ViewSet sont déclarés un peu différemment,
+    # avec un router qui dirige les GET/POST/PUT/DELETE, juste avant les routes de l'application.
+    path('api/', include(router.urls)),
+    # La page d'exemple d'implémentation de l'API
+    path('api_exemple/', api_exemple, name='api_exemple'),
+
+    path('', index, name='index'),
 ]

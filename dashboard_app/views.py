@@ -12,17 +12,10 @@ from rest_framework.views import APIView
 from dashboard_app.models import Contact, AccountAccount, AccountJournal, AccountAnalyticGroup, AccountAnalyticAccount
 from dashboard_app.odoo_api import OdooApi
 from dashboard_app.serializers import UserSerializer
-from .serializers import AccountAccountSerializer
-from rest_framework import generics
+from .serializers import AccountAnalyticGroupSerializer
 from dashboard_app.models import AccountAccount
 
 
-class AccountAccountList(generics.ListAPIView):
-    queryset = AccountAccount.objects.all()
-    serializer_class = AccountAccountSerializer
-
-# from rest_framework import routers, serializers, viewsets
-# from rest_framework import viewsets,
 
 def index(request):
     """
@@ -92,9 +85,46 @@ def objectifs_indicateurs(request):
     return render(request, 'objectifs_indicateurs.html', context=context)
 
 
-### TEST API AVEC MODEL USER ###
+### CONTROLEUR API ###
 
-### PAGE D'EXAMPLE ###
+class AccountAnalyticGroupAPI(viewsets.ViewSet):
+    # Un ViewSet est un outil qui permet te tout faire en un seul coup :
+    # https://www.django-rest-framework.org/api-guide/viewsets/#viewset-actions
+    # On se sert d'un serializer pour formater la réponse et filtrer les données
+
+    def list(self, request):
+        # Pour récupérer tous les éléments
+        serializer = AccountAnalyticGroupSerializer(AccountAnalyticGroup.objects.all(), many=True)
+        return Response(serializer.data)
+
+    def retrieve(self, request, pk=None):
+        # Pour récupérer un seul élément avec le pk (primary key, ici, c'est un uuid4)
+        serializer = AccountAnalyticGroupSerializer(AccountAnalyticGroup.objects.get(pk=pk))
+        return Response(serializer.data)
+
+    # Créer un élément. Il est parfois préférable de fabriquer un autre serializer qui va servir de formulaire de validation.
+    # def create(self, request):
+    #     serializer = CreateCardSerializer(data=json.loads(request.data.get('cards')), context={'request': request}, many=True)
+    #     if serializer.is_valid():
+    #         return Response(serializer.data, status=status.HTTP_201_CREATED)
+    #     return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+    def get_permissions(self):
+        # On peut choisir les permissions suivant l'action.
+        # Par exemple pour créer ou détruire un objet, il faut être authentifié
+        # if self.action in ['create', 'destroy']:
+        #     permission_classes = [IsAuthenticated]
+        permission_classes = [AllowAny]
+        return [permission() for permission in permission_classes]
+
+
+# Page d'exemple d'implémentation de l'API
+def api_exemple(request):
+    context = {}
+    return render(request, 'api/from_api_exemple.html', context=context)
+
+
+### PAGE D'EXAMPLE HTMX ###
 
 def odoo_account(request):
     context = {
@@ -127,7 +157,6 @@ def contacts(request):
     # de la base de donnée (models.puy)
     # Pour l'exemple, on ne prend que ceux qui sont "Membership"
     contacts = Contact.objects.all()
-
     context = {
         'contacts': contacts[:5]
     }

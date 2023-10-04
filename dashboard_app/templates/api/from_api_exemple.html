@@ -1,0 +1,59 @@
+{% extends 'htmx/base_htmx.html' %}
+<!DOCTYPE html>
+{% load static %}
+
+{% block content %}
+    <div class="my-4">
+        <div _="def fillList(analyticgroup)
+                        for item in analyticgroup
+                            call document.createElement('li')
+                            put `${item.id_odoo} ${item.name}` into its textContent
+                            put it at end of #group
+                        end
+                    end">
+            <span>Methode sans javascript, en utilisant Hyperscript : </span>
+            <button type="button" class="btn bg-gradient-info my-4"
+                    _="on click fetch /api/account_analytic_group/ as json with method:'GET'
+                    log it
+                    put it into analyticgroup then call fillList(analyticgroup)">
+                GET /api/account_analytic_group/
+            </button>
+            <div>
+                <ul id="group">
+
+                </ul>
+            </div>
+        </div>
+    </div>
+
+
+    <div class="mt-5">
+        <span>Methode classique javascript ajax hxr : </span>
+        <button type="button" class="btn bg-gradient-info my-4" onclick="fillListWithAjax()">
+            GET /api/account_analytic_group/
+        </button>
+        <div>
+            <ul id="group2">
+
+            </ul>
+        </div>
+        <script>
+            function fillListWithAjax() {
+                let xhr = new XMLHttpRequest();
+                xhr.open('GET', '/api/account_analytic_group/');
+                xhr.responseType = 'json';
+                xhr.onload = function () {
+                    analyticgroup = xhr.response;
+                    console.log(analyticgroup);
+
+                    for (let item of analyticgroup) {
+                        let li = document.createElement('li');
+                        li.textContent = `${item.id_odoo} ${item.name}`;
+                        document.querySelector('#group2').appendChild(li);
+                    }
+                };
+                xhr.send(); // Envoyer la requête
+            }
+        </script>
+    </div>
+{% endblock %}

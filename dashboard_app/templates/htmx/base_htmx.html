@@ -23,16 +23,16 @@
 
 {% include 'htmx/spinner.html' %}
 
-<div _="on load wait 2s then transition opacity to 0 then remove me">
-    Here is a temporary message!
-</div>
-
-<div _="on RemoveMe remove #rm">
-    <div _="on click trigger RemoveMe">
-        <span id="rm">remove me</span>
-        <span>but not me</span>
-    </div>
-</div>
+{#<div _="on load wait 2s then transition opacity to 0 then remove me">#}
+{#    Here is a temporary message!#}
+{#</div>#}
+{##}
+{#<div _="on RemoveMe remove #rm">#}
+{#    <div _="on click trigger RemoveMe">#}
+{#        <span id="rm">remove me</span>#}
+{#        <span>but not me</span>#}
+{#    </div>#}
+{#</div>#}
 
 <script src="{% static 'js/htmx.min.js' %}"></script>
 <script src="{% static 'js/loading-states.js' %}"></script>
