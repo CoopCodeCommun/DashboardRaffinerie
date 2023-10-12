@@ -22,3 +22,12 @@ class AccountAnalyticGroupSerializer(serializers.ModelSerializer):
             'name',
             'id_odoo',
         ]
+
+class AccountAnalyticGroupSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = AccountAnalyticGroup
+        fields = [
+            'uuid',
+            'name',
+            'id_odoo',
+        ]

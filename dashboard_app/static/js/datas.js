@@ -1,3 +1,12 @@
+let groupe_analytique = [];
+
+// Fonction pour récupérer les données
+function fetchAnalyticGroup() {
+    return fetch('/api/account_analytic_group/')
+        .then(response => response.json())
+        .then(data => {groupe_analytique = data;           
+        });
+}
 
 
 const appData = {
@@ -5,19 +14,37 @@ const appData = {
     menuOptions: ['vélo', 'Groupe Culture', 'Micro recyclerie', 'champignonnière'],
     
     // les différents menu dans la barre latéral
+
     sidebarOptions: [
-    { icon: 'bi bi-bar-chart-line', text: 'Tableau de bord'},
-    { icon: 'bi bi-person-video2', text: 'Organigramme', link: '/organigramme/'  },
-    { icon: 'bi bi-person-video2', text: 'Objectifs indicateurs', link: '/objectifs_indicateurs/'  },
-    { icon: 'bi bi-currency-euro', text: 'Suivi budgétaire', link: '/suivi_budgetaire/' },
-    { icon: 'bi bi-cash-coin', text: 'Suivi subventions', link: '/subventions/' },
-    { icon: 'bi bi-piggy-bank', text: 'Plan de trésorerie' },
-    { icon: 'bi bi-file-music', text: 'Suivi évenements' },
-    { icon: 'bi bi-list-ol', text: 'Suivi volontariat' },
-    { icon: 'bi bi-people', text: 'Répertoire Raffineur.euses', link: '/repertoire/'  },
-    { icon: 'bi bi-clipboard-data', text: 'Tableau de bord perso' },
-    { icon: 'bi bi-book', text: 'Documentation' },
-    ],
+        {icon: 'bi bi-bar-chart-line', text: 'Tableau de bord'
+        },       
+        { icon: 'bi bi-currency-euro', text: 'Suivi budgétaire', submenu: [
+            { icon: 'bi bi-currency-euro', text: 'Tableaux budgétaires', link: '/suivi_budgetaire/'},
+            { icon: 'bi bi-person-video2', text: 'Organigramme', link: '/organigramme/'},
+            { icon: 'bi bi-cash-coin', text: 'Suivi subventions', link: '/subventions/' },
+            { icon: 'bi bi-piggy-bank', text: 'Plan de trésorerie' },]
+        },
+        { icon: 'bi bi-file-music', text: 'Suivi de projet', submenu: [
+            { icon: 'bi bi-person-video2', text: 'Objectifs indicateurs', link: '/objectifs_indicateurs/'  },
+            { icon: 'bi bi-file-music', text: 'Postulations'},
+            { icon: 'bi bi-file-music', text: 'Tâches'},
+            { icon: 'bi bi-file-music', text: 'Suivi évenements'},
+            { icon: 'bi bi-piggy-bank', text: 'Plan de trésorerie' },
+            { icon: 'bi bi-file-music', text: 'Cadre de vie'},]
+        },
+        { icon: 'bi bi-people', text: 'Raffineur.euses', submenu: [
+            { icon: 'bi bi-people', text: 'Répertoire', link: '/repertoire/'},
+            { icon: 'bi bi-list-ol', text: 'Suivi volontariat'},            
+            { icon: 'bi bi-list-ol', text: 'Badges' },
+            { icon: 'bi bi-list-ol', text: 'Le calculateur de bien-être' },
+            { icon: 'bi bi-currency-euro', text: 'tableau de bord perso', link: '/tableau_de_bord_perso/' },]
+        },        
+        { icon: 'bi bi-book', text: 'Boîte à outils', submenu: [
+            { icon: 'bi bi-book', text: 'Documentation' },
+            { icon: 'bi bi-file-music', text: 'outils numériques'},]
+        }
+        
+    ]
 
 };
 
@@ -33,6 +60,7 @@ const appData = {
 //dropdown: true,  options: ['Option 1', 'Option 2', 'Option 3'], les cellule sont à choix multiple
 
 let tableaux = {
+
     suivi_budgetaire: {
     
     //suivi budgétaire
@@ -40,7 +68,7 @@ let tableaux = {
         //recap membres du collectif
         tableau_membre_collectif: {
             titre: "", 
-            total: false, 
+            total: true, 
             newline: true, 
             rows: [{ name: 'Paul' },{ name: 'Jessica' }, { name: 'Bob' },{ name: 'Marcel' }],
             columns: [
@@ -53,7 +81,7 @@ let tableaux = {
         //données recap depenses
             tableau_recap_depenses : {
             titre : "Dépenses",
-            total : false,
+            total : true,
             newline : false,
             rows : [{ name:'bienveillance' },{ name: 'presta int.' },{ name: 'presta.ext / achats' },{ name: 'dépenses int.'}],
             columns : [
@@ -78,7 +106,7 @@ let tableaux = {
 
         //données prévisionnel bienveillance
         tableau_prev_bienveillance : {
-            titre : "Prévisionnel",
+            titre : "",
             total: true,
             newline: true,
             rows: ['bienvei- llance'].map(name => ({ name })),
@@ -89,7 +117,7 @@ let tableaux = {
 
         //données réel bienveillance
         tableau_reel_bienveillance :{
-            titre : "Réel",
+            titre : "",
             total: true,
             newline: true,
             rows: ['Paul', 'Jessica', 'kevin'].map(name => ({ name })),
@@ -104,7 +132,7 @@ let tableaux = {
 
         //données prévisionnel prestations internes
         tableau_prev_prestations_internes:{
-            titre : "Prévisionnel",
+            titre : "",
             total: true,
             newline: true,
             rows: ['bienveillance', 'animation ateliers', 'entretien matériel'].map(name => ({ name })),
@@ -115,10 +143,10 @@ let tableaux = {
 
         //données réel prestation interne
         tableau_reel_prestations_internes:{
-            titre : "Réel",
+            titre : "",
             total: true,
             newline: true,
-            rows: [ 'Jessica', 'kevin'].map(name => ({ name })),
+            rows: ['Jessica', 'kevin'].map(name => ({ name })),
             columns: [
                 { name: 'date', input: true, shouldTotal: false}, 
                 { name: 'propo.', input: true, },
@@ -130,10 +158,10 @@ let tableaux = {
 
         //données prévisionnel prestations externes
         tableau_prev_prestations_externes:{    
-            titre : "Prévisionnel",
+            titre : "",
             total: true,
             newline: true,
-            rows: ['achat matériel','prestataires externes'].map(name => ({ name })),
+            rows: ['achat matériel','presta. externes'].map(name => ({ name })),
             columns: [
                 { name: 'Montant', input: true, }, 
             ],
@@ -141,7 +169,7 @@ let tableaux = {
 
         //données réel prestation externes
         tableau_reel_prestations_externes:{    
-            titre : "Réel",
+            titre : "",
             total: true,
             newline: false,
             rows: [ 'Ravate', 'run market', 'SARL Payet'].map(name => ({ name })),
@@ -155,7 +183,7 @@ let tableaux = {
 
         //données prévisionnel dépenses interne
         tableau_prev_depenses_internes:{    
-            titre: "Prévisionnel",
+            titre: "",
             total: true,
             newline: true,
             rows: ['pôle culture','inter-formation', 'micro-recylerie'].map(name => ({ name })),
@@ -166,7 +194,7 @@ let tableaux = {
 
         //données réel dépenses interne
         tableau_reel_depenses_internes:{    
-            titre: "Réel",
+            titre: "",
             total: true,
             newline: true,
             rows: [ 'Dépenses interne'].map(name => ({ name })),
@@ -192,7 +220,7 @@ let tableaux = {
 
         //données prévisionnel subvention
         tableau_prev_subvention:{    
-            titre: "Prévisionnel",
+            titre: "",
             total: true,
             newline: true,
             rows: ['subventions'].map(name => ({ name })),
@@ -203,7 +231,7 @@ let tableaux = {
 
         //données réel subvention
         tableau_reel_subvention:{    
-            titre: "Réel",
+            titre: "",
             total: true,
             newline: false,
             rows: [ 'Région', 'Mairie'].map(name => ({ name })),
@@ -215,7 +243,7 @@ let tableaux = {
 
         //données prévisionnel prestations
         tableau_prev_prestations:{    
-            titre : "Prévisionnel",
+            titre : "",
             total: true,
             newline: true,
             rows: ['divers prestations'].map(name => ({ name })),
@@ -226,7 +254,7 @@ let tableaux = {
 
         //données réel prestations
         tableau_reel_prestations:{
-            titre : "Réel",
+            titre : "",
             total: true,
             newline: false,
             rows: [ 'asso rvp', 'SARL dudu'].map(name => ({ name })),
@@ -239,7 +267,7 @@ let tableaux = {
 
         //données prévisionnel ventes
         tableau_prev_ventes:{    
-            titre: "Prévisionnel",
+            titre: "",
             total: true,
             newline: true,
             rows: ['Ventes en direct'].map(name => ({ name })),
@@ -250,7 +278,7 @@ let tableaux = {
 
         //données réel ventes
         tableau_reel_ventes:{   
-            titre: "Réel",
+            titre: "",
             total: true,
             newline: false,
             rows: [ 'vente en direct', 'asso hoareau'].map(name => ({ name })),
@@ -263,7 +291,7 @@ let tableaux = {
 
         //données prévisionnel recettes internes
         tableau_prev_recettes_internes:{    
-            titre: "Prévisionnel",
+            titre: "",
             total: true,
             newline: true,
             rows: ['divers pôles'].map(name => ({ name })),
@@ -273,20 +301,21 @@ let tableaux = {
         },
 
         //données réel dépenses internes
-        tableau_reel_recettes_internes:{    
-            titre: "Réel",
+        tableau_reel_recettes_internes:{ 
+            titre: "",
             total: true,
             newline: true,
-            rows: [ ' ', ' '].map(name => ({ name })),
+            rows: ['micro'].map(name => ({ name })),
             columns: [
-                { name: 'Pôles', dropdown: true, shouldTotal: false},
-                { name: 'Date', input: true, shouldTotal: false},
-                { name: 'Montant', input: true, },          
+                { name: 'Montant', input: true, },
+                { name: 'Montant', input: true, },
+                { name: 'Montant', input: true, },
             ],
         },
 
     },
-    
+
+   
 //////////////////////////// data subventions /////////////////////
  
 
@@ -295,7 +324,7 @@ let tableaux = {
         //données de base subventions
         tableau_donnees_base_subventions : {
             titre: "",
-            total: true,
+            total: false,
             newline: true,
             rows: [{ name: 'Région - investissement' },{ name: 'mairie - fonctionnement' }],
             columns: [
@@ -303,7 +332,7 @@ let tableaux = {
                 { name: 'Partenaire',input: true, shouldTotal: false},
                 { name: 'service',input: true,},
                 { name: 'référence',input: true,},
-                { name: 'date',input: true,},
+            
             ],
         },
 
@@ -321,6 +350,7 @@ let tableaux = {
             ],
         },
     },
+
 
     //////////////////////////// data repertoire /////////////////////
  
@@ -393,5 +423,25 @@ let tableaux = {
 
 
     }, 
+
+
+    //////////////////////////// data tableau de bord perso /////////////////////
+
+
+    tableau_de_bord_perso: {
+    
+        //recap membres du collectif
+        tableau_membre_collectif1: {
+            titre: "", 
+            total: true, 
+            newline: true, 
+            rows: [{ name: 'Paul' },{ name: 'Jessica' }, { name: 'Bob' },{ name: 'Marcel' }],
+            columns: [
+                { name: 'à valider' },
+                { name: 'à facturer' },
+                { name: 'à payer' }
+            ]
+        },
+    },
 
 };

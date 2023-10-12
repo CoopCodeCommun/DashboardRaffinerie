@@ -3,7 +3,7 @@
 }
 
 .jaune {
-    background-color: #bfa20f;
+    background-color: #d4be18;
 }
 
 .orange {
@@ -18,9 +18,72 @@
     background-color: #39b1ab;
 }
 
+.header-text {
+    color: black;
+}
+
+/*//////////////////// Classe pour la side bar ///////////////////*/
+
+/* Style de base pour le menu principal */
+.menu-item button {
+    width: 100%;
+    text-align: left;
+    font-weight: bold; 
+}
+
+/* Style de base pour le sous-menu */
+.submenu-item button {
+    width: 100%;
+    font-weight: 500; 
+    text-align: left;
+    margin-top: 0;   /* Ajustez la marge supérieure si nécessaire */
+    margin-bottom: 0; /* Réduisez la marge inférieure */
+    padding-top: 0px;   /* Ajustez le padding supérieur si nécessaire */
+    padding-bottom: 0px;  /* Réduisez le padding inférieur */
+}
+
+
+/* Cacher les sous-menus par défaut */
+.submenu {
+    list-style-type: none;
+    padding-left: 20px;
+    display: none;
+}
+
+/* Afficher le sous-menu lorsque la classe "open" est ajoutée */
+.nav-item.open .submenu {
+    display: block;
+}
+
+.sousmenusanslien {
+    /*text-decoration: line-through; pour barrer le texte*/
+    color: rgb(111, 111, 111);
+}
+
+
+/*/////////////////*/
+
+/* Style de base pour le menu principal */
+.titre {
+    font-weight: bold; 
+    text-align: center;
+}
+
+.colonne_prev {
+    background: rgba(145, 139, 27, 0.2);
+    border-radius: 10px;
+}
+
+.colonne_reel {
+    background: rgba(158, 150, 39, 0.5);
+    border-radius: 10px;
+}
+
+
+
 .case {
     font-family: 'Itim', cursive;
-    color: white;
+    color: black;
     border-radius: 15px;
     border-collapse: separate;
     border-spacing: 2px;
@@ -125,8 +188,8 @@ div[onclick="toggleContent(this)"] {
 }
 
 .esp-col {
-    padding-right: 50px; /* Ajustez selon vos besoins */
-    padding-left: 50px; /* Ajustez selon vos besoins */
+    padding-right: 50px;
+    padding-left: 50px;
 }
 
 .row {
@@ -147,5 +210,6 @@ div[onclick="toggleContent(this)"] {
 .custom-column-half {
     flex: 0 0 calc(50% - 10px); /* On prend en compte la moitié de l'espace du gap pour chaque colonne */
     box-sizing: border-box;
-    padding: 10px; /* Ajustez selon vos besoins */
+    padding: 10px; 
 }
+
