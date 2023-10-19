@@ -6,12 +6,13 @@ function fetchAnalyticGroup() {
         .then(response => response.json())
         .then(data => {groupe_analytique = data;           
         });
-}
+};
 
 
 const appData = {
     //les différent pôles dans le menu supérieur
     menuOptions: ['vélo', 'Groupe Culture', 'Micro recyclerie', 'champignonnière'],
+    annees: ['2022', '2023', '2024', '2025'],
     
     // les différents menu dans la barre latéral
 
@@ -109,7 +110,10 @@ let tableaux = {
             titre : "",
             total: true,
             newline: true,
-            rows: ['bienvei- llance'].map(name => ({ name })),
+            rows: [
+                {name:'bienvei- llance', comment: 'bienveillance du pôle sur mars' },
+
+            ],
             columns: [
             { name: 'Montant', input: true,},
             ],
@@ -120,7 +124,15 @@ let tableaux = {
             titre : "",
             total: true,
             newline: true,
-            rows: ['Paul', 'Jessica', 'kevin'].map(name => ({ name })),
+            rows: [
+                { name: 'kevin', },
+                { name: 'kevin', },
+                { name: 'Paul',commentaire: 'bienveillance du pôle sur mars' },
+                { name: 'Paul',commentaire: 'bienveillance du pôle sur avril' },
+                { name: 'Paul',commentaire: 'bienveillance du pôle sur avril' },
+                { name: 'kevin',commentaire: 'bienveillance du pôle sur mars' },
+                               
+                ],
             columns: [
                 { name: 'date', input: true, shouldTotal: false  },
                 { name: 'propo.', input: true, },

@@ -1,20 +1,58 @@
-
 //////////////////////////// menu //////////////////////////
 
-// Fonction pour remplir le menu déroulant
+// Fonction pour remplir le menu déroulant compte analytique
 function populateDropdown() {
     const dropdownMenu = document.getElementById('dropdownMenuOptions');
+    const selectedPoleSpan = document.getElementById('selectedPole');
+
+    // Vérifiez si groupe_analytique a des éléments avant de définir le pôle par défaut
+    if (groupe_analytique.length > 0) {
+        selectedPoleSpan.textContent = groupe_analytique[0].name;
+    }
+
     groupe_analytique.forEach(item => {
         const a = document.createElement('a');
         a.href = "#";
         a.className = "dropdown-item";
         a.textContent = ` ${item.name} `;
+
+        // Écouteur d'événement pour mettre à jour le bouton avec le pôle sélectionné
+        a.addEventListener('click', function() {
+            selectedPoleSpan.textContent = item.name;
+        });
+
         dropdownMenu.appendChild(a);
+    });
+}
+
+// Fonction pour remplir le menu déroulant année
+function populateYearDropdown() {
+    const yearDropdownMenu = document.getElementById('yearDropdownOptions');
+    const selectedYearSpan = document.getElementById('selectedYear');
+
+    // Définissez l'année par défaut
+    selectedYearSpan.textContent = appData.annees[0];
+
+    appData.annees.forEach(year => {
+        const a = document.createElement('a');
+        a.href = "#";
+        a.className = "dropdown-item";
+        a.textContent = year;
+
+        // Écouteur d'événement pour mettre à jour le bouton avec l'année sélectionnée
+        a.addEventListener('click', function() {
+            selectedYearSpan.textContent = year;
+        });
+
+        yearDropdownMenu.appendChild(a);
     });
 }
 
 // Exécution des fonctions
 fetchAnalyticGroup().then(populateDropdown);
+document.addEventListener("DOMContentLoaded", function() {
+    populateYearDropdown();
+});
 
 //////////////////////////////// Générer les éléments du menu latéral ////////////////////////
 
@@ -181,7 +219,42 @@ toggleContent = () => {
 customElements.define('create-toggle', CreateToggle);
 
 
+
 /////////////////////////// Creation tableau ////////////////////////////////
+
+function groupAndSumRows(rows, columns) {
+    const groupedData = {};
+
+    rows.forEach(row => {
+        if (!groupedData[row.name]) {
+            groupedData[row.name] = { ...row, count: 0 };
+        }
+        groupedData[row.name].count += 1;
+
+        columns.forEach((column, colIndex) => {
+            if (column.shouldTotal !== false) {
+                groupedData[row.name][`col_${colIndex}`] = (groupedData[row.name][`col_${colIndex}`] || 0) + (row[`col_${colIndex}`] || 0);
+            }
+        });
+    });
+
+    const result = [];
+    for (const name in groupedData) {
+        result.push(groupedData[name]);
+    }
+
+    return result;
+}
+
+
+function getColumnIndicesToHide(columns) {
+    return columns.reduce((indices, column, index) => {
+        if (column.shouldTotal === false) {
+            indices.push(index);
+        }
+        return indices;
+    }, []);
+}
 
 function createTableComplete(titre, rows, columns, containerId, total, newline) {
 const container = document.getElementById(containerId);
@@ -242,6 +315,22 @@ rows.forEach(row => {
         th.appendChild(toggleButton);
     }
 
+    // Si un commentaire est présent pour cette ligne, ajoutez une fonction de basculement
+    if (row.commentaire) {
+        th.style.cursor = "pointer";  // Changez le curseur pour indiquer qu'il est cliquable
+        th.textContent = "+" + row.name;  // Ajoute "+/-" avant le nom de la ligne
+        th.onclick = function() {
+            const commentRow = this.parentNode.nextElementSibling;
+            if (commentRow.style.display === "none") {
+                commentRow.style.display = "";
+                this.textContent = "-" + row.name;  // Lorsque le commentaire est affiché, montrez uniquement "-"
+            } else {
+                commentRow.style.display = "none";
+                this.textContent = "+" + row.name;  // Lorsque le commentaire est caché, montrez uniquement "+"
+            }
+        }
+    }
+
     tr.appendChild(th);
 
     columns.forEach((column, columnIndex) => {
@@ -280,6 +369,24 @@ rows.forEach(row => {
     });
 
     table.appendChild(tr);
+
+    if (row.commentaire) {
+        const commentRow = document.createElement('tr');
+        commentRow.style.display = "none"; // Initialement caché
+        commentRow.classList.add('comment-row'); // Ajout de la classe "comment-row"
+        const commentCell = document.createElement('td');
+        commentCell.colSpan = columns.length + 1;
+    
+        const commentDiv = document.createElement('div');
+        commentDiv.textContent = row.commentaire;
+        commentDiv.contentEditable = true; 
+        commentDiv.className = "case_clair editable-content";
+        commentCell.appendChild(commentDiv);
+        commentRow.appendChild(commentCell);
+    
+        table.appendChild(commentRow);
+        
+    }
 
     if (row.subRows && row.subRows.length) {
         row.subRows.forEach(subRow => {
@@ -369,14 +476,36 @@ if (total) {
 
     totalHeader.textContent = '+ Total'; // Commencez avec "+ Total"
 
+    //cacher les lignes et colonnes sans total quand on clique sur total
     totalHeader.onclick = function() {
         const isCollapsed = totalHeader.textContent.startsWith('+');
         const rowsToToggle = Array.from(table.querySelectorAll('tr:not(:first-child):not(.total-row)'));
+        const columnIndicesToHide = getColumnIndicesToHide(columns);
+
+        console.log(columnIndicesToHide);
+        
         rowsToToggle.forEach(row => {
             row.style.display = isCollapsed ? '' : 'none';
         });
+    
+        columnIndicesToHide.forEach(columnIndex => {
+            for (let row of table.rows) {
+                const cell = row.cells[columnIndex + 1];
+                if (cell) {
+                    cell.style.display = isCollapsed ? '' : 'none';
+                }
+            }
+        });
+    
         totalHeader.textContent = isCollapsed ? '- Total' : '+ Total';
-    };
+
+        //fermer les commentaires
+        const commentRows = Array.from(table.querySelectorAll('tr.comment-row')); // supposez que chaque ligne de commentaire a la classe "comment-row"
+        commentRows.forEach(commentRow => {
+        commentRow.style.display = "none";
+    });
+}
+    
 
     totalRow.appendChild(totalHeader);
 
@@ -390,8 +519,15 @@ if (total) {
             td.className = "case_petite case_fonce";
 
             for (let i = 0; i < rows.length; i++) {
-                const cell = table.rows[i + 1].cells[columnIndex + 1];
+                const currentRow = table.rows[i + 1];
+    
+                // Vérifiez si c'est une rangée de commentaire, et si c'est le cas, passez à la prochaine itération
+                if (currentRow.classList.contains('comment-row')) {
+                    continue;
+                }
+                const cell = currentRow.cells[columnIndex + 1];
                 const inputElement = cell.querySelector('input');
+
                 let cellValue;
                 if (inputElement) {
                     cellValue = parseFloat(inputElement.value || 0);
@@ -417,6 +553,17 @@ if (total) {
     const rowsToHide = Array.from(table.querySelectorAll('tr:not(:first-child):not(.total-row)'));
     rowsToHide.forEach(row => {
         row.style.display = 'none';
+    });
+
+    // Cachez initialement les colonnes dont shouldTotal est false
+    const columnIndicesToHide = getColumnIndicesToHide(columns);
+    columnIndicesToHide.forEach(columnIndex => {
+        for (let row of table.rows) {
+            const cell = row.cells[columnIndex + 1];
+            if (cell) {
+                cell.style.display = 'none';
+            }
+        }
     });
 }
 
@@ -478,7 +625,6 @@ inputTitle.className = "form-control case_clair case_petite";  // Style d'input
 th.appendChild(inputTitle);
 tr.appendChild(th);
 
-
 // style de case en fonction du type de case
 
 columns.forEach(column => {
@@ -513,7 +659,3 @@ if (total) {
 updateTotals(table, columns);
 }
 }
-
-
-//////////////////////////// fonction ouvrir/fermer un tableau /////////////////////////////
-
