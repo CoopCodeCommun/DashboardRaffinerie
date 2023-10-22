@@ -39,6 +39,16 @@ def suivi_budgetaire(request):
     }
     return render(request, 'suivi_budgetaire.html', context=context)
 
+def tableau_de_bord_perso(request):
+    """
+    Livre un template HTML tableau_de_bord_perso.html
+    Extension du template base.html
+    """
+    context = {
+        'name': request.user.email if request.user.is_authenticated else 'Anonymous',
+    }
+    return render(request, 'tableau_de_bord_perso.html', context=context)
+
 
 def subventions(request):
     """
@@ -88,6 +98,7 @@ def objectifs_indicateurs(request):
         'name': request.user.email if request.user.is_authenticated else 'Anonymous',
     }
     return render(request, 'objectifs_indicateurs.html', context=context)
+
 
 
 ### CONTROLEUR API ###

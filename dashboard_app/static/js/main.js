@@ -1,34 +1,20 @@
 
 //////////////////////////// menu //////////////////////////
 
-function showLoginForm() {
-    document.getElementById('loginForm').style.display = 'block';
-}
-function hideLoginForm() {
-    document.getElementById('loginForm').style.display = 'none';
-}
-function updateButtonText(element) {
-    const buttonText = element.textContent || element.innerText;
-    document.getElementById('dropdownMenuButton').textContent = buttonText;
-}
-
-// Générer les options du menu déroulant de la navbar
-const dropdownMenu = document.getElementById('dropdownMenuOptions');
-appData.menuOptions.forEach(option => {
-    const optionElement = document.createElement('a');
-    optionElement.className = 'dropdown-item';
-    optionElement.href = '#';
-    optionElement.textContent = option;
-    optionElement.onclick = function() {
-        updateButtonText(option);
-    };
-    dropdownMenu.appendChild(optionElement);
-});
-
-function updateButtonText(text) {
-    document.getElementById('dropdownMenuButton').textContent = text;
+// Fonction pour remplir le menu déroulant
+function populateDropdown() {
+    const dropdownMenu = document.getElementById('dropdownMenuOptions');
+    groupe_analytique.forEach(item => {
+        const a = document.createElement('a');
+        a.href = "#";
+        a.className = "dropdown-item";
+        a.textContent = ` ${item.name} `;
+        dropdownMenu.appendChild(a);
+    });
 }
 
+// Exécution des fonctions
+fetchAnalyticGroup().then(populateDropdown);
 
 //////////////////////////////// Générer les éléments du menu latéral ////////////////////////
 
@@ -43,22 +29,31 @@ document.addEventListener("DOMContentLoaded", function() {
 
     appData.sidebarOptions.forEach(option => {
         const li = document.createElement('li');
-        li.className = 'nav-item';
-
+        li.className = 'nav-item menu-item'; // Ajout de la classe 'menu-item'
+    
         const button = document.createElement('button');
         button.className = 'btn m-1 b-0';
 
-        if (option.link && window.location.href.includes(option.link)) {
-            button.classList.add('case_clair');
-        }
 
+        // lorsqu'on clique sur un menu
         button.addEventListener('click', () => {
-            sidebarMenu.querySelectorAll('.btn').forEach(btn => btn.classList.remove('case_clair'));
-            button.classList.add('case_clair');
+            // Fermez tous les autres menus sauf celui-ci
+            const allMenus = document.querySelectorAll('.menu-item');
+            allMenus.forEach(menu => {
+                if (menu !== li) {
+                    menu.classList.remove('open');
+                }
+            });
+        
+            if (option.submenu) {
+                li.classList.toggle('open');
+            }
+        
             if (option.link) {
                 window.location.href = option.link;
             }
         });
+        
 
         if (option.icon) {
             const icon = document.createElement('i');
@@ -70,13 +65,55 @@ document.addEventListener("DOMContentLoaded", function() {
         textSpan.className = 'font-weight-bold';
         textSpan.textContent = ` ${option.text}`;
 
-        if (!option.link) {
-            textSpan.style.textDecoration = 'line-through';
-        }
-
         button.appendChild(textSpan);
+
         li.appendChild(button);
-        sidebarMenu.appendChild(li);
+
+        
+
+    // Gestion des sous-menus
+    if (option.submenu) {
+        const subMenuUl = document.createElement('ul');
+        subMenuUl.className = 'submenu';
+
+        option.submenu.forEach(subOption => {
+            const subLi = document.createElement('li');
+            subLi.className = 'submenu-item';
+        
+            const subButton = document.createElement('button');
+            subButton.className = 'btn m-1 b-0';
+            
+            if (subOption.icon) {
+                const subIcon = document.createElement('i');
+                subIcon.className = subOption.icon;
+                subButton.appendChild(subIcon);
+            }
+            
+            const subTextSpan = document.createElement('span');
+            subTextSpan.className = 'font-weight-bold';
+            subTextSpan.textContent = ` ${subOption.text}`;
+        
+            // Si le sous-menu n'a pas de lien, barrer le texte
+            if (!subOption.link) {
+                subTextSpan.classList.add('sousmenusanslien');
+            }
+        
+            subButton.appendChild(subTextSpan);
+            
+            // Ajout de l'événement click pour le sous-menu
+            subButton.addEventListener('click', () => {
+                if (subOption.link) {
+                    window.location.href = subOption.link;
+                }
+            });
+        
+            subLi.appendChild(subButton);
+            subMenuUl.appendChild(subLi);
+        });
+
+        li.appendChild(subMenuUl);
+    }        
+    sidebarMenu.appendChild(li);
     });
 });
 
@@ -84,8 +121,9 @@ document.addEventListener("DOMContentLoaded", function() {
 let groupeTableaux;
 if (window.location.href.includes('subventions')) {groupeTableaux = tableaux.subventions;} 
 else if (window.location.href.includes('repertoire')) {groupeTableaux = tableaux.repertoire;} 
-// else if (window.location.href.includes('organigramme')) {groupeTableaux = tableaux.organigramme;}
-else if (window.location.href.includes('suivi_budgetaire')) {groupeTableaux = tableaux.suivi_budgetaire;}
+else if (window.location.href.includes('organigramme')) {groupeTableaux = tableaux.organigramme;}
+else if (window.location.href.includes('tableau_de_bord_perso')) {groupeTableaux = tableaux.tableau_de_bord_perso;}
+else if (window.location.href.includes('suivi_budgetaire')) {groupeTableaux = tableaux.suivi_budgetaire;} 
 else if (window.location.href.includes('objectifs_indicateurs')) {groupeTableaux = tableaux.objectifs_indicateurs;}  
 
 for (let nom_tableau in groupeTableaux) {
@@ -170,6 +208,7 @@ headerRow.appendChild(firstHeader);
 columns.forEach(column => {
     const th = document.createElement('th');
     th.textContent = column.name;
+    th.classList.add('header-text');
     headerRow.appendChild(th);
 });
 table.appendChild(headerRow);
@@ -181,6 +220,8 @@ rows.forEach(row => {
     const th = document.createElement('th');
     th.className = "case_petite";
     th.textContent = row.name;
+    th.style.minWidth = '20px';
+    th.classList.add('header-text');
 
     if (row.subRows && row.subRows.length > 0) {
         const toggleButton = document.createElement('button');
@@ -250,6 +291,7 @@ rows.forEach(row => {
             const subTh = document.createElement('th');
             subTh.className = "case_petite";
             subTh.textContent = subRow.name;
+            subTh.classList.add('header-text');
             subTr.appendChild(subTh);
 
             columns.forEach(() => {
@@ -312,48 +354,72 @@ if (newline) {
 //option création d'un pied de tableau qui fait les totaux des colonnes
 
 if (total) {
-const totalRow = document.createElement('tr');
-totalRow.className = "case_petite total-row";
+    const totalRow = document.createElement('tr');
+    totalRow.className = "case_petite total-row";
 
-const totalHeader = document.createElement('td');
-totalHeader.style.textAlign = 'right';
-totalHeader.style.verticalAlign = 'middle';  
-totalHeader.style.fontWeight = 'bold';       
-totalHeader.textContent = 'Total';
-totalRow.appendChild(totalHeader);
+    const totalHeader = document.createElement('td');
+    totalHeader.style.textAlign = 'right';
+    totalHeader.style.verticalAlign = 'middle';  
+    totalHeader.style.fontWeight = 'bold';
+    totalHeader.classList.add('header-text');        
+    totalHeader.style.cursor = 'pointer'; // Assurez-vous que le curseur est une main lorsque vous survolez "Total" ou "+/-"
+    totalHeader.style.minWidth = '50px'; // Ajustez la largeur minimale selon vos besoins
+    totalHeader.style.whiteSpace = 'nowrap'; // Empêche le texte de passer à la ligne suivante
+    totalHeader.style.overflow = 'visible'; // Gère le débordement du contenu
 
-columns.forEach((column, columnIndex) => {
-    const td = document.createElement('td');
-    td.style.textAlign = 'center';
-    td.style.verticalAlign = 'middle';
+    totalHeader.textContent = '+ Total'; // Commencez avec "+ Total"
 
-    if (column.shouldTotal !== false) {
-        let sum = 0;
-        td.className = "case_petite case_fonce";
+    totalHeader.onclick = function() {
+        const isCollapsed = totalHeader.textContent.startsWith('+');
+        const rowsToToggle = Array.from(table.querySelectorAll('tr:not(:first-child):not(.total-row)'));
+        rowsToToggle.forEach(row => {
+            row.style.display = isCollapsed ? '' : 'none';
+        });
+        totalHeader.textContent = isCollapsed ? '- Total' : '+ Total';
+    };
 
-        for (let i = 0; i < rows.length; i++) {
-            const cell = table.rows[i + 1].cells[columnIndex + 1];
-            const inputElement = cell.querySelector('input');
-            let cellValue;
-            if (inputElement) {
-                cellValue = parseFloat(inputElement.value || 0);
-            } else {
-                cellValue = parseFloat(cell.textContent || cell.innerText || 0);
+    totalRow.appendChild(totalHeader);
+
+    columns.forEach((column, columnIndex) => {
+        const td = document.createElement('td');
+        td.style.textAlign = 'center';
+        td.style.verticalAlign = 'middle';
+
+        if (column.shouldTotal !== false) {
+            let sum = 0;
+            td.className = "case_petite case_fonce";
+
+            for (let i = 0; i < rows.length; i++) {
+                const cell = table.rows[i + 1].cells[columnIndex + 1];
+                const inputElement = cell.querySelector('input');
+                let cellValue;
+                if (inputElement) {
+                    cellValue = parseFloat(inputElement.value || 0);
+                } else {
+                    cellValue = parseFloat(cell.textContent || cell.innerText || 0);
+                }
+                if (!isNaN(cellValue)) {
+                    sum += cellValue;
+                }
             }
-            if (!isNaN(cellValue)) {
-                sum += cellValue;
-            }
+            td.textContent = sum.toFixed(0);
+        } else {
+            td.textContent = '';
+            td.className = "case_petite"; 
         }
-        td.textContent = sum.toFixed(0);
-    } else {
-        td.textContent = '';
-        td.className = "case_petite"; 
-    }
 
-    totalRow.appendChild(td);
-});
-table.appendChild(totalRow);
+        totalRow.appendChild(td);
+    });
+    
+    table.appendChild(totalRow);
+
+    // Cachez initialement toutes les rangées sauf la rangée totale
+    const rowsToHide = Array.from(table.querySelectorAll('tr:not(:first-child):not(.total-row)'));
+    rowsToHide.forEach(row => {
+        row.style.display = 'none';
+    });
 }
+
 
 tableDiv.appendChild(table);
 container.appendChild(tableDiv);
@@ -450,29 +516,4 @@ updateTotals(table, columns);
 
 
 //////////////////////////// fonction ouvrir/fermer un tableau /////////////////////////////
-
-
-function toggleSection(element) {
-const content = element.nextElementSibling;
-if (content.style.display === "none" || !content.style.display) {
-    content.style.display = "block";
-    element.querySelector(".toggleSign").textContent = "-";
-} else {
-    content.style.display = "none";
-    element.querySelector(".toggleSign").textContent = "+";
-}
-}
-
- document.addEventListener("DOMContentLoaded", function() {
-    fetch('http://localhost:8000/api/comptes/')
-    .then(response => response.json())
-    .then(data => {
-        // Suppose que l'API renvoie un tableau de noms de comptes
-        menuOptions = data;
-        
-        // Après cette étape, vous pourrez utiliser `menuOptions` 
-        // pour n'importe quelle autre opération nécessaire dans votre script.
-    })
-    .catch(error => console.error('Erreur de fetch:', error));
-});
 
