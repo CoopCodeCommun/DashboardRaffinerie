@@ -84,8 +84,8 @@ document.addEventListener("DOMContentLoaded", function() {
 let groupeTableaux;
 if (window.location.href.includes('subventions')) {groupeTableaux = tableaux.subventions;} 
 else if (window.location.href.includes('repertoire')) {groupeTableaux = tableaux.repertoire;} 
-else if (window.location.href.includes('organigramme')) {groupeTableaux = tableaux.organigramme;}
-else if (window.location.href.includes('suivi_budgetaire')) {groupeTableaux = tableaux.suivi_budgetaire;} 
+// else if (window.location.href.includes('organigramme')) {groupeTableaux = tableaux.organigramme;}
+else if (window.location.href.includes('suivi_budgetaire')) {groupeTableaux = tableaux.suivi_budgetaire;}
 else if (window.location.href.includes('objectifs_indicateurs')) {groupeTableaux = tableaux.objectifs_indicateurs;}  
 
 for (let nom_tableau in groupeTableaux) {

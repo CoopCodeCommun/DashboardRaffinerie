@@ -1,0 +1,30 @@
+<!-- membre + recap -->
+<section class="row">
+    <!-- membre du collectif -->
+    <section class="col-md-5" style="display: flex;  align-items: stretch;">
+        <div class="rose p-2 case">
+            <create-toggle title="Organigramme" style="cursor: pointer;"></create-toggle>
+            <div class="contentToShowHide" style="display: block;">
+                <div id="tableau_organigramme">
+                    <div id="tableau_content" class="case_clair h-100" style="margin: 0px;">
+                        <div style="font-weight: bold; margin-top: 0px; padding: 5px 0px 0px 10px;"></div>
+                        <table class="no-border table-spacing">
+                            <tr>
+                                <th></th>
+                                <th>Code analytique</th>
+                                <th>garant du cadre</th>
+                                <th>référent budget / subventions</th>
+                                <th>référent tâche / planning</th>
+                            </tr>
+                            {% for contact in contacts %}
+                                {% include "organigramme/ligne_organigramme.html" %}
+                            {% endfor %}
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+
+</section>

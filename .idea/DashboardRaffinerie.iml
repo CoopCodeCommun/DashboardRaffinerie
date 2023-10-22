@@ -19,8 +19,6 @@
     <orderEntry type="module" module-name="wetransfer_src_2023-08-01_0828" />
     <orderEntry type="library" name="popper.js" level="application" />
     <orderEntry type="library" name="jquery" level="application" />
-    <orderEntry type="module" module-name="Qonto-to-Odoo" />
-    <orderEntry type="module" module-name="Odoo" />
   </component>
   <component name="PyDocumentationSettings">
     <option name="format" value="PLAIN" />
