@@ -62,14 +62,20 @@ def subventions(request):
 
 
 def organigramme(request):
-    """
-    Livre un template HTML organigramme.html
-    Extension du template base.html
-    """
-    context = {
-        'name': request.user.email if request.user.is_authenticated else 'Anonymous',
+    # Pour les tests, on va créer quelques contacts :
+    # En prod, ils seront déja récupéré par odoo dans une autre étape
+    Contact.objects.get_or_create(nom="Benoit", id_odoo=12)
+    Contact.objects.get_or_create(nom="Jessica", id_odoo=13)
+    Contact.objects.get_or_create(nom="Camille", id_odoo=14)
+    Contact.objects.get_or_create(nom="Jules", id_odoo=15)
+
+    # dans le template html, on pourra alors afficher toute les infos
+    # disponible dans le modèle Contact (models.py)
+    contexte = {
+        'contacts' : Contact.objects.filter(nom__isnull=False)
     }
-    return render(request, 'organigramme.html', context=context)
+    # import ipdb; ipdb.set_trace()
+    return render(request, 'organigramme2.html', context=contexte)
 
 
 def repertoire(request):
