@@ -56,104 +56,104 @@ document.addEventListener("DOMContentLoaded", function() {
 
 //////////////////////////////// Générer les éléments du menu latéral ////////////////////////
 
- 
-document.addEventListener("DOMContentLoaded", function() {
-
-    const sidebarMenu = document.getElementById('sidebarMenu');
-    if (!sidebarMenu) {
-        console.error("L'élément avec l'ID 'sidebarMenu' n'a pas été trouvé.");
-        return;
-    }
-
-    appData.sidebarOptions.forEach(option => {
-        const li = document.createElement('li');
-        li.className = 'nav-item menu-item'; // Ajout de la classe 'menu-item'
-    
-        const button = document.createElement('button');
-        button.className = 'btn m-1 b-0';
-
-
-        // lorsqu'on clique sur un menu
-        button.addEventListener('click', () => {
-            // Fermez tous les autres menus sauf celui-ci
-            const allMenus = document.querySelectorAll('.menu-item');
-            allMenus.forEach(menu => {
-                if (menu !== li) {
-                    menu.classList.remove('open');
-                }
-            });
-        
-            if (option.submenu) {
-                li.classList.toggle('open');
-            }
-        
-            if (option.link) {
-                window.location.href = option.link;
-            }
-        });
-        
-
-        if (option.icon) {
-            const icon = document.createElement('i');
-            icon.className = option.icon;
-            button.appendChild(icon);
-        }
-
-        const textSpan = document.createElement('span');
-        textSpan.className = 'font-weight-bold';
-        textSpan.textContent = ` ${option.text}`;
-
-        button.appendChild(textSpan);
-
-        li.appendChild(button);
-
-        
-
-    // Gestion des sous-menus
-    if (option.submenu) {
-        const subMenuUl = document.createElement('ul');
-        subMenuUl.className = 'submenu';
-
-        option.submenu.forEach(subOption => {
-            const subLi = document.createElement('li');
-            subLi.className = 'submenu-item';
-        
-            const subButton = document.createElement('button');
-            subButton.className = 'btn m-1 b-0';
-            
-            if (subOption.icon) {
-                const subIcon = document.createElement('i');
-                subIcon.className = subOption.icon;
-                subButton.appendChild(subIcon);
-            }
-            
-            const subTextSpan = document.createElement('span');
-            subTextSpan.className = 'font-weight-bold';
-            subTextSpan.textContent = ` ${subOption.text}`;
-        
-            // Si le sous-menu n'a pas de lien, barrer le texte
-            if (!subOption.link) {
-                subTextSpan.classList.add('sousmenusanslien');
-            }
-        
-            subButton.appendChild(subTextSpan);
-            
-            // Ajout de l'événement click pour le sous-menu
-            subButton.addEventListener('click', () => {
-                if (subOption.link) {
-                    window.location.href = subOption.link;
-                }
-            });
-        
-            subLi.appendChild(subButton);
-            subMenuUl.appendChild(subLi);
-        });
-
-        li.appendChild(subMenuUl);
-    }        
-    sidebarMenu.appendChild(li);
-    });
-});
+//
+// document.addEventListener("DOMContentLoaded", function() {
+//
+//     const sidebarMenu = document.getElementById('sidebarMenu');
+//     if (!sidebarMenu) {
+//         console.error("L'élément avec l'ID 'sidebarMenu' n'a pas été trouvé.");
+//         return;
+//     }
+//
+//     appData.sidebarOptions.forEach(option => {
+//         const li = document.createElement('li');
+//         li.className = 'nav-item menu-item'; // Ajout de la classe 'menu-item'
+//
+//         const button = document.createElement('button');
+//         button.className = 'btn m-1 b-0';
+//
+//
+//         // lorsqu'on clique sur un menu
+//         button.addEventListener('click', () => {
+//             // Fermez tous les autres menus sauf celui-ci
+//             const allMenus = document.querySelectorAll('.menu-item');
+//             allMenus.forEach(menu => {
+//                 if (menu !== li) {
+//                     menu.classList.remove('open');
+//                 }
+//             });
+//
+//             if (option.submenu) {
+//                 li.classList.toggle('open');
+//             }
+//
+//             if (option.link) {
+//                 window.location.href = option.link;
+//             }
+//         });
+//
+//
+//         if (option.icon) {
+//             const icon = document.createElement('i');
+//             icon.className = option.icon;
+//             button.appendChild(icon);
+//         }
+//
+//         const textSpan = document.createElement('span');
+//         textSpan.className = 'font-weight-bold';
+//         textSpan.textContent = ` ${option.text}`;
+//
+//         button.appendChild(textSpan);
+//
+//         li.appendChild(button);
+//
+//
+//
+//     // Gestion des sous-menus
+//     if (option.submenu) {
+//         const subMenuUl = document.createElement('ul');
+//         subMenuUl.className = 'submenu';
+//
+//         option.submenu.forEach(subOption => {
+//             const subLi = document.createElement('li');
+//             subLi.className = 'submenu-item';
+//
+//             const subButton = document.createElement('button');
+//             subButton.className = 'btn m-1 b-0';
+//
+//             if (subOption.icon) {
+//                 const subIcon = document.createElement('i');
+//                 subIcon.className = subOption.icon;
+//                 subButton.appendChild(subIcon);
+//             }
+//
+//             const subTextSpan = document.createElement('span');
+//             subTextSpan.className = 'font-weight-bold';
+//             subTextSpan.textContent = ` ${subOption.text}`;
+//
+//             // Si le sous-menu n'a pas de lien, barrer le texte
+//             if (!subOption.link) {
+//                 subTextSpan.classList.add('sousmenusanslien');
+//             }
+//
+//             subButton.appendChild(subTextSpan);
+//
+//             // Ajout de l'événement click pour le sous-menu
+//             subButton.addEventListener('click', () => {
+//                 if (subOption.link) {
+//                     window.location.href = subOption.link;
+//                 }
+//             });
+//
+//             subLi.appendChild(subButton);
+//             subMenuUl.appendChild(subLi);
+//         });
+//
+//         li.appendChild(subMenuUl);
+//     }
+//     sidebarMenu.appendChild(li);
+//     });
+// });
 
 // création des tableaux avec les données de datas.js, vérifie quel page est affiché et charge les données des tableaux corespondants
 let groupeTableaux;

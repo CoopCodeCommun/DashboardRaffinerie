@@ -1,0 +1,47 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+
+{% load static %}
+
+<html lang="fr">
+<head>
+    <meta content="text/html; charset=UTF-8" http-equiv="Content-Type"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="{% static 'css/main.css' %}"/>
+    <link rel="stylesheet" href="{% static 'bootstrap/bootstrap.5.3.2.min.css' %}"/>
+    <!-- JavaScript Bundle with Popper -->
+
+
+    <title>Dashboard Raffinerie</title>
+</head>
+<body>
+
+{% include 'navbar.html' %}
+
+<div class="container-fluid">
+    <!-- Menu Lateral et Tableau -->
+    <div class="row">
+        <!-- Menu Lateral -->
+        {% include 'dashboard/menu_lateral.html' %}
+
+        {% block content %}
+        {% endblock content %}
+
+    </div>
+</div>
+
+
+{% block script %}
+{% endblock script %}
+
+{#Julien.js#}
+<script src='{% static "js/datas.js" %}' type="application/javascript"></script>
+<script src='{% static "js/main.js" %}' type="application/javascript"></script>
+
+<!-- Bootstrap JS, Popper.js, and jQuery -->
+<script src="{% static 'js/jquery_3.5.1.js' %}" type="application/javascript"></script>
+<script src="{% static 'js/popper.1.16.0.js' %}" type="application/javascript"></script>
+<script src="{% static 'bootstrap/bootstrap.5.3.2.bundle.min.js' %}" type="application/javascript"></script>
+<script src="{% static 'js/hyperscript.0.9.11.min.js' %}" type="application/javascript"></script>
+
+</body>
+</html>

@@ -1,0 +1,50 @@
+{% load static %}
+<!-- barre de menu supérieure -->
+<nav class="navbar bleu case m-2">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col">
+                <!-- Bouton de sélection de l'année avec sélection déroulante -->
+                <div class="dropdown">
+                    <button class=" case_clair no-border" type="button"
+                            id="yearDropdownButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        <span id="selectedYear">Sélectionnez une année</span>
+                    </button>
+                    <div class="dropdown-menu" aria-labelledby="yearDropdownButton" id="yearDropdownOptions">
+                        <!-- Les années seront insérées ici -->
+                    </div>
+                </div>
+            </div>
+            <div class="col">
+                <!-- Bouton selection pôle avec sélection déroulante -->
+                <div class="dropdown">
+                    <button class="case_clair no-border" type="button"
+                            id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        <span id="selectedPole">Sélectionnez un pôle</span>
+                    </button>
+                    <div class="dropdown-menu" aria-labelledby="dropdownMenuButton" id="dropdownMenuOptions">
+                        <!-- Les éléments de l'API seront insérés ici -->
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col ml-auto">
+            <!-- Bouton se connecter -->
+            <button class="btn bleu case style_input case_clair" onclick="showLoginForm()">Se connecter</button>
+
+            <div class="login-form" id="loginForm" style="display: none;">
+                <form>
+                    <label for="username">Identifiant :</label>
+                    <input type="text" id="username" name="username">
+
+                    <label for="password">Mot de passe :</label>
+                    <input type="password" id="password" name="password">
+
+                    <button type="submit" class="btn btn-primary">Valider</button>
+                    <button type="button" class="btn btn-secondary" onclick="hideLoginForm()">Annuler</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</nav>
+

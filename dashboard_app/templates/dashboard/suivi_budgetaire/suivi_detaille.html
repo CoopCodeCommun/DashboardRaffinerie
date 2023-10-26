@@ -1,0 +1,194 @@
+<div class="jaune p-2 my-3 case">
+    <create-toggle title="Suivi budgétaire détaillé"></create-toggle>
+    <div class="contentToShowHide">
+        <div class="row mx-1 gx-2">
+            <!-- Dépenses -->
+            <div class="col-md-6 p-2 case case_clair">
+
+                <create-toggle title="Dépenses"></create-toggle>
+                <div class="contentToShowHide">
+
+                    <div class="case_clair">
+                        <!-- bienveillance -->
+                        <section class="px-2">
+                            <div class="row">
+                                <div class="col-md-4 p-2">
+                                    <div class="titre colonne_prev">
+                                        Prévisionnel
+                                    </div>
+                                </div>
+                                <div class="col-md-8 p-2">
+                                    <div class="titre colonne_reel">
+                                        Réel
+                                    </div>
+                                </div>
+                                <create-toggle title="Bienveillance"></create-toggle>
+                                <div class="contentToShowHide">
+                                    <div class="row">
+                                        <div class="col-md-4 p-2">
+                                            <div id="tableau_prev_bienveillance"
+                                                 class="h-100 colonne_prev"></div>
+                                        </div>
+                                        <div class="col-md-8 p-2">
+                                            <div id="tableau_reel_bienveillance"
+                                                 class="h-100 colonne_reel"></div>
+                                        </div>
+                                    </div>
+                                </div>
+                        </section>
+
+                        <!-- prestation interne -->
+                        <section class="px-2">
+                            <create-toggle title="Prestations internes"></create-toggle>
+                            <div class="contentToShowHide">
+                                <div class="row">
+                                    <div class="col-md-4 p-2">
+                                        <div id="tableau_prev_prestations_internes"
+                                             class="h-100 colonne_prev"></div>
+                                    </div>
+                                    <div class="col-md-8 p-2">
+                                        <div id="tableau_reel_prestations_internes"
+                                             class="h-100 colonne_reel"></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </section>
+
+                        <!-- prestation externe -->
+                        <section class="px-2">
+                            <create-toggle title="Prestations externes / achats"></create-toggle>
+                            <div class="contentToShowHide">
+                                <div class="row">
+                                    <div class="col-md-4 p-2">
+                                        <div id="tableau_prev_prestations_externes"
+                                             class="h-100 colonne_prev"></div>
+                                    </div>
+                                    <div class="col-md-8 p-2">
+                                        <div id="tableau_reel_prestations_externes"
+                                             class="h-100 colonne_reel"></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </section>
+
+                        <!-- dépenses internes -->
+                        <section class="px-2">
+                            <create-toggle title="Dépenses internes"></create-toggle>
+                            <div class="contentToShowHide">
+                                <div class="row">
+                                    <div class="col-md-4 p-2">
+                                        <div id="tableau_prev_depenses_internes"
+                                             class="h-100 colonne_prev"></div>
+                                    </div>
+                                    <div class="col-md-8 p-2">
+                                        <div id="tableau_reel_depenses_internes"
+                                             class="h-100 colonne_reel"></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </section>
+
+                        <!-- recap -->
+                        <section class="px-2">
+                            <create-toggle title="Recap"></create-toggle>
+                            <div class="contentToShowHide">
+                                <div class="row">
+                                    <div class="col p-2 case">
+                                        <div id="tableau_suivi_recap_depenses"></div>
+                                    </div>
+                                </div>
+                        </section>
+                    </div>
+                </div>
+            </div>
+
+            <!-- recette -->
+            <section class="col-md-6 p-2 case case_clair">
+                <create-toggle title="Recettes"></create-toggle>
+                <div class="contentToShowHide">
+                    <div class="case_clair">
+                        <!-- Subventions aap -->
+                        <section class="px-2">
+                            <div class="row">
+                                <div class="col-md-4 p-2">
+                                    <div class="titre colonne_prev">
+                                        Prévisionnel
+                                    </div>
+                                </div>
+                                <div class="col-md-8 p-2">
+                                    <div class="titre colonne_reel">
+                                        Réel
+                                    </div>
+                                </div>
+                                <create-toggle
+                                        title="Subventions / Appels à projet"></create-toggle>
+                                <div class="contentToShowHide">
+                                    <div class="row">
+                                        <div class="col-md-4 p-2">
+                                            <div id="tableau_prev_subvention"
+                                                 class="h-100 colonne_prev"></div>
+                                        </div>
+                                        <div class="col-md-8 p-2">
+                                            <div id="tableau_reel_subvention"
+                                                 class="h-100 colonne_reel"></div>
+                                        </div>
+                                    </div>
+                                </div>
+                        </section>
+
+                        <!-- Prestations -->
+                        <section class="px-2">
+                            <create-toggle title="Prestations"></create-toggle>
+                            <div class="contentToShowHide">
+                                <div class="row">
+                                    <div class="col-md-4 p-2">
+                                        <div id="tableau_prev_prestations"
+                                             class="h-100 colonne_prev"></div>
+                                    </div>
+                                    <div class="col-md-8 p-2">
+                                        <div id="tableau_reel_prestations"
+                                             class="h-100 colonne_reel"></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </section>
+
+                        <!-- Ventes -->
+                        <section class="px-2">
+                            <create-toggle title="Ventes"></create-toggle>
+                            <div class="contentToShowHide">
+                                <div class="row">
+                                    <div class="col-md-4 p-2">
+                                        <div id="tableau_prev_ventes"
+                                             class="h-100 colonne_prev"></div>
+                                    </div>
+                                    <div class="col-md-8 p-2">
+                                        <div id="tableau_reel_ventes"
+                                             class="h-100 colonne_reel"></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </section>
+
+                        <!-- Recettes internes -->
+                        <section class="px-2">
+                            <create-toggle title="Recettes internes"></create-toggle>
+                            <div class="contentToShowHide">
+                                <div class="row">
+                                    <div class="col-md-4 p-2">
+                                        <div id="tableau_prev_recettes_internes"
+                                             class="h-100 colonne_prev"></div>
+                                    </div>
+                                    <div class="col-md-8 p-2">
+                                        <div id="tableau_reel_recettes_internes"
+                                             class="h-100 colonne_reel"></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </section>
+                    </div>
+                </div>
+            </section>
+        </div>
+    </div>
+</div>

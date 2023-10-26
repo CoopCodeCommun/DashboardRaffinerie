@@ -51,9 +51,10 @@
 }
 
 /* Afficher le sous-menu lorsque la classe "open" est ajoutée */
-.nav-item.open .submenu {
+.open {
     display: block;
 }
+
 
 .sousmenusanslien {
     /*text-decoration: line-through; pour barrer le texte*/

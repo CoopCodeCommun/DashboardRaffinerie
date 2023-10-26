@@ -30,14 +30,12 @@ def index(request):
 
 
 def suivi_budgetaire(request):
-    """
-    Livre un template HTML suivi_budgetaire.html
-    Extension du template base.html
-    """
+
     context = {
         'name': request.user.email if request.user.is_authenticated else 'Anonymous',
     }
-    return render(request, 'suivi_budgetaire.html', context=context)
+
+    return render(request, 'dashboard/suivi_budgetaire/suivi_budgetaire.html', context=context)
 
 def tableau_de_bord_perso(request):
     """
@@ -72,7 +70,8 @@ def organigramme(request):
     # dans le template html, on pourra alors afficher toute les infos
     # disponible dans le modèle Contact (models.py)
     contexte = {
-        'contacts' : Contact.objects.filter(nom__isnull=False)
+        'contacts' : Contact.objects.filter(nom__isnull=False),
+        'variable': "Hide"
     }
     # import ipdb; ipdb.set_trace()
     return render(request, 'organigramme2.html', context=contexte)

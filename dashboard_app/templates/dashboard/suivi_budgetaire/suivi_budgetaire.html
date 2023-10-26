@@ -1,0 +1,28 @@
+{% extends 'dashboard/base.html' %}
+{% load static %}
+{% load tz %}
+
+{% block content %}
+    <!-- suivi budgétaire -->
+    <div class="col-md-10 ">
+        <!-- membre + recap -->
+        <section class="row">
+            <!-- membre du collectif -->
+            {% include 'dashboard/suivi_budgetaire/membre_du_collectif.html' %}
+            <!-- recap budget -->
+            {% include 'dashboard/suivi_budgetaire/recapitulatif_budget.html' %}
+        </section>
+
+        <!-- Suivi détaillé -->
+        <section>
+            {% include 'dashboard/suivi_budgetaire/suivi_detaille.html' %}
+        </section>
+
+    </div>
+
+
+{% endblock content %}
+
+{% block script %}
+
+{% endblock script %}
