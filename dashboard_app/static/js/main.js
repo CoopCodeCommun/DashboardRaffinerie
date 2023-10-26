@@ -481,7 +481,6 @@ if (total) {
     });
 }
     
-
     totalRow.appendChild(totalHeader);
 
     columns.forEach((column, columnIndex) => {

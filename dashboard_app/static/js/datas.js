@@ -14,6 +14,7 @@ const appData = {
     menuOptions: ['vélo', 'Groupe Culture', 'Micro recyclerie', 'champignonnière'],
     annees: ['2022', '2023', '2024', '2025'],
     
+    
     // les différents menu dans la barre latéral
 
     sidebarOptions: [
