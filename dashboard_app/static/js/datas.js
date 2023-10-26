@@ -97,7 +97,7 @@ let tableaux = {
             titre : "Recettes",
             total: true,
             newline: false,
-            rows: ['suventions / app', 'prestations', 'ventes', 'recette int'].map(name => ({ name })),
+            rows: ['subventions / app', 'prestations', 'ventes', 'recette int'].map(name => ({ name })),
             columns: [
                 { name: 'prév.',}, 
                 { name: 'encaissé',},
@@ -151,7 +151,7 @@ let tableaux = {
             columns: [
             { name: 'Montant', input: true, },
             ], 
-        },  
+        },
 
         //données réel prestation interne
         tableau_reel_prestations_internes:{

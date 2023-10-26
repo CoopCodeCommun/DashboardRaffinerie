@@ -222,31 +222,6 @@ customElements.define('create-toggle', CreateToggle);
 
 /////////////////////////// Creation tableau ////////////////////////////////
 
-function groupAndSumRows(rows, columns) {
-    const groupedData = {};
-
-    rows.forEach(row => {
-        if (!groupedData[row.name]) {
-            groupedData[row.name] = { ...row, count: 0 };
-        }
-        groupedData[row.name].count += 1;
-
-        columns.forEach((column, colIndex) => {
-            if (column.shouldTotal !== false) {
-                groupedData[row.name][`col_${colIndex}`] = (groupedData[row.name][`col_${colIndex}`] || 0) + (row[`col_${colIndex}`] || 0);
-            }
-        });
-    });
-
-    const result = [];
-    for (const name in groupedData) {
-        result.push(groupedData[name]);
-    }
-
-    return result;
-}
-
-
 function getColumnIndicesToHide(columns) {
     return columns.reduce((indices, column, index) => {
         if (column.shouldTotal === false) {
