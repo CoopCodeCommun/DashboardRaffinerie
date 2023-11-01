@@ -68,17 +68,17 @@ let tableaux = {
     //suivi budgétaire
 
         //recap membres du collectif
-        tableau_membre_collectif: {
-            titre: "", 
-            total: true, 
-            newline: true, 
-            rows: [{ name: 'Paul' },{ name: 'Jessica' }, { name: 'Bob' },{ name: 'Marcel' }],
-            columns: [
-                { name: 'à valider' },
-                { name: 'à facturer' },
-                { name: 'à payer' }
-            ]
-        },
+        // tableau_membre_collectif: {
+        //     titre: "",
+        //     total: true,
+        //     newline: true,
+        //     rows: [{ name: 'Paul' },{ name: 'Jessica' }, { name: 'Bob' },{ name: 'Marcel' }],
+        //     columns: [
+        //         { name: 'à valider' },
+        //         { name: 'à facturer' },
+        //         { name: 'à payer' }
+        //     ]
+        // },
     
         //données recap depenses
             tableau_recap_depenses : {

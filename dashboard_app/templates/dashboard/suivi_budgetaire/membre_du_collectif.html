@@ -1,8 +1,51 @@
 <section class="col-md-4" style="display: flex;  align-items: stretch;">
+
+
     <div class="rose p-2 case">
-        <create-toggle title="Membres du collectif"></create-toggle>
-        <div class="contentToShowHide">
-            <div id="tableau_membre_collectif"></div>
+        <create-toggle title="Membres du collectif" style="cursor: pointer;"></create-toggle>
+        <div class="contentToShowHide" style="display: block;">
+            <div id="tableau_membre_collectif">
+                <div id="tableau_content" class="case_clair h-100" style="margin: 0px;">
+                    <div style="font-weight: bold; margin-top: 0px; padding: 5px 0px 0px 10px;"></div>
+                    <table class="no-border table-spacing">
+                        <tr>
+                            <th></th>
+                            <th class="header-text">à valider</th>
+                            <th class="header-text">à facturer</th>
+                            <th class="header-text">à payer</th>
+                        </tr>
+
+                        {% for membre in membres_du_collectif %}
+                            <tr class="case_petite">
+                                <th class="case_petite header-text" style="min-width: 20px;">{{ membre.nom }}</th>
+                                <td class="case_petite case_fonce"></td>
+                                <td class="case_petite case_fonce"></td>
+                                <td class="case_petite case_fonce"></td>
+                            </tr>
+                        {% endfor %}
+
+                        {# <tr style="display: none;">#}
+                        <tr>
+                            <td colspan="4">
+                                <button style="background: none; border: medium; cursor: pointer; font-size: 0.9em; outline: none;">
+                                    Ajouter ligne +
+                                </button>
+                            </td>
+                        </tr>
+                        <tr class="case_petite total-row">
+                            <td style="text-align: right; vertical-align: middle; font-weight: bold; cursor: pointer; min-width: 50px; white-space: nowrap; overflow: visible;"
+                                class="header-text">+ Total
+                            </td>
+                            <td style="text-align: center; vertical-align: middle;" class="case_petite case_fonce">0
+                            </td>
+                            <td style="text-align: center; vertical-align: middle;" class="case_petite case_fonce">0
+                            </td>
+                            <td style="text-align: center; vertical-align: middle;" class="case_petite case_fonce">0
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
         </div>
     </div>
 </section>

@@ -4,7 +4,7 @@
 <div class="col case">
     <div class="container-fluid">
         <div class="p-0 vert sidebar case row d-flex">
-            <nav class="p-0 vert sidebar case">
+            <nav class="p-0 vert sidebar case" hx-target="#main" hx-swap="outerHTML" hx-push-url="true">
                 <div class="sidebar-sticky">
                     <ul class="nav flex-column" id="sidebarMenu">
                         <li class="nav-item">
@@ -17,15 +17,15 @@
                         <li class="nav-item menu-item">
                             <button class="btn m-1 b-0" _="on click toggle .open on the next <ul/>"><i
                                     class="bi bi-currency-euro"></i><span
-                                    class="font-weight-bold"> Suivi budgétaire</span></button>
+                                    class="font-weight-bold">Suivi budgétaire</span></button>
                             <ul class="submenu">
                                 <li class="submenu-item">
-                                    <button class="btn m-1 b-0"><i class="bi bi-currency-euro"></i><span
-                                            class="font-weight-bold"> Tableaux budgétaires</span></button>
+                                    <a class="btn m-1 b-0" hx-get="/suivi_budgetaire/"><i class="bi bi-currency-euro"></i><span
+                                            class="font-weight-bold">Tableaux budgétaires</span></a>
                                 </li>
                                 <li class="submenu-item">
-                                    <button class="btn m-1 b-0"><i class="bi bi-person-video2"></i><span
-                                            class="font-weight-bold"> Organigramme</span></button>
+                                    <a class="btn m-1 b-0" hx-get="/organigramme/"><i class="bi bi-person-video2"></i><span
+                                            class="font-weight-bold">Organigramme</span></a>
                                 </li>
                                 <li class="submenu-item">
                                     <button class="btn m-1 b-0"><i class="bi bi-cash-coin"></i><span

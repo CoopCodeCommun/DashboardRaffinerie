@@ -1,10 +1,10 @@
-{% extends 'dashboard/base.html' %}
+{% extends base_template %}
+
 {% load static %}
 {% load tz %}
 
 {% block content %}
     <!-- suivi budgétaire -->
-    <div class="col-md-10 ">
         <!-- membre + recap -->
         <section class="row">
             <!-- membre du collectif -->
@@ -18,7 +18,6 @@
             {% include 'dashboard/suivi_budgetaire/suivi_detaille.html' %}
         </section>
 
-    </div>
 
 
 {% endblock content %}
