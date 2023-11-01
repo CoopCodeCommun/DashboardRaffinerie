@@ -1,0 +1,16 @@
+<tr class="case_petite" style="">
+    <th class="case_petite header-text" style="min-width: 20px; cursor: pointer;">{{ ligne.contact.nom }}</th>
+    <td class="case_petite">{{ ligne.date }}</td>
+    <td class="case_petite">{{ ligne.proposition }}</td>
+    <td class="case_petite">{{ ligne.valide }}</td>
+    <td class="case_petite">{{ ligne.facture }}</td>
+    <td class="case_petite case_fonce">{{ ligne.paye }}</td>
+</tr>
+
+{% if ligne.commentaire %}
+    <tr class="comment-row">
+        <td colspan="6">
+            <span>{{ ligne.commentaire }}</span>
+        </td>
+    </tr>
+{% endif %}

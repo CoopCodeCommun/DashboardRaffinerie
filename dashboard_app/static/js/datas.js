@@ -121,27 +121,27 @@ let tableaux = {
         },
 
         //données réel bienveillance
-        tableau_reel_bienveillance :{
-            titre : "",
-            total: true,
-            newline: true,
-            rows: [
-                { name: 'kevin', },
-                { name: 'kevin', },
-                { name: 'Paul',commentaire: 'bienveillance du pôle sur mars' },
-                { name: 'Paul',commentaire: 'bienveillance du pôle sur avril' },
-                { name: 'Paul',commentaire: 'bienveillance du pôle sur avril' },
-                { name: 'kevin',commentaire: 'bienveillance du pôle sur mars' },
-                               
-                ],
-            columns: [
-                { name: 'date', input: true, shouldTotal: false  },
-                { name: 'propo.', input: true, },
-                { name: 'validé', input: true, },
-                { name: 'factu.', input: true, },
-                { name: 'payé', },
-            ],
-        },
+        // tableau_reel_bienveillance :{
+        //     titre : "",
+        //     total: true,
+        //     newline: true,
+        //     rows: [
+        //         { name: 'kevin', },
+        //         { name: 'kevin', },
+        //         { name: 'Paul',commentaire: 'bienveillance du pôle sur mars' },
+        //         { name: 'Paul',commentaire: 'bienveillance du pôle sur avril' },
+        //         { name: 'Paul',commentaire: 'bienveillance du pôle sur avril' },
+        //         { name: 'kevin',commentaire: 'bienveillance du pôle sur mars' },
+        //
+        //         ],
+        //     columns: [
+        //         { name: 'date', input: true, shouldTotal: false  },
+        //         { name: 'propo.', input: true, },
+        //         { name: 'validé', input: true, },
+        //         { name: 'factu.', input: true, },
+        //         { name: 'payé', },
+        //     ],
+        // },
 
         //données prévisionnel prestations internes
         tableau_prev_prestations_internes:{

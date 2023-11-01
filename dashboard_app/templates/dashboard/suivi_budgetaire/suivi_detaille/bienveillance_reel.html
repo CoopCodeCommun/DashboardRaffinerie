@@ -1,0 +1,41 @@
+<div class="col-md-8 p-2">
+    <div id="tableau_reel_bienveillance" class="h-100 colonne_reel">
+        <div id="tableau_content" class="case_clair h-100" style="margin: 0px;">
+            <div style="font-weight: bold; margin-top: 0px; padding: 5px 0px 0px 10px;"></div>
+            <table class="no-border table-spacing">
+                <tr>
+                    <th></th>
+                    <th class="header-text" style="">date</th>
+                    <th class="header-text">propo.</th>
+                    <th class="header-text">validé</th>
+                    <th class="header-text">factu.</th>
+                    <th class="header-text">payé</th>
+                </tr>
+
+                {% for ligne in depenses_bienveillances %}
+
+                    {% include 'dashboard/suivi_budgetaire/suivi_detaille/bienveillance_reel_ligne_read.html' %}
+
+                {% endfor %}
+
+                <tr style="">
+                    <td colspan="6">
+                        <button style="background: none; border: medium; cursor: pointer; font-size: 0.9em; outline: none;">
+                            Ajouter ligne +
+                        </button>
+                    </td>
+                </tr>
+                <tr class="case_petite total-row">
+                    <td style="text-align: right; vertical-align: middle; font-weight: bold; cursor: pointer; min-width: 50px; white-space: nowrap; overflow: visible;"
+                        class="header-text">- Total
+                    </td>
+                    <td style="text-align: center; vertical-align: middle;" class="case_petite"></td>
+                    <td style="text-align: center; vertical-align: middle;" class="case_petite case_fonce">0</td>
+                    <td style="text-align: center; vertical-align: middle;" class="case_petite case_fonce">0</td>
+                    <td style="text-align: center; vertical-align: middle;" class="case_petite case_fonce">0</td>
+                    <td style="text-align: center; vertical-align: middle;" class="case_petite case_fonce">0</td>
+                </tr>
+            </table>
+        </div>
+    </div>
+</div>

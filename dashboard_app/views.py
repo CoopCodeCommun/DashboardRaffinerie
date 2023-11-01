@@ -10,7 +10,7 @@ from rest_framework.response import Response
 from rest_framework.views import APIView
 
 from dashboard_app.models import Contact, AccountAccount, AccountJournal, AccountAnalyticGroup, AccountAnalyticAccount, \
-    Badge
+    Badge, DepensesBienveillance
 from dashboard_app.odoo_api import OdooApi
 from dashboard_app.serializers import UserSerializer
 from .serializers import AccountAnalyticGroupSerializer
@@ -39,6 +39,13 @@ def suivi_budgetaire(request):
     camille, created = Contact.objects.get_or_create(nom="Camille", id_odoo=14)
     badge_membre.contacts.set([benoit, jessica, camille])
 
+    # Partie Bienveillence Reel
+    # Pour les tests, on va créer quelques lignes :
+    group = AccountAnalyticGroup.objects.get_or_create(name="Culture", id_odoo=55)[0]
+    DepensesBienveillance.objects.get_or_create(contact=benoit, proposition=600, account_analytic_group=group)
+    DepensesBienveillance.objects.get_or_create(contact=jessica, proposition=1000, account_analytic_group=group)
+    DepensesBienveillance.objects.get_or_create(contact=camille, proposition=42, account_analytic_group=group, commentaire="La réponse à la vie, l'univers et le reste")
+
     # Si la requete vient d'un clic sur le menu, on ne charge que l'intérieur de la page, le client à déja le reste.
     # Si la requete vient de l'extérieur (barre de recherche), on charge toute la page.
     base_template = "dashboard/partial.html" if request.htmx else "dashboard/base.html"
@@ -47,6 +54,7 @@ def suivi_budgetaire(request):
 
         # Tous les contacts qui ont le badge "membre du collectif"
         'membres_du_collectif': Contact.objects.filter(badge=badge_membre),
+        'depenses_bienveillances': DepensesBienveillance.objects.all(),
     }
 
     return render(request, 'dashboard/suivi_budgetaire/suivi_budgetaire.html', context=context)

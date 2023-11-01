@@ -21,6 +21,7 @@ class Badge(models.Model):
     def __str__(self):
         return self.name
 
+
 ### TABLES POUR DONNEE VENANT DE ODOO : ###
 
 class Contact(models.Model):
@@ -39,6 +40,7 @@ class Contact(models.Model):
     # Un lien vers la table Badge
     # Many2Many car plusieurs contacts peuvent avoir le même badge
     badge = models.ManyToManyField(Badge, related_name='contacts', blank=True)
+
     def badge_stringify(self):
         return ", ".join([str(badge) for badge in self.badge.all()])
 
@@ -61,7 +63,6 @@ class Contact(models.Model):
                              on_delete=models.PROTECT,
                              null=True, blank=True)
 
-
     def bienveillance_a_valider(self):
         return random.randint(0, 100)
 
@@ -81,7 +82,6 @@ class Contact(models.Model):
         return self.id_odoo
 
 
-
 class AccountAccount(models.Model):
     uuid = models.UUIDField(primary_key=True, default=uuid4, editable=False, unique=True, db_index=False)
     name = models.CharField(max_length=100, db_index=True)
@@ -90,6 +90,7 @@ class AccountAccount(models.Model):
 
     def __str__(self):
         return f"{self.code} {self.name}"
+
 
 class AccountJournal(models.Model):
     uuid = models.UUIDField(primary_key=True, default=uuid4, editable=False, unique=True, db_index=False)
@@ -122,8 +123,6 @@ class AccountAnalyticAccount(models.Model):
         return self.name
 
 
-
-
 ### DONNEE DE CONFIGURATION ###
 
 class Configuration(SingletonModel):
@@ -147,10 +146,10 @@ class Configuration(SingletonModel):
         self.__original_odoo_apikey = self.odoo_apikey
 
     def save(self, *args, **kwargs):
-        if self.__original_qonto_apikey != self.qonto_apikey :
+        if self.__original_qonto_apikey != self.qonto_apikey:
             self.qonto_apikey = fernet_encrypt(self.qonto_apikey)
 
-        if self.__original_odoo_apikey != self.odoo_apikey :
+        if self.__original_odoo_apikey != self.odoo_apikey:
             self.odoo_apikey = fernet_encrypt(self.odoo_apikey)
 
         super().save(*args, **kwargs)
@@ -161,3 +160,19 @@ class Configuration(SingletonModel):
     def get_odoo_apikey(self):
         return fernet_decrypt(self.odoo_apikey)
 
+
+### TABLEAU SUIVI BUDGETAIRE DETAILLE ###
+
+class DepensesBienveillance(models.Model):
+    uuid = models.UUIDField(primary_key=True, default=uuid4, editable=False, unique=True, db_index=False)
+
+    date = models.DateField(auto_now=True)
+    proposition = models.DecimalField(max_digits=10, decimal_places=2)
+    valide = models.BooleanField(default=False)
+    facture = models.BooleanField(default=False)
+    paye = models.BooleanField(default=False)
+
+    contact = models.ForeignKey(Contact, on_delete=models.PROTECT)
+    account_analytic_group = models.ForeignKey(AccountAnalyticGroup, on_delete=models.PROTECT)
+
+    commentaire = models.TextField(blank=True, null=True)

@@ -5,16 +5,15 @@
             <div id="tableau_membre_collectif">
                 <div id="tableau_content" class="case_clair h-100" style="margin: 0px;">
                     <div style="font-weight: bold; margin-top: 0px; padding: 5px 0px 0px 10px;"></div>
-                    <table class="no-border table-spacing">
+                    <table class="no-border table-spacing" id="table_membre">
                         <tr>
                             <th></th>
                             <th class="header-text">à valider</th>
                             <th class="header-text">à facturer</th>
                             <th class="header-text">à payer</th>
                         </tr>
-
                         {% for membre in membres_du_collectif %}
-                            <tr class="case_petite">
+                            <tr class="case_petite ligne_membre">
                                 <th class="case_petite header-text" style="min-width: 20px;">{{ membre.nom }}</th>
                                 <td class="case_petite case_fonce">{{ membre.bienveillance_a_valider }}</td>
                                 <td class="case_petite case_fonce">{{ membre.bienveillance_a_facturer }}</td>
@@ -22,17 +21,18 @@
                             </tr>
                         {% endfor %}
 
-                        {# <tr style="display: none;">#}
-                        <tr>
+                        <tr style="display: none;">
                             <td colspan="4">
                                 <button style="background: none; border: medium; cursor: pointer; font-size: 0.9em; outline: none;">
                                     Ajouter ligne +
                                 </button>
                             </td>
                         </tr>
+
                         <tr class="case_petite total-row">
                             <td style="text-align: right; vertical-align: middle; font-weight: bold; cursor: pointer; min-width: 50px; white-space: nowrap; overflow: visible;"
-                                class="header-text">+ Total
+                                class="header-text" _="on click toggle .d-none on .ligne_membre">
+                                + Total
                             </td>
                             <td style="text-align: center; vertical-align: middle;" class="case_petite case_fonce">0
                             </td>

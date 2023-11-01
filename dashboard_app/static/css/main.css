@@ -168,6 +168,7 @@ table td {
     border-spacing: 8px;
 }
 
+
 .btn:focus {
     outline: none;
     box-shadow: none;
@@ -187,8 +188,6 @@ table td {
 table tr:first-child th {
     text-align: center;
     vertical-align: middle;
-    
-
 }
 
 table tr th:first-child {
