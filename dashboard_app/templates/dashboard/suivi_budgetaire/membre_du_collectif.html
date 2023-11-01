@@ -1,6 +1,4 @@
 <section class="col-md-4" style="display: flex;  align-items: stretch;">
-
-
     <div class="rose p-2 case">
         <create-toggle title="Membres du collectif" style="cursor: pointer;"></create-toggle>
         <div class="contentToShowHide" style="display: block;">
@@ -18,9 +16,9 @@
                         {% for membre in membres_du_collectif %}
                             <tr class="case_petite">
                                 <th class="case_petite header-text" style="min-width: 20px;">{{ membre.nom }}</th>
-                                <td class="case_petite case_fonce"></td>
-                                <td class="case_petite case_fonce"></td>
-                                <td class="case_petite case_fonce"></td>
+                                <td class="case_petite case_fonce">{{ membre.bienveillance_a_valider }}</td>
+                                <td class="case_petite case_fonce">{{ membre.bienveillance_a_facturer }}</td>
+                                <td class="case_petite case_fonce">{{ membre.bienveillance_a_payer }}</td>
                             </tr>
                         {% endfor %}
 

@@ -1,18 +1,120 @@
 <section class="col-md-8 pl-3">
     <div class="orange px-2 case">
-        <create-toggle title="Récapitulatif Budget"></create-toggle>
-        <div class="contentToShowHide">
+        <create-toggle title="Récapitulatif Budget" style="cursor: pointer;"></create-toggle>
+        <div class="contentToShowHide" style="display: block;">
             <div class="row">
                 <!-- Dépenses -->
                 <div class="col-md-6 p-2">
-                    <div id="tableau_recap_depenses" class="h-100 p-0"></div>
+                    <div id="tableau_recap_depenses" class="h-100 p-0">
+                        <div id="tableau_content" class="case_clair h-100" style="margin: 0px;">
+                            <div style="font-weight: bold; margin-top: 0px; padding: 5px 0px 0px 10px;">Dépenses</div>
+                            <table class="no-border table-spacing">
+                                <tr>
+                                    <th></th>
+                                    <th class="header-text">prév</th>
+                                    <th class="header-text">dépensé</th>
+                                    <th class="header-text">reste à dépenser</th>
+                                </tr>
+                                <tr class="case_petite">
+                                    <th class="case_petite header-text" style="min-width: 20px;">bienveillance</th>
+                                    <td class="case_petite case_fonce"></td>
+                                    <td class="case_petite case_fonce"></td>
+                                    <td class="case_petite case_fonce"></td>
+                                </tr>
+                                <tr class="case_petite">
+                                    <th class="case_petite header-text" style="min-width: 20px;">presta int.</th>
+                                    <td class="case_petite case_fonce"></td>
+                                    <td class="case_petite case_fonce"></td>
+                                    <td class="case_petite case_fonce"></td>
+                                </tr>
+                                <tr class="case_petite">
+                                    <th class="case_petite header-text" style="min-width: 20px;">presta.ext / achats
+                                    </th>
+                                    <td class="case_petite case_fonce"></td>
+                                    <td class="case_petite case_fonce"></td>
+                                    <td class="case_petite case_fonce"></td>
+                                </tr>
+                                <tr class="case_petite">
+                                    <th class="case_petite header-text" style="min-width: 20px;">dépenses int.</th>
+                                    <td class="case_petite case_fonce"></td>
+                                    <td class="case_petite case_fonce"></td>
+                                    <td class="case_petite case_fonce"></td>
+                                </tr>
+                                <tr class="case_petite total-row">
+                                    <td style="text-align: right; vertical-align: middle; font-weight: bold; cursor: pointer; min-width: 50px; white-space: nowrap; overflow: visible;"
+                                        class="header-text">+ Total
+                                    </td>
+                                    <td style="text-align: center; vertical-align: middle;"
+                                        class="case_petite case_fonce">0
+                                    </td>
+                                    <td style="text-align: center; vertical-align: middle;"
+                                        class="case_petite case_fonce">0
+                                    </td>
+                                    <td style="text-align: center; vertical-align: middle;"
+                                        class="case_petite case_fonce">0
+                                    </td>
+                                </tr>
+                            </table>
+                        </div>
+                    </div>
                 </div>
                 <!-- recette -->
                 <div class="col-md-6 p-2">
-                    <div id="tableau_recap_recettes" class="h-100 p-0"></div>
+                    <div id="tableau_recap_recettes" class="h-100 p-0">
+                        <div id="tableau_content" class="case_clair h-100" style="margin: 0px;">
+                            <div style="font-weight: bold; margin-top: 0px; padding: 5px 0px 0px 10px;">Recettes</div>
+                            <table class="no-border table-spacing">
+                                <tr>
+                                    <th></th>
+                                    <th class="header-text">prév.</th>
+                                    <th class="header-text">encaissé</th>
+                                    <th class="header-text">reste à encaisser</th>
+                                </tr>
+                                <tr class="case_petite">
+                                    <th class="case_petite header-text" style="min-width: 20px;">subventions / app</th>
+                                    <td class="case_petite case_fonce"></td>
+                                    <td class="case_petite case_fonce"></td>
+                                    <td class="case_petite case_fonce"></td>
+                                </tr>
+                                <tr class="case_petite">
+                                    <th class="case_petite header-text" style="min-width: 20px;">prestations</th>
+                                    <td class="case_petite case_fonce"></td>
+                                    <td class="case_petite case_fonce"></td>
+                                    <td class="case_petite case_fonce"></td>
+                                </tr>
+                                <tr class="case_petite">
+                                    <th class="case_petite header-text" style="min-width: 20px;">ventes</th>
+                                    <td class="case_petite case_fonce"></td>
+                                    <td class="case_petite case_fonce"></td>
+                                    <td class="case_petite case_fonce"></td>
+                                </tr>
+                                <tr class="case_petite">
+                                    <th class="case_petite header-text" style="min-width: 20px;">recette int</th>
+                                    <td class="case_petite case_fonce"></td>
+                                    <td class="case_petite case_fonce"></td>
+                                    <td class="case_petite case_fonce"></td>
+                                </tr>
+                                <tr class="case_petite total-row">
+                                    <td style="text-align: right; vertical-align: middle; font-weight: bold; cursor: pointer; min-width: 50px; white-space: nowrap; overflow: visible;"
+                                        class="header-text">+ Total
+                                    </td>
+                                    <td style="text-align: center; vertical-align: middle;"
+                                        class="case_petite case_fonce">0
+                                    </td>
+                                    <td style="text-align: center; vertical-align: middle;"
+                                        class="case_petite case_fonce">0
+                                    </td>
+                                    <td style="text-align: center; vertical-align: middle;"
+                                        class="case_petite case_fonce">0
+                                    </td>
+                                </tr>
+                            </table>
+                        </div>
+                    </div>
                 </div>
             </div>
 
         </div>
     </div>
 </section>
+

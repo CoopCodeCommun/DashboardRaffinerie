@@ -81,30 +81,30 @@ let tableaux = {
         // },
     
         //données recap depenses
-            tableau_recap_depenses : {
-            titre : "Dépenses",
-            total : true,
-            newline : false,
-            rows : [{ name:'bienveillance' },{ name: 'presta int.' },{ name: 'presta.ext / achats' },{ name: 'dépenses int.'}],
-            columns : [
-                { name: 'prév', }, 
-                { name: 'dépensé', },
-                { name: 'reste à dépensé',},
-            ],  
-        },  
+        //     tableau_recap_depenses : {
+        //     titre : "Dépenses",
+        //     total : true,
+        //     newline : false,
+        //     rows : [{ name:'bienveillance' },{ name: 'presta int.' },{ name: 'presta.ext / achats' },{ name: 'dépenses int.'}],
+        //     columns : [
+        //         { name: 'prév', },
+        //         { name: 'dépensé', },
+        //         { name: 'reste à dépensé',},
+        //     ],
+        // },
 
         //données recap recettes
-        tableau_recap_recettes : {
-            titre : "Recettes",
-            total: true,
-            newline: false,
-            rows: ['subventions / app', 'prestations', 'ventes', 'recette int'].map(name => ({ name })),
-            columns: [
-                { name: 'prév.',}, 
-                { name: 'encaissé',},
-                { name: 'reste à encaisser',},
-            ],
-        },
+        // tableau_recap_recettes : {
+        //     titre : "Recettes",
+        //     total: true,
+        //     newline: false,
+        //     rows: ['subventions / app', 'prestations', 'ventes', 'recette int'].map(name => ({ name })),
+        //     columns: [
+        //         { name: 'prév.',},
+        //         { name: 'encaissé',},
+        //         { name: 'reste à encaisser',},
+        //     ],
+        // },
 
         //données prévisionnel bienveillance
         tableau_prev_bienveillance : {

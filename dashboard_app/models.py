@@ -1,3 +1,5 @@
+import random
+
 from django.db import models
 from uuid import uuid4
 
@@ -58,6 +60,16 @@ class Contact(models.Model):
     user = models.ForeignKey('dashboard_user.CustomUser',
                              on_delete=models.PROTECT,
                              null=True, blank=True)
+
+
+    def bienveillance_a_valider(self):
+        return random.randint(0, 100)
+
+    def bienveillance_a_facturer(self):
+        return random.randint(0, 100)
+
+    def bienveillance_a_payer(self):
+        return random.randint(0, 100)
 
     def __str__(self):
         if self.nom:

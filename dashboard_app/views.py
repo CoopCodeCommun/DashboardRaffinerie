@@ -32,7 +32,7 @@ def index(request):
 
 def suivi_budgetaire(request):
     # Partie Membre du collectif
-    # Pour les tests, on va créer un badge "membre du collectif" et quelques contacts associé :
+    # Pour les tests, on va créer un badge "membre du collectif" et quelques contacts associés :
     badge_membre, created = Badge.objects.get_or_create(name="Membre du collectif")
     benoit, created = Contact.objects.get_or_create(nom="Benoit", id_odoo=12)
     jessica, created = Contact.objects.get_or_create(nom="Jessica", id_odoo=13)
