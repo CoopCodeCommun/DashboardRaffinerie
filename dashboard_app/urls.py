@@ -2,7 +2,7 @@ from django.conf import settings
 from django.urls import path, include
 from .views import contacts, lazy_loading_profil_image, \
     reload_contact_from_odoo, odoo_account, reload_account_from_odoo, \
-    AccountAnalyticGroupAPI, OdooContactsAPI
+    AccountAnalyticGroupAPI, OdooContactsAPI, julienjs_suivi_budgetaire
 from .views import index, suivi_budgetaire, subventions, organigramme, repertoire, objectifs_indicateurs, api_exemple, tableau_de_bord_perso
 from rest_framework import routers
 
@@ -21,8 +21,11 @@ urlpatterns = [
     path('reload_account_from_odoo/', reload_account_from_odoo.as_view(), name="reload_account_from_odoo"),
 
     # Pages de l'application Front de Julien :
-    path('organigramme/', organigramme, name='organigramme'),
     path('suivi_budgetaire/', suivi_budgetaire, name='suivi_budgetaire'),
+    path('julienjs/suivi_budgetaire/', julienjs_suivi_budgetaire, name='julienjs'),
+
+
+    path('organigramme/', organigramme, name='organigramme'),
     path('tableau_de_bord_perso/', tableau_de_bord_perso, name='tableau_de_bord_perso'),
     path('subventions/', subventions, name='subventions'),
     path('repertoire/', repertoire, name='repertoire'),

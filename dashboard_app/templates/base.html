@@ -8,14 +8,10 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" href="{% static 'css/main.css' %}"/>
     <link rel="stylesheet" href="{% static 'bootstrap/bootstrap.5.3.2.min.css' %}"/>
-<!-- JavaScript Bundle with Popper -->
-
-
     <title>Dashboard Raffinerie</title>
 </head>
 <body>
 
-{# barre de menu supérieure -> dashboard_app/templates/navbar.html #}
 {% include 'navbar.html' %}
 
 {# C'est ici que se chargera toute les autres pages qui commencent par "extend base.html"#}
@@ -28,6 +24,9 @@
 
 {% block script %} {% endblock script %}
 
+{#Julien.js#}
+<script src='{% static "js/datas.js" %}' type="application/javascript"></script>
+<script src='{% static "js/main.js" %}' type="application/javascript"></script>
 
 <!-- Bootstrap JS, Popper.js, and jQuery -->
 <script src="{% static 'js/jquery_3.5.1.js' %}"></script>

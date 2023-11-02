@@ -67,44 +67,44 @@ let tableaux = {
     
     //suivi budgétaire
 
-        // recap membres du collectif
-        tableau_membre_collectif: {
-            titre: "",
-            total: true,
-            newline: true,
-            rows: [{ name: 'Paul' },{ name: 'Jessica' }, { name: 'Bob' },{ name: 'Marcel' }],
-            columns: [
-                { name: 'à valider' },
-                { name: 'à facturer' },
-                { name: 'à payer' }
-            ]
-        },
+        //recap membres du collectif
+        // tableau_membre_collectif: {
+        //     titre: "",
+        //     total: true,
+        //     newline: true,
+        //     rows: [{ name: 'Paul' },{ name: 'Jessica' }, { name: 'Bob' },{ name: 'Marcel' }],
+        //     columns: [
+        //         { name: 'à valider' },
+        //         { name: 'à facturer' },
+        //         { name: 'à payer' }
+        //     ]
+        // },
     
         //données recap depenses
-            tableau_recap_depenses : {
-            titre : "Dépenses",
-            total : true,
-            newline : false,
-            rows : [{ name:'bienveillance' },{ name: 'presta int.' },{ name: 'presta.ext / achats' },{ name: 'dépenses int.'}],
-            columns : [
-                { name: 'prév', },
-                { name: 'dépensé', },
-                { name: 'reste à dépensé',},
-            ],
-        },
+        //     tableau_recap_depenses : {
+        //     titre : "Dépenses",
+        //     total : true,
+        //     newline : false,
+        //     rows : [{ name:'bienveillance' },{ name: 'presta int.' },{ name: 'presta.ext / achats' },{ name: 'dépenses int.'}],
+        //     columns : [
+        //         { name: 'prév', },
+        //         { name: 'dépensé', },
+        //         { name: 'reste à dépensé',},
+        //     ],
+        // },
 
         //données recap recettes
-        tableau_recap_recettes : {
-            titre : "Recettes",
-            total: true,
-            newline: false,
-            rows: ['subventions / app', 'prestations', 'ventes', 'recette int'].map(name => ({ name })),
-            columns: [
-                { name: 'prév.',},
-                { name: 'encaissé',},
-                { name: 'reste à encaisser',},
-            ],
-        },
+        // tableau_recap_recettes : {
+        //     titre : "Recettes",
+        //     total: true,
+        //     newline: false,
+        //     rows: ['subventions / app', 'prestations', 'ventes', 'recette int'].map(name => ({ name })),
+        //     columns: [
+        //         { name: 'prév.',},
+        //         { name: 'encaissé',},
+        //         { name: 'reste à encaisser',},
+        //     ],
+        // },
 
         //données prévisionnel bienveillance
         tableau_prev_bienveillance : {
@@ -120,28 +120,28 @@ let tableaux = {
             ],
         },
 
-        // données réel bienveillance
-        tableau_reel_bienveillance :{
-            titre : "",
-            total: true,
-            newline: true,
-            rows: [
-                { name: 'kevin', },
-                { name: 'kevin', },
-                { name: 'Paul',commentaire: 'bienveillance du pôle sur mars' },
-                { name: 'Paul',commentaire: 'bienveillance du pôle sur avril' },
-                { name: 'Paul',commentaire: 'bienveillance du pôle sur avril' },
-                { name: 'kevin',commentaire: 'bienveillance du pôle sur mars' },
-
-                ],
-            columns: [
-                { name: 'date', input: true, shouldTotal: false  },
-                { name: 'propo.', input: true, },
-                { name: 'validé', input: true, },
-                { name: 'factu.', input: true, },
-                { name: 'payé', },
-            ],
-        },
+        //données réel bienveillance
+        // tableau_reel_bienveillance :{
+        //     titre : "",
+        //     total: true,
+        //     newline: true,
+        //     rows: [
+        //         { name: 'kevin', },
+        //         { name: 'kevin', },
+        //         { name: 'Paul',commentaire: 'bienveillance du pôle sur mars' },
+        //         { name: 'Paul',commentaire: 'bienveillance du pôle sur avril' },
+        //         { name: 'Paul',commentaire: 'bienveillance du pôle sur avril' },
+        //         { name: 'kevin',commentaire: 'bienveillance du pôle sur mars' },
+        //
+        //         ],
+        //     columns: [
+        //         { name: 'date', input: true, shouldTotal: false  },
+        //         { name: 'propo.', input: true, },
+        //         { name: 'validé', input: true, },
+        //         { name: 'factu.', input: true, },
+        //         { name: 'payé', },
+        //     ],
+        // },
 
         //données prévisionnel prestations internes
         tableau_prev_prestations_internes:{

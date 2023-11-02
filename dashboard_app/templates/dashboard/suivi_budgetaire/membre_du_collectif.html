@@ -1,17 +1,20 @@
 <section class="col-md-4" style="display: flex;  align-items: stretch;">
     <div class="rose p-2 case">
-        <create-toggle title="Membres du collectif" style="cursor: pointer;"></create-toggle>
+        <div style="cursor: pointer;" _="on click toggle .d-none on the next <div/>" >- Membres du collectif</div>
         <div class="contentToShowHide" style="display: block;">
             <div id="tableau_membre_collectif">
                 <div id="tableau_content" class="case_clair h-100" style="margin: 0px;">
                     <div style="font-weight: bold; margin-top: 0px; padding: 5px 0px 0px 10px;"></div>
-                    <table class="table no-border table-spacing" id="table_membre">
+
+
+                    <table class="no-border table-spacing" id="table_membre">
                         <tr>
                             <th></th>
                             <th class="header-text">à valider</th>
                             <th class="header-text">à facturer</th>
                             <th class="header-text">à payer</th>
                         </tr>
+
                         {% for membre in membres_du_collectif %}
                             <tr class="case_petite ligne_membre">
                                 <th class="case_petite header-text" style="min-width: 20px;">{{ membre.nom }}</th>
@@ -42,6 +45,8 @@
                             </td>
                         </tr>
                     </table>
+
+
                 </div>
             </div>
         </div>

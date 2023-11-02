@@ -30,6 +30,12 @@ def index(request):
     return render(request, 'example.html', context=context)
 
 
+def julienjs_suivi_budgetaire(request):
+    context = {}
+    return render(request, 'suivi_budgetaire.html', context=context)
+    pass
+
+
 def suivi_budgetaire(request):
     # Partie Membre du collectif
     # Pour les tests, on va créer un badge "membre du collectif" et quelques contacts associés :
@@ -39,31 +45,53 @@ def suivi_budgetaire(request):
     camille, created = Contact.objects.get_or_create(nom="Camille", id_odoo=14)
     badge_membre.contacts.set([benoit, jessica, camille])
 
-    # Partie Bienveillence Reel
+    # Partie Bienveillance Reel
     # Pour les tests, on va créer quelques lignes :
     group = AccountAnalyticGroup.objects.get_or_create(name="Culture", id_odoo=55)[0]
     DepensesBienveillance.objects.get_or_create(contact=benoit, proposition=600, account_analytic_group=group)
     DepensesBienveillance.objects.get_or_create(contact=jessica, proposition=1000, account_analytic_group=group)
-    DepensesBienveillance.objects.get_or_create(contact=camille, proposition=42, account_analytic_group=group, commentaire="La réponse à la vie, l'univers et le reste")
+    DepensesBienveillance.objects.get_or_create(contact=camille, proposition=42, account_analytic_group=group,
+                                                commentaire="La réponse à la vie, l'univers et le reste")
+
+    #### DEBUT DU CONTROLEUR
+    # Création des lignes pour le tableau "Membre du collectif" en fonction de la base de donnée :
+
+    lignes_membres_du_collectif = [{
+        'Nom': contact.nom,
+        'A valider':contact.bienveillance_a_valider(),
+        'A facturer':contact.bienveillance_a_facturer(),
+        'A payer':contact.bienveillance_a_payer(),
+    } for contact in Contact.objects.filter(badge=badge_membre)]
+
+
 
     # Si la requete vient d'un clic sur le menu, on ne charge que l'intérieur de la page, le client à déja le reste.
     # Si la requete vient de l'extérieur (barre de recherche), on charge toute la page.
     base_template = "dashboard/partial.html" if request.htmx else "dashboard/base.html"
     context = {
-        'base_template' : base_template,
+        'base_template': base_template,
 
-        # Tous les contacts qui ont le badge "membre du collectif"
-        'membres_du_collectif': Contact.objects.filter(badge=badge_membre),
-        'depenses_bienveillances': DepensesBienveillance.objects.all(),
+        # Premier tableau
+        'membres_du_collectif': {
+            "titre": "Membres du collectif",
+            "colonnes": lignes_membres_du_collectif[0].keys(),
+            "lignes": lignes_membres_du_collectif,
+            "total": True,
+            "couleur": "rose",
+        },
+
+        # second tableau
+        'recapitulatif_budget': {
+            "title": "Recapitulatif Budget",
+            "lignes": Contact.objects.filter(badge=badge_membre),
+            "total": False,
+        },
     }
 
     return render(request, 'dashboard/suivi_budgetaire/suivi_budgetaire.html', context=context)
 
+
 def tableau_de_bord_perso(request):
-    """
-    Livre un template HTML tableau_de_bord_perso.html
-    Extension du template base.html
-    """
     context = {
         'name': request.user.email if request.user.is_authenticated else 'Anonymous',
     }
@@ -71,10 +99,6 @@ def tableau_de_bord_perso(request):
 
 
 def subventions(request):
-    """
-    Livre un template HTML subventions.html
-    Extension du template base.html
-    """
     context = {
         'name': request.user.email if request.user.is_authenticated else 'Anonymous',
     }
@@ -82,11 +106,9 @@ def subventions(request):
 
 
 def organigramme(request):
-    # dans le template html, on pourra alors afficher toute les infos
-    # disponible dans le modèle Contact (models.py)
     base_template = "dashboard/partial.html" if request.htmx else "dashboard/base.html"
     context = {
-        'base_template' : base_template,
+        'base_template': base_template,
     }
 
     # import ipdb; ipdb.set_trace()
@@ -94,10 +116,6 @@ def organigramme(request):
 
 
 def repertoire(request):
-    """
-    Livre un template HTML organigramme.html
-    Extension du template base.html
-    """
     context = {
         'name': request.user.email if request.user.is_authenticated else 'Anonymous',
     }
@@ -105,15 +123,10 @@ def repertoire(request):
 
 
 def objectifs_indicateurs(request):
-    """
-    Livre un template HTML organigramme.html
-    Extension du template base.html
-    """
     context = {
         'name': request.user.email if request.user.is_authenticated else 'Anonymous',
     }
     return render(request, 'objectifs_indicateurs.html', context=context)
-
 
 
 ### CONTROLEUR API ###
@@ -170,7 +183,6 @@ class OdooContactsAPI(viewsets.ViewSet):
         # ce n'est ni un modal ni un cancel
         # Envoie du formulaire de modification du contact
         return render(request, 'htmx/odoo_contacts_edit_row.html', context={'contact': contact})
-
 
     def update(self, request, pk=None):
         # Le update est activé avec le hx-put du bouton save du tableau odoo contact

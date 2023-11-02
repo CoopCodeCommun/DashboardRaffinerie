@@ -1,0 +1,56 @@
+<section class="col-md-4" style="display: flex;  align-items: stretch;">
+    <div class="{{ table.couleur }} p-2 case">
+        <div style="cursor: pointer;" _="on click toggle .d-none on the next .contentToShowHide">{{ table.titre }}</div>
+        <div class="contentToShowHide">
+            <div id="tableau_content" class="case_clair h-100" style="margin: 0px;">
+                <div style="font-weight: bold; margin-top: 0px; padding: 5px 0px 0px 10px;"></div>
+                <table class="no-border table-spacing" id="{{ table.titre | slugify }}">
+
+                    <tr>
+                        {% for colonne in table.colonnes %}
+                            <th class="header-text">{{ colonne }}</th>
+                        {% endfor %}
+                    </tr>
+
+                    {% for ligne in table.lignes %}
+                        <tr class="case_petite ligne_membre">
+                            {% for key, value in ligne.items %}
+                                {% if forloop.first %}
+                                    <th class="case_petite header-text" style="min-width: 20px;">{{ value }}</th>
+                                {% else %}
+                                    <td class="case_petite case_fonce">{{ value }}</td>
+                                {% endif %}
+                            {% endfor %}
+                        </tr>
+                    {% endfor %}
+
+                    {% if table.ajouter_ligne %}
+                        <tr>
+                            <td colspan="4">
+                                <button style="background: none; border: medium; cursor: pointer; font-size: 0.9em; outline: none;">
+                                    Ajouter ligne +
+                                </button>
+                            </td>
+                        </tr>
+                    {% endif %}
+
+                    {% if table.total %}
+                        <tr class="case_petite total-row">
+                            <td style="text-align: right; vertical-align: middle; font-weight: bold; cursor: pointer; min-width: 50px; white-space: nowrap; overflow: visible;"
+                                class="header-text" _="on click toggle .d-none on .ligne_membre">
+                                + Total
+                            </td>
+                            <td style="text-align: center; vertical-align: middle;" class="case_petite case_fonce">0
+                            </td>
+                            <td style="text-align: center; vertical-align: middle;" class="case_petite case_fonce">0
+                            </td>
+                            <td style="text-align: center; vertical-align: middle;" class="case_petite case_fonce">0
+                            </td>
+                        </tr>
+                    {% endif %}
+
+                </table>
+            </div>
+        </div>
+    </div>
+</section>

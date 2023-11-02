@@ -5,18 +5,19 @@
 
 {% block content %}
     <!-- suivi budgétaire -->
-        <!-- membre + recap -->
-        <section class="row">
-            <!-- membre du collectif -->
-            {% include 'dashboard/suivi_budgetaire/membre_du_collectif.html' %}
-            <!-- recap budget -->
-            {% include 'dashboard/suivi_budgetaire/recapitulatif_budget.html' %}
-        </section>
+    <!-- membre + recap -->
+    <section class="row">
+        <!-- membre du collectif -->
+        {% include 'dashboard/tableau_generique.html' with table=membres_du_collectif %}
 
-        <!-- Suivi détaillé -->
-        <section>
-            {% include 'dashboard/suivi_budgetaire/suivi_detaille.html' %}
-        </section>
+        <!-- recap budget -->
+        {% include 'dashboard/suivi_budgetaire/recapitulatif_budget.html' %}
+    </section>
+
+    <!-- Suivi détaillé -->
+    <section>
+        {% include 'dashboard/suivi_budgetaire/suivi_detaille.html' %}
+    </section>
 
 
 
