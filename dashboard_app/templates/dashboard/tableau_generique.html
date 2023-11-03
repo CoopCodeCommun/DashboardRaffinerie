@@ -19,7 +19,7 @@
                     <tbody hx-target="closest tr" hx-swap="outerHTML">
 
                     {% for ligne in table.lignes %} {# pour chaque ligne dans l'objet lignes #}
-                        {% include 'dashboard/tableau_generique_ligne_read.html' with index=forloop.counter %}
+                        {% include 'dashboard/tableau_generique_ligne_read.html' with index=forloop.counter %} {# forloop.counter donne le numéro d'index de chaque objet dans la liste #}
                     {% endfor %}
 
                     {% if table.ajouter_ligne %}

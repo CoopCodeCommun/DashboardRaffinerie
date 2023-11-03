@@ -50,7 +50,7 @@ def suivi_budgetaire(request):
     base_template = "dashboard/partial.html" if request.htmx else "dashboard/base.html"
     context = {
         'base_template': base_template,
-        'membres_du_collectif': data.membres_du_collectif,
+        'data': data,
     }
 
     return render(request, 'dashboard/suivi_budgetaire/suivi_budgetaire.html', context=context)

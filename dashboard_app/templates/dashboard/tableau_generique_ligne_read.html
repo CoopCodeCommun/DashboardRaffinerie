@@ -18,7 +18,7 @@
 
     {% if table.editable %} {# si la table est éditable #}
         <td class="case_petite case_fonce">
-            <button class="btn btn-sm" hx-get="/edit_tableau_generique/{{ table.slug }}/{{ forloop.counter0 }}/?edit=true">
+            <button class="btn btn-sm" hx-get="/edit_tableau_generique/{{ table.slug }}/{{ index }}/?edit=true">
                 Edit
             </button>
         </td>
