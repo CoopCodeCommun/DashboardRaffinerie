@@ -11,13 +11,13 @@
             </th>
 
         {% else %} {# si c'est les colonnes suivantes #}
-           <th><input type="text" value="{{ value }}"/></th>
+            <th><input type="text" value="{{ value }}"/></th>
         {% endif %}
 
     {% endfor %}
 
     <td class="case_petite case_fonce">
-        <button class="btn btn-sm" hx-get="/edit_tableau_generique/{{ table.slug }}/{{ forloop.counter0 }}/">
+        <button class="btn btn-sm" hx-get="/edit_tableau_generique/{{ table.slug }}/{{ index }}/">
             Save
         </button>
     </td>

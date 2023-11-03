@@ -40,7 +40,10 @@ def julienjs_suivi_budgetaire(request):
 def edit_tableau_generique(request, table, index):
     table = getattr(data, table)
     ligne = table['lignes'][index]
-    return render(request, 'dashboard/tableau_generique_ligne_edit.html', context={'ligne':ligne})
+    if request.GET.get('edit'):
+        return render(request, 'dashboard/tableau_generique_ligne_edit.html', context={'ligne':ligne, 'table':table, 'index':index})
+    else :
+        return render(request, 'dashboard/tableau_generique_ligne_read.html', context={'ligne':ligne, 'table':table, 'index':index})
 
 def suivi_budgetaire(request):
     #### DEBUT DU CONTROLEUR

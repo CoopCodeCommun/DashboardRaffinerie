@@ -19,33 +19,7 @@
                     <tbody hx-target="closest tr" hx-swap="outerHTML">
 
                     {% for ligne in table.lignes %} {# pour chaque ligne dans l'objet lignes #}
-                        <tr class="case_petite ligne_table">
-
-                            {% for value in ligne %} {# pour chaque valeur dans la ligne #}
-
-                                {% if forloop.first %} {# si c'est la première colonne #}
-                                    <th class="case_petite header-text" style="min-width: 20px;">{{ value }}</th>
-
-                                {% elif value == True or value == False %} {# si c'est une case à cocher #}
-                                    <th class="case_petite case_fonce" style="text-align: center;">
-                                        {% if value == True %}<span>X</span>{% else %}<span>-</span>{% endif %}
-                                    </th>
-
-                                {% else %} {# si c'est les colonnes suivantes #}
-                                    <td class="case_petite case_fonce">{{ value }}</td>
-                                {% endif %}
-
-                            {% endfor %}
-
-                            {% if table.editable %} {# si la table est éditable #}
-                                <td class="case_petite case_fonce">
-                                    <button class="btn btn-sm" hx-get="/edit_tableau_generique/{{ table.slug }}/{{ forloop.counter0 }}/">
-                                        Edit
-                                    </button>
-                                </td>
-                            {% endif %}
-
-                        </tr>
+                        {% include 'dashboard/tableau_generique_ligne_read.html' with index=forloop.counter %}
                     {% endfor %}
 
                     {% if table.ajouter_ligne %}
