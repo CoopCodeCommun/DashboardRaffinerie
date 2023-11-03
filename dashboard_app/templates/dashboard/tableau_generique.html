@@ -5,22 +5,46 @@
             <div id="tableau_content" class="case_clair h-100" style="margin: 0px;">
                 <div style="font-weight: bold; margin-top: 0px; padding: 5px 0px 0px 10px;"></div>
                 <table class="no-border table-spacing" id="{{ table.titre | slugify }}">
+                    <thead>
 
                     <tr>
                         {% for colonne in table.colonnes %}
                             <th class="header-text">{{ colonne }}</th>
                         {% endfor %}
+                        {% if table.editable %}
+                            <th></th>
+                        {% endif %}
                     </tr>
+                    </thead>
+                    <tbody hx-target="closest tr" hx-swap="outerHTML">
 
-                    {% for ligne in table.lignes %}
-                        <tr class="case_petite ligne_membre">
-                            {% for key, value in ligne.items %}
-                                {% if forloop.first %}
+                    {% for ligne in table.lignes %} {# pour chaque ligne dans l'objet lignes #}
+                        <tr class="case_petite ligne_table">
+
+                            {% for value in ligne %} {# pour chaque valeur dans la ligne #}
+
+                                {% if forloop.first %} {# si c'est la première colonne #}
                                     <th class="case_petite header-text" style="min-width: 20px;">{{ value }}</th>
-                                {% else %}
+
+                                {% elif value == True or value == False %} {# si c'est une case à cocher #}
+                                    <th class="case_petite case_fonce" style="text-align: center;">
+                                        {% if value == True %}<span>X</span>{% else %}<span>-</span>{% endif %}
+                                    </th>
+
+                                {% else %} {# si c'est les colonnes suivantes #}
                                     <td class="case_petite case_fonce">{{ value }}</td>
                                 {% endif %}
+
                             {% endfor %}
+
+                            {% if table.editable %} {# si la table est éditable #}
+                                <td class="case_petite case_fonce">
+                                    <button class="btn btn-sm" hx-get="/edit_tableau_generique/{{ table.slug }}/{{ forloop.counter0 }}/">
+                                        Edit
+                                    </button>
+                                </td>
+                            {% endif %}
+
                         </tr>
                     {% endfor %}
 
@@ -37,7 +61,7 @@
                     {% if table.total %}
                         <tr class="case_petite total-row">
                             <td style="text-align: right; vertical-align: middle; font-weight: bold; cursor: pointer; min-width: 50px; white-space: nowrap; overflow: visible;"
-                                class="header-text" _="on click toggle .d-none on .ligne_membre">
+                                class="header-text" _="on click toggle .d-none on .ligne_table">
                                 + Total
                             </td>
                             <td style="text-align: center; vertical-align: middle;" class="case_petite case_fonce">0
@@ -48,7 +72,7 @@
                             </td>
                         </tr>
                     {% endif %}
-
+                    </tbody>
                 </table>
             </div>
         </div>

@@ -2,7 +2,7 @@ from django.conf import settings
 from django.urls import path, include
 from .views import contacts, lazy_loading_profil_image, \
     reload_contact_from_odoo, odoo_account, reload_account_from_odoo, \
-    AccountAnalyticGroupAPI, OdooContactsAPI, julienjs_suivi_budgetaire
+    AccountAnalyticGroupAPI, OdooContactsAPI, julienjs_suivi_budgetaire, edit_tableau_generique
 from .views import index, suivi_budgetaire, subventions, organigramme, repertoire, objectifs_indicateurs, api_exemple, tableau_de_bord_perso
 from rest_framework import routers
 
@@ -24,7 +24,10 @@ urlpatterns = [
     path('suivi_budgetaire/', suivi_budgetaire, name='suivi_budgetaire'),
     path('julienjs/suivi_budgetaire/', julienjs_suivi_budgetaire, name='julienjs'),
 
+    # Pour afficher une ligne editable :
+    path('edit_tableau_generique/<str:table>/<int:index>/', edit_tableau_generique, name='edit_tableau_generique'),
 
+    # A bosser :)
     path('organigramme/', organigramme, name='organigramme'),
     path('tableau_de_bord_perso/', tableau_de_bord_perso, name='tableau_de_bord_perso'),
     path('subventions/', subventions, name='subventions'),

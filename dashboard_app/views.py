@@ -8,6 +8,7 @@ from rest_framework.decorators import permission_classes
 from rest_framework.permissions import AllowAny, IsAuthenticated, IsAdminUser
 from rest_framework.response import Response
 from rest_framework.views import APIView
+from dashboard_app.data import data
 
 from dashboard_app.models import Contact, AccountAccount, AccountJournal, AccountAnalyticGroup, AccountAnalyticAccount, \
     Badge, DepensesBienveillance
@@ -36,56 +37,17 @@ def julienjs_suivi_budgetaire(request):
     pass
 
 
+def edit_tableau_generique(request, table, index):
+    table = getattr(data, table)
+    ligne = table['lignes'][index]
+    return render(request, 'dashboard/tableau_generique_ligne_edit.html', context={'ligne':ligne})
+
 def suivi_budgetaire(request):
-    # Partie Membre du collectif
-    # Pour les tests, on va créer un badge "membre du collectif" et quelques contacts associés :
-    badge_membre, created = Badge.objects.get_or_create(name="Membre du collectif")
-    benoit, created = Contact.objects.get_or_create(nom="Benoit", id_odoo=12)
-    jessica, created = Contact.objects.get_or_create(nom="Jessica", id_odoo=13)
-    camille, created = Contact.objects.get_or_create(nom="Camille", id_odoo=14)
-    badge_membre.contacts.set([benoit, jessica, camille])
-
-    # Partie Bienveillance Reel
-    # Pour les tests, on va créer quelques lignes :
-    group = AccountAnalyticGroup.objects.get_or_create(name="Culture", id_odoo=55)[0]
-    DepensesBienveillance.objects.get_or_create(contact=benoit, proposition=600, account_analytic_group=group)
-    DepensesBienveillance.objects.get_or_create(contact=jessica, proposition=1000, account_analytic_group=group)
-    DepensesBienveillance.objects.get_or_create(contact=camille, proposition=42, account_analytic_group=group,
-                                                commentaire="La réponse à la vie, l'univers et le reste")
-
     #### DEBUT DU CONTROLEUR
-    # Création des lignes pour le tableau "Membre du collectif" en fonction de la base de donnée :
-
-    lignes_membres_du_collectif = [{
-        'Nom': contact.nom,
-        'A valider':contact.bienveillance_a_valider(),
-        'A facturer':contact.bienveillance_a_facturer(),
-        'A payer':contact.bienveillance_a_payer(),
-    } for contact in Contact.objects.filter(badge=badge_membre)]
-
-
-
-    # Si la requete vient d'un clic sur le menu, on ne charge que l'intérieur de la page, le client à déja le reste.
-    # Si la requete vient de l'extérieur (barre de recherche), on charge toute la page.
     base_template = "dashboard/partial.html" if request.htmx else "dashboard/base.html"
     context = {
         'base_template': base_template,
-
-        # Premier tableau
-        'membres_du_collectif': {
-            "titre": "Membres du collectif",
-            "colonnes": lignes_membres_du_collectif[0].keys(),
-            "lignes": lignes_membres_du_collectif,
-            "total": True,
-            "couleur": "rose",
-        },
-
-        # second tableau
-        'recapitulatif_budget': {
-            "title": "Recapitulatif Budget",
-            "lignes": Contact.objects.filter(badge=badge_membre),
-            "total": False,
-        },
+        'membres_du_collectif': data.membres_du_collectif,
     }
 
     return render(request, 'dashboard/suivi_budgetaire/suivi_budgetaire.html', context=context)
