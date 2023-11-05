@@ -230,3 +230,6 @@ div[onclick="toggleContent(this)"] {
     padding: 10px; 
 }
 
+.d-none {
+    display: none;
+}

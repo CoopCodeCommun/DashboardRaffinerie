@@ -28,12 +28,12 @@ def index(request):
     context = {
         'user': request.user if request.user.is_authenticated else None,
     }
-    return render(request, 'example.html', context=context)
+    return render(request, 'dashboard/example.html', context=context)
 
 
 def julienjs_suivi_budgetaire(request):
     context = {}
-    return render(request, 'suivi_budgetaire.html', context=context)
+    return render(request, 'pages_html/suivi_budgetaire.html', context=context)
     pass
 
 
@@ -53,7 +53,7 @@ def suivi_budgetaire(request):
         'data': data,
     }
 
-    return render(request, 'dashboard/suivi_budgetaire/suivi_budgetaire.html', context=context)
+    return render(request, 'dashboard/pages_html/suivi_budgetaire.html', context=context)
 
 
 def tableau_de_bord_perso(request):
@@ -77,7 +77,7 @@ def organigramme(request):
     }
 
     # import ipdb; ipdb.set_trace()
-    return render(request, 'dashboard/suivi_budgetaire/organigramme.html', context=context)
+    return render(request, 'dashboard/pages_html/organigramme.html', context=context)
 
 
 def repertoire(request):
