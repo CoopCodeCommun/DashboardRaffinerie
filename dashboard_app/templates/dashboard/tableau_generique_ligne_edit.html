@@ -3,7 +3,7 @@
 
         {% if forloop.first %}
             {# si c'est la première colonne #}
-            <th><input type="text" value="{{ value }}"/></th>
+            <th><input type="text" value="{{ 'value' }}"/></th>
 
         {% elif value == True or value == False %} {# si c'est une case à cocher #}
             <th class="case_petite case_fonce" style="text-align: center;">
