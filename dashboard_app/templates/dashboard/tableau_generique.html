@@ -7,19 +7,20 @@
                 <table class="no-border table-spacing" id="{{ table.titre | slugify }}">
                     <thead>
 
-                        <tr>
-                            {% for colonne in table.colonnes %}
-                                <th class="header-text">{{ colonne.nom }}</th>
-                            {% endfor %}
-                            {% if table.editable %}
-                                <th></th>
-                            {% endif %}
-                        </tr>
+                    <tr>
+                        {% for colonne in table.colonnes %}
+                            <th class="header-text">{{ colonne.nom }}</th>
+                        {% endfor %}
+                        {% if table.editable %}
+                            <th></th>
+                        {% endif %}
+                    </tr>
                     </thead>
                     <tbody hx-target="closest tr" hx-swap="outerHTML">
 
                     {% for ligne in table.lignes %} {# pour chaque ligne dans l'objet lignes #}
-                        {% include 'dashboard/tableau_generique_ligne_read.html' with index=forloop.counter %} {# forloop.counter donne le numéro d'index de chaque objet dans la liste #}
+                        {% include 'dashboard/tableau_generique_ligne_read.html' with index=forloop.counter0 %}
+                        {# forloop.counter donne le numéro d'index de chaque objet dans la liste #}
                     {% endfor %}
 
                     {% if table.ajouter_ligne %}
@@ -32,19 +33,19 @@
                         </tr>
                     {% endif %}
 
+                    </tbody>
+                    <tfoot _="on click toggle .d-none on the previous <tbody/>">
+
                     {% if table.total %}
 
-                    <tr class="case_petite total-row">
-                        <td style="text-align: right; vertical-align: middle; font-weight: bold; cursor: pointer; min-width: 50px; white-space: nowrap; overflow: visible;"
-                            class="header-text" _="on click 
-                                toggle .d-none on .ligne_table
-                                then set my.textContent to my.textContent.includes('+ Total') ? '- Total' : '+ Total'">
-                            + Total
-                        </td>
-                    </tr>         
-                  
+                        <tr class="case_petite total-row" >
+                            <td style="text-align: right; vertical-align: middle; font-weight: bold; cursor: pointer; min-width: 50px; white-space: nowrap; overflow: visible;"
+                                class="header-text">
+                                + Total
+                            </td>
+                        </tr>
                     {% endif %}
-                    </tbody>
+                    </tfoot>
                 </table>
             </div>
         </div>
