@@ -1,3 +1,25 @@
+function calculateTotals() {
+    var columns = document.querySelectorAll('thead th');
+    var totalCells = document.querySelectorAll('.total-cell');
+    var rows = document.querySelectorAll('tbody tr:not(.d-none)');
+
+    totalCells.forEach((cell, index) => {
+        if (index < columns.length - 1) { // Assurez-vous de ne pas inclure la colonne d'action si elle est présente
+            let sum = 0;
+            rows.forEach(row => {
+                let value = row.cells[index + 1].textContent; // +1 pour compenser la cellule "+ Total"
+                sum += parseFloat(value) || 0;
+            });
+            cell.textContent = sum.toFixed(2);
+        }
+    });
+}
+
+
+
+// Exécuter calculateTotals lorsque la page est chargée et à chaque fois que le tableau est mis à jour
+document.addEventListener("DOMContentLoaded", calculateTotals);
+
 //////////////////////////// menu //////////////////////////
 
 // Fonction pour remplir le menu déroulant compte analytique

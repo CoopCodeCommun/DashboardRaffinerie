@@ -42,7 +42,7 @@
                 <div class="contentToShowHide">
                     <div class="row mx-1 gx-2">
                         <!-- Dépenses -->
-                        <div class="col-md-6 p-2 case case_clair ">
+                        <div class="col-md-7 p-2 case case_clair ">
                           {% include 'dashboard/section_generique.html' with titre='Dépenses' %}
                             <div class="contentToShowHide">
 
@@ -122,19 +122,19 @@
                         </div>
 
                         <!-- recette -->
-                        <section class="col-md-6 p-2 case case_clair">
+                        <section class="col-md-5 p-2 case case_clair">
                             {% include 'dashboard/section_generique.html' with titre='Recettes' %}
                             <div class="contentToShowHide">
                                 <div class="case_clair">
                                     <!-- Subventions aap -->
                                     <section class="px-2">
                                         <div class="row">
-                                            <div class="col-md-4 p-2">
+                                            <div class="col-md-6 p-2">
                                                 <div class="titre colonne_prev">
                                                     Prévisionnel
                                                 </div>
                                             </div>
-                                            <div class="col-md-8 p-2">
+                                            <div class="col-md-6 p-2">
                                                 <div class="titre colonne_reel">
                                                     Réel
                                                 </div>
@@ -143,10 +143,10 @@
                                             {% include 'dashboard/section_generique.html' with titre='Subventions / Appels à projet' %}
                                             <div class="contentToShowHide">
                                                 <div class="row">
-                                                    <div class="col-md-4 p-2">
+                                                    <div class="col-md-6 p-2">
                                                         {% include 'dashboard/tableau_generique.html' with table=data.subvention_prev %}
                                                     </div>
-                                                    <div class="col-md-8 p-2">
+                                                    <div class="col-md-6 p-2">
                                                         {% include 'dashboard/tableau_generique.html' with table=data.subvention_reel %}
                                                     </div>
                                                 </div>
@@ -158,10 +158,10 @@
                                         {% include 'dashboard/section_generique.html' with titre='Prestations' %}
                                         <div class="contentToShowHide">
                                             <div class="row">
-                                                <div class="col-md-4 p-2">
+                                                <div class="col-md-6 p-2">
                                                     {% include 'dashboard/tableau_generique.html' with table=data.presta_prev %}
                                                 </div>
-                                                <div class="col-md-8 p-2">
+                                                <div class="col-md-6 p-2">
                                                     {% include 'dashboard/tableau_generique.html' with table=data.presta_reel %}
                                                 </div>
                                             </div>
@@ -173,10 +173,10 @@
                                         {% include 'dashboard/section_generique.html' with titre='Ventes' %}
                                         <div class="contentToShowHide">
                                             <div class="row">
-                                                <div class="col-md-4 p-2">
+                                                <div class="col-md-6 p-2">
                                                     {% include 'dashboard/tableau_generique.html' with table=data.vente_prev %}
                                                 </div>
-                                                <div class="col-md-8 p-2">
+                                                <div class="col-md-6 p-2">
                                                     {% include 'dashboard/tableau_generique.html' with table=data.vente_reel %}
                                                 </div>
                                             </div>
@@ -188,10 +188,10 @@
                                         {% include 'dashboard/section_generique.html' with titre='Recettes internes' %}
                                         <div class="contentToShowHide">
                                             <div class="row">
-                                                <div class="col-md-4 p-2">
+                                                <div class="col-md-6 p-2">
                                                     {% include 'dashboard/tableau_generique.html' with table=data.recettes_int_prev %}
                                                 </div>
-                                                <div class="col-md-8 p-2">
+                                                <div class="col-md-6 p-2">
                                                     {% include 'dashboard/tableau_generique.html' with table=data.recettes_int_reel %}
                                                 </div>
                                             </div>

@@ -1,9 +1,12 @@
 class data():
    
    #les paramètres sont de base en False, et mis en True si actifs
-   #input : modifiable
-   #list : liste déroulante
-   #checkbox : case à cocher
+   #colonnes : 
+        #input : modifiable
+        #list : liste déroulante
+        #checkbox : case à cocher
+        #total : affiche le total de la colonne
+   
    #total : fait le total en pied de page si "total" du tableau est en True
 
     membres_du_collectif = {
@@ -21,7 +24,6 @@ class data():
             ['Jacqueline', 10, 20, True],
         ],
         "total": True,
-        "editable": True,
     }
 
     recap_depenses = {
@@ -40,12 +42,11 @@ class data():
             ['dépenses int.', 10, 20, True],
         ],
         "total": True,
-        "editable": False,
     }
 
     recap_recettes = {
         "slug": "recap_recettes",
-        "titre": "recettes",
+        "titre": "",
         "colonnes": [
             {'nom':'', 'input': True}, 
             {'nom':'prév', 'input': True},  #somme des recettes prévisionnel 
@@ -59,13 +60,13 @@ class data():
             ['recette int', 10, 20, False],
         ],
         "total": True,
-        "editable": False,
     }
+    
 ################## suivi budgétaire détaillé ################""
     ####  dépenses ###
     bienveillance_prev = {
         "slug": "recap_recettes",
-        "titre": "recettes",
+        "titre": "",
         "colonnes": [
             {'nom':'', 'input': True}, #les membres du collectif ayant le caractére bienveillant dans l'organigramme, peuvent ajouter des intulés 
             {'nom':'montant', 'input': True}, #les membres du collectif ayant le caractére bienveillant dans l'organigramme, peuvent ajouter des montants 
@@ -76,12 +77,11 @@ class data():
             ['ref communication', 100],
         ],
         "total": True,
-        "editable": True,
     }
 
     bienveillance_reel = {
         "slug": "recap_recettes",
-        "titre": "recettes",
+        "titre": "",
         "colonnes": [
             {'nom':'', 'list': True}, #les bienveillants peuvent selectionné un nom 
             {'nom':'date', 'input': True}, #les bienveillants peuvent remplir une date
@@ -91,18 +91,17 @@ class data():
             {'nom':'payé', 'checkbox': True}, #si la facture est "payé" dans odoo, la checkbox est True, il y aura un peu de réflexion à avoir pour voir comment associé une proposition à une facture odoo
         ],
         "lignes": [
-            ['Rémy', 100, True, False, False],
-            ['Georgette', 200, True, True, False],
-            ['hugues', 300, False, False, False],
-            ['yvette', 500, True, True, False],
+            ['Rémy', 100, True, False, False, False],
+            ['Georgette', 200, True, True, False,False],
+            ['hugues', 300, False, False, False,False],
+            ['yvette', 500, True, True, False,False],
         ],
         "total": True,
-        "editable": True,
     }
 
     presta_int_prev = {
         "slug": "recap_recettes",
-        "titre": "recettes",
+        "titre": "",
         "colonnes": [
             {'nom':'', 'input': True}, #les membres du collectif ayant le caractére bienveillant dans l'organigramme, peuvent ajouter des intulés 
             {'nom':'montant', 'input': True}, #les membres du collectif ayant le caractére bienveillant dans l'organigramme, peuvent ajouter des montants 
@@ -112,12 +111,11 @@ class data():
             ['entretien matérie', 200],
         ],
         "total": True,
-        "editable": True,
     }
 
     presta_int_reel = {
         "slug": "recap_recettes",
-        "titre": "recettes",
+        "titre": "",
         "colonnes": [
             {'nom':'', 'liste': True}, #liste déroulante des presta interne de l'organigramme
             {'nom':'date', 'input': True}, #les presta int concerné peuvent remplir un une date
@@ -127,16 +125,15 @@ class data():
             {'nom':'payé', 'checkbox': True}, #si la facture est "payé" dans odoo, la checkbox est True 
         ],
         "lignes": [
-            ['Rémy', 100, True, False, False],
-            ['Georgette', 200, True, True, False],
+            ['Rémy', 100, True, False, False,False],
+            ['Georgette', 200, True, True, False,False],
         ],
         "total": True,
-        "editable": True,
     }
 
     presta_ext_prev = {
         "slug": "recap_recettes",
-        "titre": "recettes",
+        "titre": "",
         "colonnes": [
             {'nom':'', 'input': True}, #les membres du collectif ayant le caractére bienveillant dans l'organigramme, peuvent ajouter des intulés 
             {'nom':'montant', 'input': True}, #les membres du collectif ayant le caractére bienveillant dans l'organigramme, peuvent ajouter des montants 
@@ -146,12 +143,11 @@ class data():
             ['consomable', 400],
         ],
         "total": True,
-        "editable": True,
     }
 
     presta_ext_reel = {
         "slug": "recap_recettes",
-        "titre": "recettes",
+        "titre": "",
         "colonnes": [
             {'nom':''},  #le nom des facture de tout les articles sauf co-rem et presta int
             {'nom':'intitulé'}, #l'intitulé des facture
@@ -164,12 +160,11 @@ class data():
             ['decathlon','matériel ', '09/08/23', True, True],
         ],
         "total": True,
-        "editable": False,
     }
 
     depenses_int_prev = {
         "slug": "recap_recettes",
-        "titre": "recettes",
+        "titre": "",
         "colonnes": [
             {'nom':'', 'input': True}, #les membres du collectif ayant le caractére bienveillant dans l'organigramme, peuvent ajouter des intulés 
             {'nom':'montant', 'input': True}, #les membres du collectif ayant le caractére bienveillant dans l'organigramme, peuvent ajouter des montants 
@@ -180,13 +175,12 @@ class data():
             ['commun', '2000€'],
         ],
         "total": True,
-        "editable": True,
     }
 
     #le principe est que ce tableau est relié avec le tableau recette int des projets selectionné dans "nom"
     depenses_int_reel = { 
         "slug": "recap_recettes",
-        "titre": "recettes",
+        "titre": "",
         "colonnes": [
             {'nom':'', 'list': True}, #liste déroulante des projets
             {'nom':'date', 'input': True}, #date à rentrer par un bienveillant
@@ -197,14 +191,13 @@ class data():
             ['Culture', '03/05/23', '2000€'],
         ],
         "total": True,
-        "editable": False,
     }
 
     ####  recettes ###
 
     subvention_prev = {
         "slug": "recap_recettes",
-        "titre": "recettes",
+        "titre": "",
         "colonnes": [
             {'nom':'', 'input': True}, #les membres du collectif ayant le caractére bienveillant dans l'organigramme, peuvent ajouter des intulés 
             {'nom':'montant', 'input': True}, #les membres du collectif ayant le caractére bienveillant dans l'organigramme, peuvent ajouter des montants 
@@ -215,13 +208,12 @@ class data():
             ['commun', '2000€'],
         ],
         "total": True,
-        "editable": True,
     }
 
 #ce tableau est relié à la page subventions
     subvention_reel = { 
         "slug": "recap_recettes",
-        "titre": "recettes",
+        "titre": "",
         "colonnes": [
                     {'nom':'',}, 
                     {'nom':'date', },
@@ -232,12 +224,11 @@ class data():
             ['Culture', '03/05/23', '2000€'],
         ],
         "total": True,
-        "editable": False,
     }
 
     presta_prev = {
         "slug": "recap_recettes",
-        "titre": "recettes",
+        "titre": "",
         "colonnes": [
             {'nom':'', 'input': True},  #les membres du collectif ayant le caractére bienveillant dans l'organigramme, peuvent ajouter des intulés 
             {'nom':'montant', 'input': True}, #les membres du collectif ayant le caractére bienveillant dans l'organigramme, peuvent ajouter des montants 
@@ -249,12 +240,11 @@ class data():
             ['commun', '2000€'],
         ],
         "total": True,
-        "editable": True,
     }
 
     presta_reel = { 
         "slug": "recap_recettes",
-        "titre": "recettes",
+        "titre": "",
         "colonnes": [
             {'nom':'',}, #factures client avec l'article presta ext via odoo
             {'nom':'date',}, # date des factures 
@@ -265,12 +255,11 @@ class data():
             ['Culture', '03/05/23', '2000€'],
         ],
         "total": True,
-        "editable": False,
     }
 
     vente_prev = {
         "slug": "recap_recettes",
-        "titre": "recettes",
+        "titre": "",
         "colonnes": [
             {'nom':'', 'input': True}, #les membres du collectif ayant le caractére bienveillant dans l'organigramme, peuvent ajouter des intulés 
             {'nom':'montant', 'input': True}, #les membres du collectif ayant le caractére bienveillant dans l'organigramme, peuvent ajouter des montants 
@@ -281,12 +270,11 @@ class data():
             ['commun', '2000€'],
         ],
         "total": True,
-        "editable": True,
     }
 
     vente_reel = { 
         "slug": "recap_recettes",
-        "titre": "recettes",
+        "titre": "",
         "colonnes": [
             {'nom':'',}, #factures client avec l'article vente via odoo
             {'nom':'date',},  #date des factures 
@@ -297,12 +285,11 @@ class data():
             ['Culture', '03/05/23', '2000€'],
         ],
         "total": True,
-        "editable": False,
     }
 
     recettes_int_prev = {
         "slug": "recap_recettes",
-        "titre": "recettes",
+        "titre": "",
         "colonnes": [
             {'nom':'', 'input': True}, #les membres du collectif ayant le caractére bienveillant dans l'organigramme, peuvent ajouter des intulés 
             {'nom':'montant', 'input': True}, #les membres du collectif ayant le caractére bienveillant dans l'organigramme, peuvent ajouter des montants 
@@ -313,13 +300,12 @@ class data():
             ['commun', '2000€'],
         ],
         "total": True,
-        "editable": True,
     }
 
 #le principe est que ce tableau est relié avec le tableau dépense int des projets selectionné dans "nom"
     recettes_int_reel = { 
         "slug": "recap_recettes",
-        "titre": "recettes",
+        "titre": "",
         "colonnes": [
             {'nom': '', 'list': False}, 
             {'nom': 'date', 'input': True},
@@ -330,7 +316,6 @@ class data():
             ['Culture', '03/05/23', '2000€'],
         ],
         "total": True,
-        "editable": False,
     }
 
 ############ Organigramme #################
@@ -338,7 +323,7 @@ class data():
 
     organigramme = { 
         "slug": "recap_recettes",
-        "titre": "recettes",
+        "titre": "",
         "colonnes": [
                     {'nom':'', 'list': True}, #liste déroulante des membres de odoo qui ont l'étiquette "Raffineur.euse"
                     {'nom':'presta interne', 'checkbox': True}, #peut être coché par les admins 
@@ -353,7 +338,6 @@ class data():
             ['Suzy', True, False, False, False ],
         ],
         "total": True,
-        "editable": False,
     }
 
        

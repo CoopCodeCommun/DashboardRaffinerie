@@ -11,41 +11,53 @@
                         {% for colonne in table.colonnes %}
                             <th class="header-text">{{ colonne.nom }}</th>
                         {% endfor %}
-                        {% if table.editable %}
-                            <th></th>
-                        {% endif %}
                     </tr>
                     </thead>
-                    <tbody hx-target="closest tr" hx-swap="outerHTML">
+                    <tbody hx-target="closest tr" hx-swap="outerHTML" class="d-none">
+                        {% for ligne in table.lignes %}
+    <tr>
+        {% for colonne in table.colonnes %}
+            {% if colonne.input %}
+                <td class="case_clair">
+                    {{ ligne|get_item:forloop.counter0 }}
+                    essai
+                </td>
+            {% else %}
+                <td>{{ ligne|get_item:forloop.counter0 }}</td>
+            {% endif %}
+        {% endfor %}
+    </tr>
+{% endfor %}
 
-                    {% for ligne in table.lignes %} {# pour chaque ligne dans l'objet lignes #}
-                        {% include 'dashboard/tableau_generique_ligne_read.html' with index=forloop.counter0 %}
-                        {# forloop.counter donne le numéro d'index de chaque objet dans la liste #}
-                    {% endfor %}
-
-                    {% if table.ajouter_ligne %}
-                        <tr>
-                            <td colspan="4">
-                                <button style="background: none; border: medium; cursor: pointer; font-size: 0.9em; outline: none;">
-                                    Ajouter ligne +
-                                </button>
-                            </td>
-                        </tr>
-                    {% endif %}
-
+                    
+                        {% if table.ajouter_ligne %}
+                            <tr>
+                                <td colspan="4">
+                                    <button style="background: none; border: medium; cursor: pointer; font-size: 0.9em; outline: none;">
+                                        Ajouter ligne +
+                                    </button>
+                                </td>
+                            </tr>
+                        {% endif %}
                     </tbody>
-                    <tfoot _="on click toggle .d-none on the previous <tbody/>">
-
-                    {% if table.total %}
-
-                        <tr class="case_petite total-row" >
-                            <td style="text-align: right; vertical-align: middle; font-weight: bold; cursor: pointer; min-width: 50px; white-space: nowrap; overflow: visible;"
-                                class="header-text">
-                                + Total
-                            </td>
-                        </tr>
-                    {% endif %}
-                    </tfoot>
+                    
+                    
+                       
+                    <tfoot>
+    {% if table.total %}
+        <tr class="case_petite total-row">
+            <td style="text-align: right; vertical-align: middle; font-weight: bold; cursor: pointer; min-width: 50px; white-space: nowrap; overflow: visible;"
+                class="header-text" 
+                _="on click toggle .d-none on the previous <tbody/>">
+                + Total
+            </td>
+            {% for colonne in table.colonnes %}
+                <td class="total-cell case_fonce" data-total-for=""header-text {% if not colonne.input %}hide-column{% endif %}"{{ colonne.nom | slugify }}" style="text-align: right; vertical-align: middle;"></td>
+            {% endfor %}
+        </tr>
+    {% endif %}
+</tfoot>
+                    
                 </table>
             </div>
         </div>
