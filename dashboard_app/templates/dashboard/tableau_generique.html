@@ -14,35 +14,22 @@
                     </tr>
                     </thead>
                     <tbody hx-target="closest tr" hx-swap="outerHTML" class="d-none">
-                        {% for ligne in table.lignes %}
-    <tr>
-        {% for colonne in table.colonnes %}
-            {% if colonne.input %}
-                <td class="case_clair">
-                    {{ ligne|get_item:forloop.counter0 }}
-                    essai
-                </td>
-            {% else %}
-                <td>{{ ligne|get_item:forloop.counter0 }}</td>
-            {% endif %}
-        {% endfor %}
-    </tr>
-{% endfor %}
 
-                    
-                        {% if table.ajouter_ligne %}
-                            <tr>
-                                <td colspan="4">
-                                    <button style="background: none; border: medium; cursor: pointer; font-size: 0.9em; outline: none;">
-                                        Ajouter ligne +
-                                    </button>
-                                </td>
-                            </tr>
-                        {% endif %}
-                    </tbody>
-                    
-                    
-                       
+                    {% for ligne in table.lignes %} {# pour chaque ligne dans l'objet lignes #}
+                        {% include 'dashboard/tableau_generique_ligne_read.html' with index=forloop.counter0 %}
+                        {# forloop.counter donne le numéro d'index de chaque objet dans la liste #}
+                    {% endfor %}
+
+                    {% if table.ajouter_ligne %}
+                        <tr>
+                            <td colspan="4">
+                                <button style="background: none; border: medium; cursor: pointer; font-size: 0.9em; outline: none;">
+                                    Ajouter ligne +
+                                </button>
+                            </td>
+                        </tr>
+                    {% endif %}
+
                     <tfoot>
     {% if table.total %}
         <tr class="case_petite total-row">
