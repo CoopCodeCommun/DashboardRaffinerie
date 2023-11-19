@@ -1,27 +1,26 @@
+{% load my_filters %}
+
 <tr class="case_petite ligne_table">
-
-    {% for value in ligne %} {# pour chaque valeur dans la ligne #}
-
-        {% if forloop.first %} {# si c'est la première colonne #}
-            <th class="case_petite header-text" style="min-width: 20px;">{{ value }}</th>
-
-        {% elif value == True or value == False %} {# si c'est une case à cocher #}
-            <th class="case_petite case_fonce" style="text-align: center;">
-                {% if value == True %}<span>X</span>{% else %}<span>-</span>{% endif %}
-            </th>
-
-        {% else %} {# si c'est les colonnes suivantes #}
-            <td class="case_petite case_fonce">{{ value }}</td>
+    {% for value, colonne in ligne|zip_lists:table.colonnes %}
+        {% if colonne.input %}
+            {% if value == True or value == False %}
+                <!-- Création d'une case à cocher éditable -->
+                <td class="case_petite case_fonce" style="text-align: center;">
+                    <input type="checkbox" {% if value %} checked {% endif %}/>
+                </td>
+            {% else %}
+                <!-- Création d'un champ input pour les autres types de données -->
+                <td><input type="text" value="{{ value }}" class="case_petite case_clair"/>
+                </td>
+            {% endif %}
+        {% elif value == True or value == False %}
+            <!-- Affichage d'une case à cocher non éditable -->
+            <td class="case_petite case_fonce" style="text-align: center;">
+                <input type="checkbox" {% if value %} checked {% endif %} disabled/>
+            </td>
+        {% else %}
+            <!-- Affichage normal pour les autres types de données -->
+            <td>{{ value }}</td>
         {% endif %}
-
     {% endfor %}
-
-    {% if table.editable %} {# si la table est éditable #}
-        <td class="case_petite case_fonce">
-            <button class="btn btn-sm" hx-get="/edit_tableau_generique/{{ table.slug }}/{{ index }}/?edit=true">
-                Edit
-            </button>
-        </td>
-    {% endif %}
-
 </tr>

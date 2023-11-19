@@ -246,4 +246,3 @@ class lazy_loading_profil_image(APIView):
             'contact': Contact.objects.get(pk=uuid)
         }
         return render(request, 'htmx/lazy_loading.html', context=context)
-

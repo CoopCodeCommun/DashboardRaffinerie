@@ -1,25 +1,21 @@
-<section class="col-md-4" style="display: flex;  align-items: stretch;">
+<section class="col-md-4" style="display: flex; align-items: stretch;">
     <div class="p-1 case_clair">
         <div style="cursor: pointer;" _="on click toggle .d-none on the next .contentToShowHide">{{ table.titre }}</div>
         <div class="contentToShowHide">
-            <div id="tableau_content" class=" h-100" style="margin: 0px;">
-                <div style="font-weight: bold; margin-top: 0px; padding: 5px 0px 0px 10px;"></div>
+            <div id="tableau_content" class="h-100" style="margin: 0px;">
                 <table class="no-border table-spacing" id="{{ table.titre | slugify }}">
                     <thead>
-
-                    <tr>
-                        {% for colonne in table.colonnes %}
-                            <th class="header-text">{{ colonne.nom }}</th>
-                        {% endfor %}
-                    </tr>
+                        <tr>
+                            {% for colonne in table.colonnes %}
+                                <th class="header-text {% if colonne.total == False %}hidden-on-total{% endif %}">{{ colonne.nom }}</th>
+                            {% endfor %}
+                        </tr>
                     </thead>
                     <tbody hx-target="closest tr" hx-swap="outerHTML" class="d-none">
-
-                    {% for ligne in table.lignes %} {# pour chaque ligne dans l'objet lignes #}
-                        {% include 'dashboard/tableau_generique_ligne_read.html' with index=forloop.counter0 %}
-                        {# forloop.counter donne le numéro d'index de chaque objet dans la liste #}
-                    {% endfor %}
-
+                        {% for ligne in table.lignes %}
+                            {% include 'dashboard/tableau_generique_ligne_read.html' with index=forloop.counter0 colonnes=table.colonnes %}
+                        {% endfor %}
+                    </tbody>
                     {% if table.ajouter_ligne %}
                         <tr>
                             <td colspan="4">
@@ -29,22 +25,23 @@
                             </td>
                         </tr>
                     {% endif %}
-
                     <tfoot>
-    {% if table.total %}
-        <tr class="case_petite total-row">
-            <td style="text-align: right; vertical-align: middle; font-weight: bold; cursor: pointer; min-width: 50px; white-space: nowrap; overflow: visible;"
-                class="header-text" 
-                _="on click toggle .d-none on the previous <tbody/>">
-                + Total
-            </td>
-            {% for colonne in table.colonnes %}
-                <td class="total-cell case_fonce" data-total-for=""header-text {% if not colonne.input %}hide-column{% endif %}"{{ colonne.nom | slugify }}" style="text-align: right; vertical-align: middle;"></td>
-            {% endfor %}
-        </tr>
-    {% endif %}
-</tfoot>
-                    
+                        {% if table.total %}
+                        <tr class="case_petite total-row">
+                            <td style="text-align: right; vertical-align: middle; font-weight: bold; cursor: pointer; min-width: 50px; white-space: nowrap; overflow: visible;"
+                                class="header-text"
+                                _="on click toggle .d-none on the previous <tbody/>">
+                                + Total
+                            </td>
+                            {% for colonne in table.colonnes %}
+                                {% if not forloop.first and colonne.total != False %}
+                                    <td class="total-cell case_fonce header-text {% if colonne.total == False %}hidden-on-total{% endif %}"
+                                        style="text-align: right; vertical-align: middle;"></td>
+                                {% endif %}
+                            {% endfor %}
+                        </tr>
+                        {% endif %}
+                    </tfoot>
                 </table>
             </div>
         </div>

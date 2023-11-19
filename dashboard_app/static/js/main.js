@@ -15,8 +15,6 @@ function calculateTotals() {
     });
 }
 
-
-
 // Exécuter calculateTotals lorsque la page est chargée et à chaque fois que le tableau est mis à jour
 document.addEventListener("DOMContentLoaded", calculateTotals);
 

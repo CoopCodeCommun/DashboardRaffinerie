@@ -19,16 +19,16 @@ class data():
             {'nom':'A Payer', 'total':True }, #total des colones A Payé (bienveillance et presta interne) du suivi détaillé
         ],
         "lignes": [
-            ['Jacques', 10, 20, True],
-            ['Camille', 10, 20, False],
-            ['Jacqueline', 10, 20, True],
+            ['Jacques', 10, 20, 20],
+            ['Camille', 10, 20, 40],
+            ['Jacqueline', 10, 20, 10],
         ],
         "total": True,
     }
 
     recap_depenses = {
         "slug": "recap_depenses",
-        "titre": "dépenses",
+        "titre": "Dépenses",
         "colonnes": [
             {'nom':''}, 
             {'nom':'prév'}, #somme du dépenses prévisionnel 
@@ -36,28 +36,28 @@ class data():
             {'nom':'reste à dépenser'}, #somme des reste à dépenser
         ],
         "lignes": [
-            ['bienveillance', 10, 20, True],
-            ['presta int.', 10, 20, True],
-            ['presta.ext / achats', 10, 20, True],
-            ['dépenses int.', 10, 20, True],
+            ['bienveillance', 10, 20, 30],
+            ['presta int.', 10, 20, 30],
+            ['presta.ext / achats', 10, 20, 30],
+            ['dépenses int.', 10, 20, 30],
         ],
         "total": True,
     }
 
     recap_recettes = {
         "slug": "recap_recettes",
-        "titre": "",
+        "titre": "Recettes",
         "colonnes": [
-            {'nom':'', 'input': True}, 
-            {'nom':'prév', 'input': True},  #somme des recettes prévisionnel 
-            {'nom':'encaissé', 'input': True}, #somme des recettes encaissées
-            {'nom':'reste à encaisser', 'input': True}, #somme des recettes qui reste à encaisser
+            {'nom':''}, 
+            {'nom':'prév'},  #somme des recettes prévisionnel 
+            {'nom':'encaissé'}, #somme des recettes encaissées
+            {'nom':'reste à encaisser'}, #somme des recettes qui reste à encaisser
         ],
         "lignes": [
-            ['animation ateliers', 10, 20, False],
-            ['entretien matérie', 10, 20, False],
-            ['ventes', 10, 20, False],
-            ['recette int', 10, 20, False],
+            ['animation ateliers', 10, 20, 30],
+            ['entretien matérie', 10, 20, 30],
+            ['ventes', 10, 20, 30],
+            ['recette int', 10, 20, 30],
         ],
         "total": True,
     }
@@ -83,19 +83,20 @@ class data():
         "slug": "recap_recettes",
         "titre": "",
         "colonnes": [
-            {'nom':'', 'list': True}, #les bienveillants peuvent selectionné un nom 
-            {'nom':'date', 'input': True}, #les bienveillants peuvent remplir une date
-            {'nom':'propo.', 'input': True}, #les bienveillants peuvent remplir un un montant
-            {'nom':'validé', 'checkbox': True}, #les bienveillants peuvent valider
-            {'nom':'factu.', 'checkbox': True}, #les bienveillants peuvent valider
-            {'nom':'payé', 'checkbox': True}, #si la facture est "payé" dans odoo, la checkbox est True, il y aura un peu de réflexion à avoir pour voir comment associé une proposition à une facture odoo
+            {'nom':''}, #les bienveillants peuvent selectionné un nom si il créé une nouvelle ligne
+            {'nom':'date', 'input': True, 'total': False}, #les bienveillants peuvent remplir une date
+            {'nom':'propo.' , 'input': True}, #les bienveillants peuvent remplir un un montant
+            {'nom':'validé', 'input': True}, #les bienveillants peuvent valider
+            {'nom':'factu.', 'input': True}, #les bienveillants peuvent valider
+            {'nom':'payé'}, #si la facture est "payé" dans odoo, la checkbox est True, il y aura un peu de réflexion à avoir pour voir comment associé une proposition à une facture odoo
         ],
         "lignes": [
-            ['Rémy', 100, True, False, False, False],
-            ['Georgette', 200, True, True, False,False],
-            ['hugues', 300, False, False, False,False],
-            ['yvette', 500, True, True, False,False],
+            ['Rémy','02/03/23', 100, True, False, True],
+            ['Georgette','02/03/23', 200, True, True, False],
+            ['hugues','02/03/23', 300, False, False, False],
+            ['yvette','02/03/23', 500, True, True, False],
         ],
+        #"ajouter_ligne":True,
         "total": True,
     }
 
@@ -118,15 +119,15 @@ class data():
         "titre": "",
         "colonnes": [
             {'nom':'', 'liste': True}, #liste déroulante des presta interne de l'organigramme
-            {'nom':'date', 'input': True}, #les presta int concerné peuvent remplir un une date
+            {'nom':'date', 'input': True, 'total': False}, #les presta int concerné peuvent remplir un une date
             {'nom':'propo.', 'input': True}, #les presta int concerné peuvent remplir un un montant
-            {'nom':'validé', 'checkbox': True}, #les bienveillants peuvent valider
-            {'nom':'factu.', 'checkbox': True}, #les presta int concerné peuvent valider
-            {'nom':'payé', 'checkbox': True}, #si la facture est "payé" dans odoo, la checkbox est True 
+            {'nom':'validé'}, #les bienveillants peuvent valider
+            {'nom':'factu.'}, #les presta int concerné peuvent valider
+            {'nom':'payé'}, #si la facture est "payé" dans odoo, la checkbox est True 
         ],
         "lignes": [
-            ['Rémy', 100, True, False, False,False],
-            ['Georgette', 200, True, True, False,False],
+            ['Rémy', '02/04/2023', 100, False, False,True],
+            ['Georgette', '02/04/2023', 100, True, False,False],
         ],
         "total": True,
     }
@@ -151,7 +152,7 @@ class data():
         "colonnes": [
             {'nom':''},  #le nom des facture de tout les articles sauf co-rem et presta int
             {'nom':'intitulé'}, #l'intitulé des facture
-            {'nom':'date'}, #date des factures
+            {'nom':'date', 'total': False}, #date des factures
             {'nom':'validé',},#si la facture est "validé" dans odoo, la checkbox est True, c'est une checkbox non modifiable par l'utilisateur
             {'nom':'payé',}, #si la facture est "payé" dans odoo, la checkbox est True, c'est une checkbox non modifiable par l'utilisateur
         ],
@@ -183,7 +184,7 @@ class data():
         "titre": "",
         "colonnes": [
             {'nom':'', 'list': True}, #liste déroulante des projets
-            {'nom':'date', 'input': True}, #date à rentrer par un bienveillant
+            {'nom':'date', 'input': True, 'total': False}, #date à rentrer par un bienveillant
             {'nom':'montant', 'input': True}, #montant à rentrer par un bienveillant
         ],
         "lignes": [
@@ -216,7 +217,7 @@ class data():
         "titre": "",
         "colonnes": [
                     {'nom':'',}, 
-                    {'nom':'date', },
+                    {'nom':'date', 'total': False },
                     {'nom':'montant',},
         ],
         "lignes": [
@@ -246,9 +247,9 @@ class data():
         "slug": "recap_recettes",
         "titre": "",
         "colonnes": [
-            {'nom':'',}, #factures client avec l'article presta ext via odoo
-            {'nom':'date',}, # date des factures 
-            {'nom':'montant',},# montant des factures
+            {'nom':'', 'input': False}, #factures client avec l'article presta ext via odoo
+            {'nom':'date', 'total': False}, # date des factures 
+            {'nom':'montant'},# montant des factures
         ],
         "lignes": [
             ['micro-recylerie', '03/05/23','1000€'],
@@ -277,7 +278,7 @@ class data():
         "titre": "",
         "colonnes": [
             {'nom':'',}, #factures client avec l'article vente via odoo
-            {'nom':'date',},  #date des factures 
+            {'nom':'date', 'total': False},  #date des factures 
             {'nom':'montant',},  #montant des factures 
         ],
         "lignes": [
@@ -308,7 +309,7 @@ class data():
         "titre": "",
         "colonnes": [
             {'nom': '', 'list': False}, 
-            {'nom': 'date', 'input': True},
+            {'nom': 'date', 'input': True, 'total': False},
             {'nom': 'montant', 'input': True},
         ],
         "lignes": [
@@ -326,10 +327,10 @@ class data():
         "titre": "",
         "colonnes": [
                     {'nom':'', 'list': True}, #liste déroulante des membres de odoo qui ont l'étiquette "Raffineur.euse"
-                    {'nom':'presta interne', 'checkbox': True}, #peut être coché par les admins 
-                    {'nom':'garant du cadre', 'checkbox': True}, #peut être coché par les admins
-                    {'nom':'référent budgtet / subvention', 'checkbox': True}, #peut être coché par les admins
-                    {'nom':'référent tâche planning', 'checkbox': True}, #peut être coché par les admins
+                    {'nom':'presta interne'}, #peut être coché par les admins 
+                    {'nom':'garant du cadre'}, #peut être coché par les admins
+                    {'nom':'référent budgtet / subvention'}, #peut être coché par les admins
+                    {'nom':'référent tâche planning'}, #peut être coché par les admins
         ],
         "lignes": [
             ['jessica', True, True, False, False ],

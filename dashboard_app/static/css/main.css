@@ -117,42 +117,38 @@
 }
 
 .case_clair {
-    background: rgba(255, 254, 254, 0.2);
+    background: rgba(255, 255, 255, 0.2);
     border-radius: 10px;
+    
 
 }
 
 .case_petite {
-
     height: 28px;
     border-radius: 10px;
-    min-width: 40px;
+    min-width: 20px;
     max-width: 60px;
-    line-height: 0.5em;
+    text-align: center;
     border: none !important;
     outline: none;
     margin: 0 !important;
     padding: 0 !important;
+    width: fit-content;
 }
 
-.case_petite td {
-    max-width: 50px;
-    max-height: 20px;
+.case_petite td .td{
+    width: auto;
     overflow: hidden;
     text-overflow: ellipsis;
-    white-space: nowrap;
+    text-align: center;
 }
 
 .case_petite th {
-        min-width: 40px;
-        max-width: 90px;
+    width: auto;
+    text-align: center;
     }
 
 
-input.case_clair, select.case_clair {
-    border: none !important;
-    box-shadow: none !important;
-}
 
 table th {
     font-size: 0.9em;
@@ -234,6 +230,6 @@ div[onclick="toggleContent(this)"] {
     display: none;
 }
 
-.hide-column {
+.hidden-on-total {
     display: none;
 }
