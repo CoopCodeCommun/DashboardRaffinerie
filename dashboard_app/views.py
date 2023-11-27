@@ -74,6 +74,7 @@ def organigramme(request):
     base_template = "dashboard/partial.html" if request.htmx else "dashboard/base.html"
     context = {
         'base_template': base_template,
+        'data': data
     }
 
     # import ipdb; ipdb.set_trace()
@@ -246,3 +247,4 @@ class lazy_loading_profil_image(APIView):
             'contact': Contact.objects.get(pk=uuid)
         }
         return render(request, 'htmx/lazy_loading.html', context=context)
+    

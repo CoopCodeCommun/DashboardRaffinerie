@@ -15,8 +15,27 @@ function calculateTotals() {
     });
 }
 
+function ajouterLigne() {
+    var tableau = document.getElementById('monTableau');
+    var nouvelleLigne = tableau.insertRow(-1); // Insère une ligne à la fin du tableau
+
+    // Supposons que vous ayez 4 colonnes
+    for (let i = 0; i < 4; i++) {
+        let nouvelleCellule = nouvelleLigne.insertCell(i);
+        nouvelleCellule.innerHTML = "Nouvelle cellule " + (i + 1);
+        // Vous pouvez ajuster le contenu de la cellule selon vos besoins
+    }
+}
+
+
+
+
 // Exécuter calculateTotals lorsque la page est chargée et à chaque fois que le tableau est mis à jour
 document.addEventListener("DOMContentLoaded", calculateTotals);
+
+
+
+//////////ancien code plus actif ///////////
 
 //////////////////////////// menu //////////////////////////
 

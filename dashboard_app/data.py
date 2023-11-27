@@ -327,10 +327,10 @@ class data():
         "titre": "",
         "colonnes": [
                     {'nom':'', 'list': True}, #liste déroulante des membres de odoo qui ont l'étiquette "Raffineur.euse"
-                    {'nom':'presta interne'}, #peut être coché par les admins 
-                    {'nom':'garant du cadre'}, #peut être coché par les admins
-                    {'nom':'référent budgtet / subvention'}, #peut être coché par les admins
-                    {'nom':'référent tâche planning'}, #peut être coché par les admins
+                    {'nom':'presta interne', 'input': True}, #peut être coché par les admins 
+                    {'nom':'garant du cadre', 'input': True}, #peut être coché par les admins
+                    {'nom':'référent budgtet / subvention', 'input': True}, #peut être coché par les admins
+                    {'nom':'référent tâche planning', 'input': True}, #peut être coché par les admins
         ],
         "lignes": [
             ['jessica', True, True, False, False ],
@@ -338,7 +338,8 @@ class data():
             ['John', True, False, False, True ],
             ['Suzy', True, False, False, False ],
         ],
-        "total": True,
+        "total": False,
+        "ajouter_ligne" : True,
     }
 
        
