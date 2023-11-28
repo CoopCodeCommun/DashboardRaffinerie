@@ -9,7 +9,7 @@
     <section class="row">
         
     <!-- membre du collectif -->
-    <div class="col-md-3 m-2 p-2 case rose">
+    <div class="col-md-4 m-2 p-2 case rose">
         {% include 'dashboard/section_generique.html' with titre='Membres du Collectif' %}
             <div style="width: 100%; overflow-x: auto;">
                 {% include 'dashboard/tableau_generique.html' with table=data.membres_du_collectif %}
@@ -17,7 +17,7 @@
     </div>
 
     <!-- recap budget -->
-    <div class="col-md-8 p-2 m-2 case orange">
+    <div class="col-md-7 p-2 m-2 case orange">
         {% include 'dashboard/section_generique.html' with titre='Recapitulatif Budget' %}
         <section class="row">
             <div class="col-md-6 p-2 width: 100%; overflow-x: auto;">
