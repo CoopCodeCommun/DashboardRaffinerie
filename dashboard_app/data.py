@@ -323,7 +323,7 @@ class data():
 
 
     organigramme = { 
-        "slug": "recap_recettes",
+        "slug": "organigramme",
         "titre": "",
         "colonnes": [
                     {'nom':'', 'list': True}, #liste déroulante des membres de odoo qui ont l'étiquette "Raffineur.euse"

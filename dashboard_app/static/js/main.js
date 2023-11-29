@@ -15,17 +15,44 @@ function calculateTotals() {
     });
 }
 
-function ajouterLigne() {
-    var tableau = document.getElementById('monTableau');
-    var nouvelleLigne = tableau.insertRow(-1); // Insère une ligne à la fin du tableau
 
-    // Supposons que vous ayez 4 colonnes
-    for (let i = 0; i < 4; i++) {
-        let nouvelleCellule = nouvelleLigne.insertCell(i);
-        nouvelleCellule.innerHTML = "Nouvelle cellule " + (i + 1);
-        // Vous pouvez ajuster le contenu de la cellule selon vos besoins
+
+function ajouterLigne(tableauId) {
+        console.log("ID du tableau:", tableauId);
+        var tableau = document.getElementById(tableauId);
+        console.log("Élément tableau récupéré:", tableau);
+    
+    var nouvelleLigne = tableau.insertRow(-1); // Ajoute une ligne à la fin du tableau
+
+    // Déterminez le nombre de colonnes en fonction des en-têtes de votre tableau
+    var nombreDeColonnes = tableau.rows[0].cells.length;
+
+    for (let i = 0; i < nombreDeColonnes; i++) {
+        let cell = nouvelleLigne.insertCell(i);
+
+        // Ici, vous pouvez personnaliser le contenu de chaque cellule
+        // Pour l'instant, nous allons juste mettre du texte de base
+        if (i === 0) {
+            // Supposons que la première cellule contienne un champ input
+            cell.innerHTML = '<input type="text" class="form-control" value="Nouvelle Valeur">';
+        } else if (i === nombreDeColonnes - 1) {
+            // Supposons que la dernière cellule contienne un bouton
+            cell.innerHTML = '<button class="btn btn-sm">Save</button>';
+        } else {
+            // Pour les autres cellules, mettez simplement du texte
+            cell.innerHTML = 'Cellule ' + (i + 1);
+        }
     }
 }
+
+document.addEventListener('DOMContentLoaded', function() {
+    document.querySelectorAll('.ajouter-ligne-btn').forEach(function(btn) {
+        btn.addEventListener('click', function() {
+            var tableauId = this.getAttribute('data-tableau-id');
+            ajouterLigne(tableauId);
+        });
+    });
+});
 
 
 
