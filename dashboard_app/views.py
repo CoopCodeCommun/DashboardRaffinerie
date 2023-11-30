@@ -64,14 +64,13 @@ def tableau_de_bord_perso(request):
 
 
 def subventions(request):
-    
     base_template = "dashboard/partial.html" if request.htmx else "dashboard/base.html"
     context = {
         'base_template': base_template,
-        'data': data,
+        'name': request.user.email if request.user.is_authenticated else 'Anonymous',
     }
-
     return render(request, 'dashboard/pages_html/subventions.html', context=context)
+
 
 
 def organigramme(request):
