@@ -342,6 +342,48 @@ class data():
         "ajouter_ligne" : True,
     }
 
+
+############ Subventions #################
+
+    subventions = { 
+        "slug": "subventions",
+        "titre": "subventions",
+        "colonnes": [
+                    {'nom':'projet concerné', 'input': True}, #projet concerné par la subvention
+                    {'nom':'intitulé', 'input': True}, #nom de la subvention, rempli par le référent
+                    {'nom':'référent'}, #corespond au référent inscrit dans l'organigramme
+                    {'nom':'partenaire', 'input': True}, #rempli par l'admin
+                    {'nom':'service', 'input': True}, #rempli par l'admin
+                    {'nom':'montant', 'input': True}, #rempli par l'admin
+        ],
+        "lignes": [
+            ['micro-forêt', 'economik', 'Marc', 'OFB', '', '22 500€'],
+            ['micro-forêt', 'economik', 'Marc', 'OFB', '', '22 500€'],
+            ['micro-forêt', 'economik', 'Marc', 'OFB', '', '22 500€'],
+            ['micro-forêt', 'economik', 'Marc', 'OFB', '', '22 500€'],
+        ],
+        "total": False,
+        "ajouter_ligne" : False,
+    }
+
+    subvention_historique = {
+        "slug": "historique",
+        "titre": "Historique",
+        "colonnes": [
+                    {'nom':''},
+                    {'nom':'Demandée le'},
+                    {'nom':'Acceptée le'},
+                    {'nom':'Notifié le'},
+                    {'nom':'référence'},
+        ],
+        "lignes": [
+            ['Région - investissement', 9,8,7,6],
+            ['mairie - fonctionnement', 11,12,13,14],
+        ],
+        "total": True,
+    }
+
+
        
 
 

@@ -1,45 +1,26 @@
-{% extends 'base.html' %}
+{% extends base_template %}
+
 {% load static %}
 {% load tz %}
 
 {% block content %}
 
-<div class="container-fluid">
-    <!-- Menu Lateral et Tableau -->
-    <div class="row">
-        <!-- Menu Lateral -->
-        {% include 'menu_lateral.html' %}
-
-        <!-- suivi budgétaire -->
-        <div class="col-md-10 ">
-            <!-- membre + recap -->
-            <section class="row">
-                <!-- membre du collectif -->
-                <section class="col-md-5" style="display: flex;  align-items: stretch;">
-                    <div class="rose p-2 case">
-                        <create-toggle title="Données de base"></create-toggle>
-                        <div class="contentToShowHide">
-                            <div id="tableau_donnees_base_subventions"></div>
-                        </div>
-                    </div>
-                </section>
-
-                <section class="col-md-5" style="display: flex;  align-items: stretch;">
-                    <div class="orange p-2 case">
-                        <create-toggle title="Historique"></create-toggle>
-                        <div class="contentToShowHide">
-                            <div id="tableau_historique_subventions"></div>
-                        </div>
-                    </div>
-                </section>
-                             
-            </section>
-
+<section class="row">
+    <!-- Organigramme -->
+    <div class="col-md-5 m-2 p-2 case rose">
+        {% include 'dashboard/section_generique.html' with titre='Subventions' %}
+        <div style="width: 100%; overflow-x: auto;">
+            {% include 'dashboard/tableau_generique.html' with table=data.subventions %}
+            
+        </div>
+    </div>
+    <div class="col-md-5 m-2 p-2 case orange">
+        {% include 'dashboard/section_generique.html' with titre='Référents' %}
+        <div style="width: 100%; overflow-x: auto;">
+            {% include 'dashboard/tableau_generique.html' with table=data.subventions %}
+            
+        </div>
+    </div>
+</section>
 
 {% endblock content %}
-
-{% block script %}
-    <script src='{% static "js/datas.js" %}'></script>
-    <script src='{% static "js/main.js" %}'></script>
-   
-{% endblock script %}
