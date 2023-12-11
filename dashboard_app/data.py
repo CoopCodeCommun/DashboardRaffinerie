@@ -196,33 +196,37 @@ class data():
 
     ####  recettes ###
 
-    subvention_prev = {
-        "slug": "recap_recettes",
-        "titre": "",
+    subvention_donne_de_base= {
+        "slug": "donnees_de_base",
+        "titre": "Données de base",
         "colonnes": [
-            {'nom':'', 'input': True}, #les membres du collectif ayant le caractére bienveillant dans l'organigramme, peuvent ajouter des intulés 
-            {'nom':'montant', 'input': True}, #les membres du collectif ayant le caractére bienveillant dans l'organigramme, peuvent ajouter des montants 
+            {'nom':''},
+            {'nom':'Référent'},
+            {'nom':'Partenaire'},
+            {'nom':'service'},
+            {'nom':'référence'},
         ],
         "lignes": [
-            ['micro-recylerie','1000€'],
-            ['Culture', '2000€'],
-            ['commun', '2000€'],
+            ['Région - investissement', 10,20,3,30],
+            ['mairie - fonctionnement', 22,33,44,55],
         ],
         "total": True,
     }
 
 #ce tableau est relié à la page subventions
-    subvention_reel = { 
-        "slug": "recap_recettes",
-        "titre": "",
+    subvention_historique = {
+        "slug": "historique",
+        "titre": "Historique",
         "colonnes": [
-                    {'nom':'',}, 
-                    {'nom':'date', 'total': False },
-                    {'nom':'montant',},
+                    {'nom':''},
+                    {'nom':'Demandée le'},
+                    {'nom':'Acceptée le'},
+                    {'nom':'Notifié le'},
+                    {'nom':'référence'},
         ],
         "lignes": [
-            ['micro-recylerie', '03/05/23','1000€'],
-            ['Culture', '03/05/23', '2000€'],
+            ['Région - investissement', 9,8,7,6],
+            ['mairie - fonctionnement', 11,12,13,14],
         ],
         "total": True,
     }
@@ -383,6 +387,23 @@ class data():
         "total": True,
     }
 
+
+membres_du_collectifcccccc = {
+        "slug": "membres_du_collectif",
+        "titre": "",
+        "colonnes": [
+            {'nom':'', 'list': True, }, # liste qui vient de l'organigramme
+            {'nom':'A valider', 'total':True}, #total des colones A valider (bienveillance et presta interne) du suivi détaillé
+            {'nom':'A facturer', 'total':True},  #total des colones A Facturer (bienveillance et presta interne) du suivi détaillé
+            {'nom':'A Payer', 'total':True }, #total des colones A Payé (bienveillance et presta interne) du suivi détaillé
+        ],
+        "lignes": [
+            ['Jacques', 10, 20, 20],
+            ['Camille', 10, 20, 40],
+            ['Jacqueline', 10, 20, 10],
+        ],
+        "total": True,
+    }
 
        
 
