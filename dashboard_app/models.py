@@ -9,6 +9,7 @@ from stdimage import JPEGField
 from stdimage.validators import MinSizeValidator
 
 from dashboard_app.utils import fernet_encrypt, fernet_decrypt
+from django.conf import settings
 
 
 class Badge(models.Model):
@@ -161,6 +162,21 @@ class Configuration(SingletonModel):
         return fernet_decrypt(self.odoo_apikey)
 
 
+
+class BankAccount(models.Model):
+    uuid = models.UUIDField(primary_key=True, default=uuid4, editable=False, unique=True, db_index=False)
+    iban = models.CharField(max_length=150, unique=True, verbose_name='Iban')
+    bic = models.CharField(max_length=10, blank=True, null=True, verbose_name="Bic ou Swift")
+    currency = models.CharField(max_length=15, default="euro", verbose_name='Devise')
+    account_number = models.CharField(max_length=150, unique=True, verbose_name="Le numéro de compte")
+    user = models.ForeignKey(
+        settings.CONTACT_USER_MODEL,
+        on_delete=models.CASCADE,
+        null=True,
+        related_name="bank_account",
+        verbose_name='Compte bancaire')
+
+
 ### TABLEAU SUIVI BUDGETAIRE DETAILLE ###
 
 class DepensesBienveillance(models.Model):
@@ -176,3 +192,4 @@ class DepensesBienveillance(models.Model):
     account_analytic_group = models.ForeignKey(AccountAnalyticGroup, on_delete=models.PROTECT)
 
     commentaire = models.TextField(blank=True, null=True)
+
