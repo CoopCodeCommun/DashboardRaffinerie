@@ -164,49 +164,89 @@ class Configuration(SingletonModel):
         return fernet_decrypt(self.odoo_apikey)
 
 
+# Creating the groupe of poles
+class Group(models.Model):
+    uuid = models.UUIDField(primary_key=True, default=uuid4, editable=False)
+    name = models.CharField(max_length=30, verbose_name="Nom du groupe")
+    # The first number of the analytic code
+    first_numbers_analytic_code = models.SmallIntegerField(
+        validators = [MinValueValidator(1), MaxValueValidator(9)],
+        default=1,
+        verbose_name='Premiér nombre du code analytique')
+    user = models.ForeignKey(settings.CONTACT_USER_MODEL,
+                             on_delete=models.CASCADE,
+                             related_name="group",
+                             null=True,
+                             verbose_name="Members"
+                             )
+    class Meta:
+        verbose_name = _("Groupe")
+        verbose_name_plural = _("Groupes")
+
+
 # Seting the pol with its analytic code
 class Pole(models.Model):
     uuid = models.UUIDField(primary_key=True, default=uuid4, editable=False)
     name = models.CharField(max_length=30, verbose_name="Nom du pôle")
-    # The first numbers of the analytic code
-    TEN, TWENTY, THIRTY, FORTY, FIFTY, SIXTY, SEVENTY, EIGHTY, NINETY = '10', '20', '30', '40', '50', '60', '70', '80', '90'
-    CHOOSING_POLE_CODE = [
-        (TEN, _('Dix')),
-        (TWENTY, _('Vingt')),
-        (THIRTY, _('Trent')),
-        (FORTY, _('Quarante')),
-        (SIXTY, _('Cinquante')),
-        (SEVENTY, _('Soixante-dix')),
-        (EIGHTY, _('Quatre-vingts')),
-        (NINETY, _('Quatre vingt')),
-    ]
-    first_numbers_analytic_code = models.CharField(
-        max_length=2,
-        choices=CHOOSING_POLE_CODE,
-        verbose_name='Choix des de premier nombres du code analytique'
-    )
-
-# Creating the groupe of poles
-class Group(models.Model):
-    uuid = models.UUIDField(primary_key=True, default=uuid4, editable=False)
-    name = models.CharField(max_length=30, verbose_name="Nom du group")
-    second_num_analytic_code = models.SmallIntegerField(
+    # The second numbers of the analytic code
+    second_numbers_analytic_code = models.SmallIntegerField(
         validators = [MinValueValidator(1), MaxValueValidator(9)],
         default=1,
         verbose_name='Deuxièm nombre du code analytique')
-    pole = models.ForeignKey(Pole, on_delete=models.PROTECT)
+    group = models.ForeignKey(Group, related_name="pole", on_delete=models.PROTECT, verbose_name="Groupe")
+    user = models.ForeignKey(settings.CONTACT_USER_MODEL,
+                             on_delete=models.CASCADE,
+                             related_name="pole",
+                             null=True,
+                             verbose_name="Membre"
+                             )
+    class Meta:
+        verbose_name = _("Pôle")
+        verbose_name_plural = _("Pôles")
 
 
 # Creating the project models of  groups and poles
 class Project(models.Model):
     uuid = models.UUIDField(primary_key=True, default=uuid4, editable=False)
     name = models.CharField(max_length=30, verbose_name="Nom du projet")
-    last_num_analytic_code = models.SmallIntegerField(
+    third_num_analytic_code = models.SmallIntegerField(
         validators = [MinValueValidator(1), MaxValueValidator(9)],
         default=1,
-        verbose_name='Dernière nombre du code analytique')
-    project = models.ForeignKey(Group, on_delete=models.PROTECT)
-    pole = models.ForeignKey(Pole, on_delete=models.PROTECT)
+        verbose_name='Troisièm nombre du code analytique')
+    pole = models.ForeignKey(Pole, related_name="project", on_delete=models.PROTECT, verbose_name="Pôle")
+    user = models.ForeignKey(settings.CONTACT_USER_MODEL,
+                             on_delete=models.CASCADE,
+                             related_name="project",
+                             null=True,
+                             verbose_name="Membre"
+                             )
+    class Meta:
+        verbose_name = _("Projet")
+        verbose_name_plural = _("Projets")
+
+
+# Creating the action models of  groups and poles
+class Action(models.Model):
+    uuid = models.UUIDField(primary_key=True, default=uuid4, editable=False)
+    name = models.CharField(max_length=30, verbose_name="Nom du projet")
+    third_num_analytic_code = models.SmallIntegerField(
+        validators = [MinValueValidator(1), MaxValueValidator(9)],
+        default=1,
+        verbose_name='Troisièm nombre du code analytique')
+    project = models.ForeignKey(Project, related_name="action", on_delete=models.PROTECT)
+    user = models.ForeignKey(settings.CONTACT_USER_MODEL,
+                             on_delete=models.CASCADE,
+                             related_name="action",
+                             null=True,
+                             verbose_name="Membre"
+                             )
+    class Meta:
+        verbose_name_plural = ("Actions")
+
+
+# Creating Organigrame model
+class Organigrame(models.Model):
+    pass
 
 class BankAccount(models.Model):
     uuid = models.UUIDField(primary_key=True, default=uuid4, editable=False, unique=True, db_index=False)
