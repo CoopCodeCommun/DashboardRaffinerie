@@ -264,6 +264,32 @@ class BankAccount(models.Model):
 
 ### TABLEAU SUIVI BUDGETAIRE DETAILLE ###
 
+# Creating the class Prefision, in french Prévisionnel
+class PrevisionCost(models.Model):
+    uuid = models.UUIDField(primary_key=True, default=uuid4, editable=False, unique=True, db_index=False)
+    CARING, INTERN_SERVICE, EXTEARN_SERVICE, INTERN_SPENDS, SUBVENTION, SERVICE, SELL, INTERN_RECIPE = 'CAR', 'IN_S', 'EX_S', 'SP_I', 'SUB', 'SER', 'S', 'IN_R'
+    CHOICE_TYPE = (
+        (CARING, 'bienveillance'),
+        (INTERN_SERVICE, 'prestation interne'),
+        (EXTEARN_SERVICE, 'Prestation externe'),
+        (INTERN_SPENDS, 'Dépense interne'),
+        (SUBVENTION, 'Subvention'),
+        (SERVICE, 'Prestation'),
+        (SELL, "Vente"),
+        (INTERN_RECIPE, 'Récette interne')
+    )
+    type = models.CharField(max_length=4, choices=CHOICE_TYPE, default=CARING)
+    user = models.ForeignKey(
+            settings.CONTACT_USER_MODEL,
+            on_delete=models.PROTECT,
+            null=True,
+            related_name="prevision_cost",
+            verbose_name='Intitulé')
+
+    class Meta:
+        verbose_name = _('Prévisionnel')
+
+
 class DepensesBienveillance(models.Model):
     uuid = models.UUIDField(primary_key=True, default=uuid4, editable=False, unique=True, db_index=False)
 
