@@ -28,7 +28,7 @@ class Badge(models.Model):
 ### TABLES POUR DONNEE VENANT DE ODOO : ###
 
 class Contact(models.Model):
-    uuid = models.UUIDField(primary_key=True, editable=False, default=uuid4)
+    uuid = models.UUIDField(primary_key=True, editable=False, default=uuid4, unique=True, db_index=True)
     id_odoo = models.SmallIntegerField()
 
     email = models.EmailField(max_length=100, null=True, blank=True)
@@ -86,7 +86,7 @@ class Contact(models.Model):
 
 
 class AccountAccount(models.Model):
-    uuid = models.UUIDField(primary_key=True, default=uuid4, editable=False, unique=True, db_index=False)
+    uuid = models.UUIDField(primary_key=True, default=uuid4, editable=False, unique=True, db_index=True)
     name = models.CharField(max_length=100, db_index=True)
     code = models.CharField(max_length=100)
     id_odoo = models.SmallIntegerField()
@@ -96,7 +96,7 @@ class AccountAccount(models.Model):
 
 
 class AccountJournal(models.Model):
-    uuid = models.UUIDField(primary_key=True, default=uuid4, editable=False, unique=True, db_index=False)
+    uuid = models.UUIDField(primary_key=True, default=uuid4, editable=False, unique=True, db_index=True)
     name = models.CharField(max_length=100, db_index=True)
     id_odoo = models.SmallIntegerField()
 
@@ -105,7 +105,7 @@ class AccountJournal(models.Model):
 
 
 class AccountAnalyticGroup(models.Model):
-    uuid = models.UUIDField(primary_key=True, default=uuid4, editable=False, unique=True, db_index=False)
+    uuid = models.UUIDField(primary_key=True, default=uuid4, editable=False, unique=True, db_index=True)
     name = models.CharField(max_length=100, db_index=True)
     id_odoo = models.SmallIntegerField()
 
@@ -114,7 +114,7 @@ class AccountAnalyticGroup(models.Model):
 
 
 class AccountAnalyticAccount(models.Model):
-    uuid = models.UUIDField(primary_key=True, default=uuid4, editable=False, unique=True, db_index=False)
+    uuid = models.UUIDField(primary_key=True, default=uuid4, editable=False, unique=True, db_index=True)
     id_odoo = models.SmallIntegerField()
     name = models.CharField(max_length=100, db_index=True)
     code = models.CharField(max_length=100)
@@ -166,7 +166,7 @@ class Configuration(SingletonModel):
 
 # Creating the groupe of poles
 class Group(models.Model):
-    uuid = models.UUIDField(primary_key=True, default=uuid4, editable=False)
+    uuid = models.UUIDField(primary_key=True, default=uuid4, editable=False, unique=True, db_index=True)
     name = models.CharField(max_length=30, verbose_name="Nom du groupe")
     # The first number of the analytic code
     first_numbers_analytic_code = models.SmallIntegerField(
@@ -184,9 +184,24 @@ class Group(models.Model):
         verbose_name_plural = _("Groupes")
 
 
+class Role(models.Model):
+    uuid = models.UUIDField(primary_key=True, default=uuid4, editable=False, unique=True, db_index=True)
+    name = models.CharField(max_length=30, verbose_name='Nom')
+    user = models.ForeignKey(
+        settings.CONTACT_USER_MODEL,
+        on_delete=models.PROTECT,
+        related_name='role',
+        verbose_name='Member'
+    )
+    class Meta:
+        verbose_name = _("Rôle")
+        verbose_name_plural = _("Rôles")
+
+
+
 # Seting the pol with its analytic code
 class Pole(models.Model):
-    uuid = models.UUIDField(primary_key=True, default=uuid4, editable=False)
+    uuid = models.UUIDField(primary_key=True, default=uuid4, editable=False, unique=True, db_index=True)
     name = models.CharField(max_length=30, verbose_name="Nom du pôle")
     # The second numbers of the analytic code
     second_numbers_analytic_code = models.SmallIntegerField(
@@ -207,7 +222,7 @@ class Pole(models.Model):
 
 # Creating the project models of  groups and poles
 class Project(models.Model):
-    uuid = models.UUIDField(primary_key=True, default=uuid4, editable=False)
+    uuid = models.UUIDField(primary_key=True, default=uuid4, editable=False, unique=True, db_index=True)
     name = models.CharField(max_length=30, verbose_name="Nom du projet")
     third_num_analytic_code = models.SmallIntegerField(
         validators = [MinValueValidator(1), MaxValueValidator(9)],
@@ -227,7 +242,7 @@ class Project(models.Model):
 
 # Creating the action models of  groups and poles
 class Action(models.Model):
-    uuid = models.UUIDField(primary_key=True, default=uuid4, editable=False)
+    uuid = models.UUIDField(primary_key=True, default=uuid4, editable=False, unique=True, db_index=True)
     name = models.CharField(max_length=30, verbose_name="Nom du projet")
     third_num_analytic_code = models.SmallIntegerField(
         validators = [MinValueValidator(1), MaxValueValidator(9)],
@@ -245,11 +260,31 @@ class Action(models.Model):
 
 
 # Creating Organigrame model
-class Organigrame(models.Model):
-    pass
+class OrganizationalChart(models.Model):
+    uuid = models.UUIDField(primary_key=True, default=uuid4, editable=False, unique=True, db_index=True)
+    user = models.ForeignKey(
+        settings.CONTACT_USER_MODEL,
+        on_delete=models.PROTECT,
+        null=True,
+        related_name="organigrame",
+        verbose_name='Membre')
+    analytic_account = models.ForeignKey(
+        AccountAnalyticAccount,
+        on_delete=models.PROTECT,
+        null=True,
+        related_name="Organigrame",
+        verbose_name='Compte analytique'
+    )
+    role = models.ForeignKey(Role, on_delete=models.PROTECT, null=True, related_name='organigrame', verbose_name='Rôle')
+    
+    class Meta:
+        verbose_name = _('Organigrame')
+        verbose_name_plural = _('Organigrames')
 
+
+# Bank Account model
 class BankAccount(models.Model):
-    uuid = models.UUIDField(primary_key=True, default=uuid4, editable=False, unique=True, db_index=False)
+    uuid = models.UUIDField(primary_key=True, default=uuid4, editable=False, unique=True, db_index=True)
     iban = models.CharField(max_length=150, unique=True, verbose_name='Iban')
     bic = models.CharField(max_length=10, blank=True, null=True, verbose_name="Bic ou Swift")
     currency = models.CharField(max_length=15, default="euro", verbose_name='Devise')
@@ -259,14 +294,18 @@ class BankAccount(models.Model):
         on_delete=models.CASCADE,
         null=True,
         related_name="bank_account",
-        verbose_name='Compte bancaire')
+        verbose_name='Membre')
+
+    class Meta:
+        verbose_name = _('Compte Bancaire')
+        verbose_name_plural = _('Comptes Bancaires')
 
 
 ### TABLEAU SUIVI BUDGETAIRE DETAILLE ###
 
 # Creating the class Prefision, in french Prévisionnel
 class PrevisionCost(models.Model):
-    uuid = models.UUIDField(primary_key=True, default=uuid4, editable=False, unique=True, db_index=False)
+    uuid = models.UUIDField(primary_key=True, default=uuid4, editable=False, unique=True, db_index=True)
     CARING, INTERN_SERVICE, EXTEARN_SERVICE, INTERN_SPENDS, SUBVENTION, SERVICE, SELL, INTERN_RECIPE = 'CAR', 'IN_S', 'EX_S', 'SP_I', 'SUB', 'SER', 'S', 'IN_R'
     CHOICE_TYPE = (
         (CARING, 'bienveillance'),
@@ -291,7 +330,7 @@ class PrevisionCost(models.Model):
 
 
 class DepensesBienveillance(models.Model):
-    uuid = models.UUIDField(primary_key=True, default=uuid4, editable=False, unique=True, db_index=False)
+    uuid = models.UUIDField(primary_key=True, default=uuid4, editable=False, unique=True, db_index=True)
 
     date = models.DateField(auto_now=True)
     proposition = models.DecimalField(max_digits=10, decimal_places=2)
@@ -303,4 +342,3 @@ class DepensesBienveillance(models.Model):
     account_analytic_group = models.ForeignKey(AccountAnalyticGroup, on_delete=models.PROTECT)
 
     commentaire = models.TextField(blank=True, null=True)
-
