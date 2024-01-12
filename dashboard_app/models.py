@@ -10,6 +10,7 @@ from stdimage.validators import MinSizeValidator
 
 from dashboard_app.utils import fernet_encrypt, fernet_decrypt
 from django.conf import settings
+from django.utils import timezone
 from django.utils.translation import gettext_lazy as _
 from django.core.validators import MaxValueValidator, MinValueValidator
 
@@ -327,6 +328,36 @@ class PrevisionCost(models.Model):
 
     class Meta:
         verbose_name = _('Prévisionnel')
+
+
+
+# Creating the grant model
+class Grant(models.Model):
+    uuid = models.UUIDField(primary_key=True, default=uuid4, editable=False, unique=True, db_index=True)
+    account_date_automatic = models.DateField(auto_now_add=True,verbose_name="Date comptable (automatique)")
+    label = models.CharField(max_length=150, verbose_name="Libéllé")
+    reverence = models.CharField(max_length=70, verbose_name="Référence")
+    amount = models.IntegerField(verbose_name="Montant")
+    account_date = models.DateField(verbose_name="Date comptable")
+    partnaire = models.CharField(max_length=60, verbose_name='Partenaire')
+    reference = models.CharField(max_length=60, verbose_name='Référence')
+    request_date = models.DateField(verbose_name="Date de la demande")
+    acceptation_date = models.DateField(verbose_name="Date d'accéptation")
+    notification_date = models.DateField(verbose_name="Date de notification")
+    initial_request_link = models.URLField(verbose_name='Lien de demande initiale')
+    convention_link = models.URLField(verbose_name='Lien convention')
+    analytic_account = models.ForeignKey(
+        AccountAnalyticAccount,
+        on_delete=models.PROTECT,
+        null=True,
+        related_name="Grant",
+        verbose_name='Compte analytique'
+    )
+    global_budget = models.IntegerField(verbose_name='Budget global project')
+    spended_amount = models.IntegerField(verbose_name='Montant dépensé')
+    rested_spending = models.IntegerField(verbose_name='Reste à dépenser')
+    recived_amount = models.IntegerField(verbose_name='Montant reçu')
+
 
 
 class DepensesBienveillance(models.Model):
