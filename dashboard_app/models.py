@@ -302,7 +302,28 @@ class BankAccount(models.Model):
         verbose_name_plural = _('Comptes Bancaires')
 
 
+
 ### TABLEAU SUIVI BUDGETAIRE DETAILLE ###
+
+# Creating Invoicing Model, don't forgete we have two types of invoicing. Client and Supplier
+class Invoice(models.Model):
+    uuid = models.UUIDField(primary_key=True, default=uuid4, editable=False, unique=True, db_index=True)
+    CLIENT, SUPPLIER = 'C', 'S'
+    CHOICE_TYPE_INVOICE = ((CLIENT, 'Client'), (SUPPLIER, 'Fournisseur'))
+    client_or_supplier = models.CharField(max_length=1, choices=CHOICE_TYPE_INVOICE, default=SUPPLIER, verbose_name='Choix: Client \ Fournisseur ')
+    numero_facture = models.CharField(max_length=12, verbose_name='Numéro de facture')
+    nom = models.CharField(max_length=45, verbose_name='Nom de Client où Fournisseur')
+    date_invoicing = models.DateField(verbose_name='Date de facturation')
+    deadline = models.DateField(verbose_name="Date d'échéance")
+    account_date = models.DateField(null=True, blank=True, verbose_name='Date comptable')
+    amount = models.IntegerField(verbose_name="Montant")
+    validated = models.BooleanField(default=False, verbose_name='Validé')
+    payed = models.BooleanField(default=False, verbose_name='Payé')
+
+
+
+
+
 
 # Creating the class Prefision, in french Prévisionnel
 class PrevisionCost(models.Model):
@@ -325,10 +346,32 @@ class PrevisionCost(models.Model):
             null=True,
             related_name="prevision_cost",
             verbose_name='Intitulé')
+    amount = models.IntegerField(verbose_name="Montant", default=0)
 
     class Meta:
         verbose_name = _('Prévisionnel')
 
+
+    # Creating the class for Caring Service intern (Bienvéillance service interne)
+    class InternServiceCaring(models.Model):
+        uuid = models.UUIDField(primary_key=True, default=uuid4, editable=False, unique=True, db_index=True)
+        user = models.ForeignKey(
+            settings.CONTACT_USER_MODEL,
+            on_delete=models.PROTECT,
+            null=True,
+            related_name="intern_service_caring",
+            verbose_name='Member')
+        date = models.DateField()
+        proposition = models.CharField(max_length=15, default='0 €')
+        validated = models.BooleanField(default=False, verbose_name='Validé')
+        invoiced = models.BooleanField(default=False, verbose_name='Facturé')
+        payed = models.BooleanField(default=False, verbose_name='Payé')
+        CARING, INTERN_SERVICE = 'CAR', 'IN_S'
+        CHOICE_TYPE = ((CARING, 'bienveillance'), (INTERN_SERVICE, 'Préstation interne'))
+        type = models.CharField(max_length=4, choices=CHOICE_TYPE, default=CARING)
+
+        class Meta:
+            verbose_name = _('Bienveillance prestation interne')
 
 
 # Creating the grant model
@@ -357,6 +400,13 @@ class Grant(models.Model):
     spended_amount = models.IntegerField(verbose_name='Montant dépensé')
     rested_spending = models.IntegerField(verbose_name='Reste à dépenser')
     recived_amount = models.IntegerField(verbose_name='Montant reçu')
+
+    class Meta:
+        verbose_name = _('Subvention')
+        verbose_name_plural = _('Subventions')
+
+
+
 
 
 
