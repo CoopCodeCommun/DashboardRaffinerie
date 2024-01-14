@@ -320,9 +320,9 @@ class Invoice(models.Model):
     validated = models.BooleanField(default=False, verbose_name='Validé')
     payed = models.BooleanField(default=False, verbose_name='Payé')
 
-
-
-
+    class Meta:
+        verbose_name = _('Facture')
+        verbose_name_plural = _('Factures')
 
 
 # Creating the class Prefision, in french Prévisionnel
