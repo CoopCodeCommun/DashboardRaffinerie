@@ -323,9 +323,8 @@ class Invoice(models.Model):
         verbose_name = _('Facture')
         verbose_name_plural = _('Factures')
 
-
-# Creating the class Prefision, in french Prévisionnel
-class PrevisionCost(models.Model):
+# The Cost class. It will be a base for Prevision and Real cost tables
+class Cost(models.Model):
     uuid = models.UUIDField(primary_key=True, default=uuid4, editable=False, unique=True)
     CARING, INTERN_SERVICE, EXTEARN_SERVICE, INTERN_SPENDS, SUBVENTION, SERVICE, SELL, INTERN_RECIPE = 'CAR', 'IN_S', 'EX_S', 'SP_I', 'SUB', 'SER', 'S', 'IN_R'
     CHOICE_TYPE = (
@@ -339,6 +338,14 @@ class PrevisionCost(models.Model):
         (INTERN_RECIPE, 'Récette interne')
     )
     type = models.CharField(max_length=4, choices=CHOICE_TYPE, default=CARING)
+    class Meta:
+        verbose_name = _('Dépenses')
+
+
+# Creating the class Prevision, in french Prévisionnel
+class PrevisionCost(models.Model):
+    uuid = models.UUIDField(primary_key=True, default=uuid4, editable=False, unique=True)
+    type = models.ForeignKey(Cost, on_delete=models.PROTECT, related_name='prevision_cost', verbose_name='type')
     user = models.ForeignKey(
             settings.AUTH_USER_MODEL,
             on_delete=models.PROTECT,
@@ -346,9 +353,22 @@ class PrevisionCost(models.Model):
             related_name="prevision_cost",
             verbose_name='Intitulé')
     amount = models.IntegerField(verbose_name="Montant", default=0)
-
+    titeld = models.CharField(max_length=60, verbose_name='intitulé')
     class Meta:
-        verbose_name = _('Prévisionnel')
+        verbose_name = _('Dépenses Prévisionnel')
+
+
+    class RealCost(models.Model):
+        pass
+
+    '''
+    date = models.DateField(default=None)
+    validated = models.BooleanField(default=False, verbose_name='validé')
+    invoiced = models.BooleanField(default=False, verbose_name='facturé')
+    paid = models.BooleanField(default=False, verbose_name='payé')
+    '''
+
+
 
 
     # Creating the class for Caring Service intern (Bienvéillance service interne)
