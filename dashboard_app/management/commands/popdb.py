@@ -1,5 +1,5 @@
 from django.core.management.base import BaseCommand, CommandError
-from dashboard_app.models import Group, Pole, Cost, PrevisionCost, RealCost, RealCostExternService, RealCostInternSpending
+from dashboard_app.models import Groupe, Pole, Cost, PrevisionCost, RealCost, RealCostExternService, RealCostInternSpending
 from dashboard_user.models import CustomUser, ContactProvisional
 
 # creating provisoire users
@@ -24,10 +24,14 @@ def create_prov_user():
         {'email': 'yvette@laraffinerie.re', 'name': 'Yvette', 'username': 'Yvette','type': CustomUser.USER_QONTO},
     ]
 
+    dict_users = {}
     #loop to create the users:
     for user in users:
-        CustomUser.objects.get_or_create(**user)
+        usr, created = CustomUser.objects.get_or_create(**user)
+        dict_users[usr.name] = usr
 
+    # Return the dictionair with the user object
+    return dict_users
 
 # creating some provisoil contacts
 def create_contacts():
@@ -35,41 +39,66 @@ def create_contacts():
     ContactProvisional.objects.get_or_create(email='vents@decathlon.re', name='Decathlon')
 
 # Creating the bases of Groupe db
-def create_groupes():
-    groupes = [
-        {'name': 'Les communs', 'code': '10', 'user': 'Steph'},
-        {'name': 'Les communs', 'code': '10', 'user': 'Céline'},
-        {'name': 'Alimentation', 'code': '20', 'user': 'Céline'},
-        {'name': 'Jardin', 'code': '30', 'user': 'Stiff'},
-        {'name': 'Micro-Recylerie', 'code': '40', 'user': 'Julien'},
-        {'name': 'Culture', 'code': '50', 'user': 'Laetitia'},
-        {'name': 'Services', 'code': '70', 'user': 'Guillaume B'},
-    ]
+def create_groupes(dict_users):
+    # create a dictionair so we can regroupe all group objects with their name as key
+    group_dict = {}
+    #creating groups with one users or multiple users (many to many)
+    gr, created = Groupe.objects.get_or_create(name='Les communs', code= 10)
+    gr.users.add(dict_users['Céline'])
+    gr.users.add(dict_users['Steph'])
+    group_dict[gr.name] = gr.pk
+    gr2, created = Groupe.objects.get_or_create(name='Alimentation', code= 20)
+    gr2.users.add(create_prov_user()['Céline'])
+    group_dict[gr2.name] = gr2.pk
+    gr3, created = Groupe.objects.get_or_create(name='Jardin', code= 30)
+    gr3.users.add(dict_users['Stiff'])
+    group_dict[gr3.name] = gr3.pk
+    gr4, created = Groupe.objects.get_or_create(name='Micro-Recylerie', code= 40)
+    gr4.users.add(dict_users['Julien'])
+    group_dict[gr4.name] = gr4.pk
+    gr5, created = Groupe.objects.get_or_create(name='Culture', code= 50)
+    gr5.users.add(dict_users['Laetitia'])
+    group_dict[gr5.name] = gr5.pk
+    gr6, created = Groupe.objects.get_or_create(name='Services', code= 70)
+    gr6.users.add(dict_users['Guillaume B'])
+    group_dict[gr6.name] = gr6.pk
 
-    # creating all groupes with a loop
-    for groupe in groupes:
-        gr, creted = Group.objects.get_or_create(**groupe)
+    return group_dict
 
 # Creating the bases of pole db
-def create_poles():
-    poles = [
-        {'name': 'Interpôle', 'code': '2', 'type': Pole.POLE, 'user': 'Steph','groupe': Group.objects.get(name='Les communs',user__username = 'Stiff')},
-        {'name': 'Outils communs', 'code': '3', 'type': Pole.POLE, 'user': 'Céline','groupe': Group.objects.get(name='Les communs',user__username = 'Céline')},
-        {'name': 'Instances', 'code': '4', 'type': Pole.POLE, 'user': 'Céline','groupe': Group.objects.get(name='Les communs',user__username = 'Céline')},
-        {'name': 'Snack / Bar', 'code': '2', 'type': Pole.GROUP, 'user': 'Céline','groupe': Group.objects.get(name='Alimentation',user__username = 'Céline')},
-        {'name': 'Micro-forêt', 'code': '2', 'type': Pole.POLE, 'user': 'Anouk','groupe': Group.objects.get(name='Jardin',user__username = 'Stiff')},
-        {'name': 'Potager', 'code': '3', 'type': Pole.POLE, 'user': 'Stiff','groupe': Group.objects.get(name='Jardin', user__username = 'Stiff')},
-        {'name': 'Serre aquaponique', 'code': '4', 'type': Pole.POLE, 'user': 'Stiff','groupe': Group.objects.get(name='Jardin', user__username ='Stiff')},
-        {'name': 'Champignonnière', 'code': '5', 'type': Pole.POLE, 'user': 'Stiff','groupe': Group.objects.get(name='Jardin', user__username ='Stiff')},
-        {'name': 'Café culturel', 'code': '3', 'type': Pole.POLE, 'user': 'Laetitia','groupe': Group.objects.get(name='Culture', user__username ='Laetitia')},
-        {'name': 'Culture Lab', 'code': '2', 'type': Pole.POLE, 'user': 'Laetitia','groupe': Group.objects.get(name='Culture', user__username ='Laetitia')},
-    ]
+def create_poles(dict_user, group_pk_dict):
+    dict_pk_pol = {}
+    pol0, created = Pole.objects.get_or_create(name='Interpole', code= 2, user=dict_user['Steph'], group_id=group_pk_dict['Les communs'])
+    dict_pk_pol[pol0.name] = pol0.pk
 
-    # creating all poles with a loop
-    for pole in poles:
-        pl, creted = Pole.objects.get_or_create(**pole)
+    pol1, created = Pole.objects.get_or_create(name='Outils communs', code= 3, user=dict_user['Céline'], group_id=group_pk_dict['Les communs'])
+    dict_pk_pol[pol1.name] = pol1.pk
 
+    pol2, created = Pole.objects.get_or_create(name='Instances', code= 4, user=dict_user['Steph'], group_id=group_pk_dict['Les communs'])
+    dict_pk_pol[pol2.name] = pol2.pk
 
+    pol3, created = Pole.objects.get_or_create(name='Snack / Bar', code= 2, user=dict_user['Céline'], group_id=group_pk_dict['Alimentation'])
+    dict_pk_pol[pol3.name] = pol3.pk
+
+    pol4, created = Pole.objects.get_or_create(name='Micro-forêt', code= 2, user=dict_user['Steph'], group_id=group_pk_dict['Jardin'])
+    dict_pk_pol[pol4.name] = pol4.pk
+
+    pol5, created = Pole.objects.get_or_create(name='Potager', code= 3, user=dict_user['Céline'], group_id=group_pk_dict['Jardin'])
+    dict_pk_pol[pol5.name] = pol5.pk
+
+    pol6, created = Pole.objects.get_or_create(name='Serre aquaponique', code= 4, user=dict_user['Steph'], group_id=group_pk_dict['Jardin'])
+    dict_pk_pol[pol6.name] = pol6.pk
+
+    pol7, created = Pole.objects.get_or_create(name='Champignonnière', code= 5, user=dict_user['Céline'], group_id=group_pk_dict['Jardin'])
+    dict_pk_pol[pol7.name] = pol7.pk
+
+    pol8, created = Pole.objects.get_or_create(name='Café culturel', code= 3, user=dict_user['Steph'], group_id=group_pk_dict['Culture'])
+    dict_pk_pol[pol8.name] = pol8.pk
+
+    pol9, created = Pole.objects.get_or_create(name='Culture Lab', code= 2, user=dict_user['Céline'], group_id=group_pk_dict['Culture'])
+    dict_pk_pol[pol0.name] = pol9.pk
+
+    return dict_pk_pol
 
 # Creating cost base db
 def cost_base():
@@ -104,7 +133,7 @@ def prevision_cost():
 def delete_models():
     CustomUser.objects.all().delete()
     ContactProvisional.objects.all().delete()
-    Group.objects.all().delete()
+    Groupe.objects.all().delete()
     Pole.objects.all().delete()
     Cost.objects.all().delete()
     PrevisionCost.objects.all().delete()
@@ -113,9 +142,16 @@ def delete_models():
 # BaseCommand to create DB
 class Command(BaseCommand):
     def handle(self, *args, **options):
-        create_prov_user()
+        # create the users and collect the user objects in a dictionary
+        dict_user = create_prov_user()
         create_contacts()
+        # create the groups and collect the group objects in a dictionary
+        group_dict = create_groupes(dict_user)
+        create_poles(dict_user, group_dict)
+
+        # creating Cost basic elements
+        cost_base()
+        # creating prevision cost
+        prevision_cost()
 
         #delete_models()
-
-

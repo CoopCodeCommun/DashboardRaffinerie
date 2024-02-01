@@ -180,15 +180,13 @@ class Role(models.Model):
 
 
 # Creating the groupe of poles
-class Group(models.Model):
+class Groupe(models.Model):
     uuid = models.UUIDField(primary_key=True, default=uuid4, editable=False, unique=True)
     name = models.CharField(max_length=30, verbose_name="Nom")
     # The first number of the analytic code
     code = models.SmallIntegerField(verbose_name='Code')
-    user = models.ForeignKey(settings.AUTH_USER_MODEL,
-                             on_delete=models.CASCADE,
-                             related_name="group",
-                             null=True,
+    users = models.ManyToManyField(settings.AUTH_USER_MODEL,
+                             blank= True,
                              verbose_name="Members"
                              )
     visible = models.BooleanField(default=True, verbose_name='Visible')
@@ -205,7 +203,7 @@ class Pole(models.Model):
     name = models.CharField(max_length=30, verbose_name="Nom du pôle")
     # The second numbers of the analytic code
     code = models.SmallIntegerField(verbose_name='Code')
-    group = models.ForeignKey(Group, related_name="poles", on_delete=models.PROTECT, verbose_name="Groupe")
+    group = models.ForeignKey(Groupe, related_name="poles", on_delete=models.PROTECT, verbose_name="Groupe")
     user = models.ForeignKey(settings.AUTH_USER_MODEL,
                              on_delete=models.CASCADE,
                              related_name="pole",
