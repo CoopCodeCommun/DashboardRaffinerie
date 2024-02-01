@@ -199,8 +199,6 @@ class Group(models.Model):
 
 
 
-
-
 # Seting the pol with its analytic code
 class Pole(models.Model):
     uuid = models.UUIDField(primary_key=True, default=uuid4, editable=False, unique=True)
@@ -315,7 +313,7 @@ class Invoice(models.Model):
     date_invoicing = models.DateField(verbose_name='Date de facturation')
     deadline = models.DateField(verbose_name="Date d'échéance")
     account_date = models.DateField(null=True, blank=True, verbose_name='Date comptable')
-    amount = models.IntegerField(verbose_name="Montant")
+    amount = models.DecimalField(max_digits=8, decimal_places=2, default=0, verbose_name='montant')
     validated = models.BooleanField(default=False, verbose_name='Validé')
     payed = models.BooleanField(default=False, verbose_name='Payé')
 
@@ -326,11 +324,11 @@ class Invoice(models.Model):
 # The Cost class. It will be a base for Prevision and Real cost tables
 class Cost(models.Model):
     uuid = models.UUIDField(primary_key=True, default=uuid4, editable=False, unique=True)
-    CARING, INTERN_SERVICE, EXTEARN_SERVICE, INTERN_SPENDS, SUBVENTION, SERVICE, SELL, INTERN_RECIPE = 'CAR', 'IN_S', 'EX_S', 'SP_I', 'SUB', 'SER', 'S', 'IN_R'
+    CARING, INTERN_SERVICE, EXTERN_SERVICE, INTERN_SPENDS, SUBVENTION, SERVICE, SELL, INTERN_RECIPE = 'CAR', 'IN_S', 'EX_S', 'SP_I', 'SUB', 'SER', 'S', 'IN_R'
     CHOICE_TYPE = (
         (CARING, 'bienveillance'),
         (INTERN_SERVICE, 'prestation interne'),
-        (EXTEARN_SERVICE, 'Prestation externe'),
+        (EXTERN_SERVICE, 'Prestation externe'),
         (INTERN_SPENDS, 'Dépense interne'),
         (SUBVENTION, 'Subvention'),
         (SERVICE, 'Prestation'),
@@ -346,51 +344,81 @@ class Cost(models.Model):
 class PrevisionCost(models.Model):
     uuid = models.UUIDField(primary_key=True, default=uuid4, editable=False, unique=True)
     type = models.ForeignKey(Cost, on_delete=models.PROTECT, related_name='prevision_cost', verbose_name='type')
+    amount = models.DecimalField(max_digits=8, decimal_places=2, default=0, verbose_name='montant')
+    titled = models.CharField(max_length=60, verbose_name='intitulé')
+    class Meta:
+        verbose_name = _('Dépenses Prévisionnel')
+
+# Creating the RealCost Class for the tables Intern services
+# and Caring ( Presta intern et Beinveillence)
+class RealCost(models.Model):
+    uuid = models.UUIDField(primary_key=True, default=uuid4, editable=False, unique=True)
+    type = models.ForeignKey(Cost, on_delete=models.PROTECT, related_name='real_cost', verbose_name='type')
     user = models.ForeignKey(
             settings.AUTH_USER_MODEL,
             on_delete=models.PROTECT,
             null=True,
             related_name="prevision_cost",
             verbose_name='Intitulé')
-    amount = models.IntegerField(verbose_name="Montant", default=0)
-    titeld = models.CharField(max_length=60, verbose_name='intitulé')
-    class Meta:
-        verbose_name = _('Dépenses Prévisionnel')
-
-
-    class RealCost(models.Model):
-        pass
-
-    '''
-    date = models.DateField(default=None)
+    date = models.DateField()
     validated = models.BooleanField(default=False, verbose_name='validé')
     invoiced = models.BooleanField(default=False, verbose_name='facturé')
     paid = models.BooleanField(default=False, verbose_name='payé')
-    '''
+    proposition = models.DecimalField(max_digits=8, decimal_places=2, default=0, verbose_name='proposition')
+
+    class Meta:
+        verbose_name = _('Bienvillance où Préstation interne')
+        verbose_name_plural = _('Bienvillances où Préstation internes')
 
 
+# Creating the class for the extern services
+class RealCostExternService(models.Model):
+    uuid = models.UUIDField(primary_key=True, default=uuid4, editable=False, unique=True)
+    type = models.ForeignKey(Cost, on_delete=models.PROTECT, related_name='real_cost_extern_service', verbose_name='type')
+    contact = models.CharField(max_length=50, verbose_name='Fourniseur')
+    titled = models.CharField(max_length=60, verbose_name='intitulé')
+    date = models.DateField()
+    validated = models.BooleanField(default=False, verbose_name='Validé')
+    payed = models.BooleanField(default=False, verbose_name='Payé')
+
+    class Meta:
+        verbose_name = _('Préstation externe / achat')
+        verbose_name_plural = _('Préstations externes / achats')
 
 
-    # Creating the class for Caring Service intern (Bienvéillance service interne)
-    class InternServiceCaring(models.Model):
-        uuid = models.UUIDField(primary_key=True, default=uuid4, editable=False, unique=True)
-        user = models.ForeignKey(
-            settings.AUTH_USER_MODEL,
-            on_delete=models.PROTECT,
-            null=True,
-            related_name="intern_service_caring",
-            verbose_name='Member')
-        date = models.DateField()
-        proposition = models.CharField(max_length=15, default='0 €')
-        validated = models.BooleanField(default=False, verbose_name='Validé')
-        invoiced = models.BooleanField(default=False, verbose_name='Facturé')
-        payed = models.BooleanField(default=False, verbose_name='Payé')
-        CARING, INTERN_SERVICE = 'CAR', 'IN_S'
-        CHOICE_TYPE = ((CARING, 'bienveillance'), (INTERN_SERVICE, 'Préstation interne'))
-        type = models.CharField(max_length=4, choices=CHOICE_TYPE, default=CARING)
+# Creating the class for the intern spendings
+class RealCostInternSpending(models.Model):
+    uuid = models.UUIDField(primary_key=True, default=uuid4, editable=False, unique=True)
+    type = models.ForeignKey(Cost, on_delete=models.PROTECT, related_name='real_cost_intern_spending', verbose_name='type')
+    pole = models.ForeignKey(Pole, on_delete=models.PROTECT, related_name='real_cost_intern_spending', verbose_name='pôle')
+    amount = models.DecimalField(max_digits=8, decimal_places=2, default=0, verbose_name='montant')
+    date = models.DateField()
 
-        class Meta:
-            verbose_name = _('Bienveillance prestation interne')
+    class Meta:
+        verbose_name = _('')
+        verbose_name_plural = _('')
+
+
+# Il faut voir dans le futur si on va pas effacer le modele InternServiceCaring
+class InternServiceCaring(models.Model):
+    uuid = models.UUIDField(primary_key=True, default=uuid4, editable=False, unique=True)
+    user = models.ForeignKey(
+        settings.AUTH_USER_MODEL,
+        on_delete=models.PROTECT,
+        null=True,
+        related_name="intern_service_caring",
+        verbose_name='Member')
+    date = models.DateField()
+    proposition = models.CharField(max_length=15, default='0 €')
+    validated = models.BooleanField(default=False, verbose_name='Validé')
+    invoiced = models.BooleanField(default=False, verbose_name='Facturé')
+    payed = models.BooleanField(default=False, verbose_name='Payé')
+    CARING, INTERN_SERVICE = 'CAR', 'IN_S'
+    CHOICE_TYPE = ((CARING, 'bienveillance'), (INTERN_SERVICE, 'Préstation interne'))
+    type = models.CharField(max_length=4, choices=CHOICE_TYPE, default=CARING)
+
+    class Meta:
+        verbose_name = _('Bienveillance prestation interne')
 
 
 # Creating the grant model
@@ -399,7 +427,7 @@ class Grant(models.Model):
     account_date_automatic = models.DateField(auto_now_add=True,verbose_name="Date comptable (automatique)")
     label = models.CharField(max_length=150, verbose_name="Libéllé")
     reverence = models.CharField(max_length=70, verbose_name="Référence")
-    amount = models.IntegerField(verbose_name="Montant")
+    amount = models.DecimalField(max_digits=8, decimal_places=2, default=0, verbose_name='montant')
     account_date = models.DateField(verbose_name="Date comptable")
     partnaire = models.CharField(max_length=60, verbose_name='Partenaire')
     reference = models.CharField(max_length=60, verbose_name='Référence')
@@ -415,17 +443,17 @@ class Grant(models.Model):
         related_name="Grant",
         verbose_name='Compte analytique'
     )
-    global_budget = models.IntegerField(verbose_name='Budget global project')
-    spended_amount = models.IntegerField(verbose_name='Montant dépensé')
-    rested_spending = models.IntegerField(verbose_name='Reste à dépenser')
-    recived_amount = models.IntegerField(verbose_name='Montant reçu')
+    global_budget = models.DecimalField(max_digits=8, decimal_places=2, default=0, verbose_name='Budget global project')
+    spended_amount = models.DecimalField(max_digits=8, decimal_places=2, default=0, verbose_name='Montant dépensé')
+    rested_spending = models.DecimalField(max_digits=8, decimal_places=2, default=0, verbose_name='Reste à dépenser')
+    recived_amount = models.DecimalField(max_digits=8, decimal_places=2, default=0, verbose_name='Montant reçu')
 
     class Meta:
         verbose_name = _('Subvention')
         verbose_name_plural = _('Subventions')
 
 
-
+# Il faut voir dans le futur si on va pas effacer le modele  DepensesBienveillance
 class DepensesBienveillance(models.Model):
     uuid = models.UUIDField(primary_key=True, default=uuid4, editable=False, unique=True, db_index=True)
 
