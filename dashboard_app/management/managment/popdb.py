@@ -1,5 +1,32 @@
 from django.core.management.base import BaseCommand, CommandError
 from dashboard_app.models import Group, Pole, Cost, PrevisionCost, RealCost, RealCostExternService, RealCostInternSpending
+from dashboard_user.models import CustomUser
+
+# creating provisoire users
+def create_prov_user():
+    users = [
+        {'email': 'julien@laraffinerie.re', 'name': 'Julien', 'username': 'Julien','type': CustomUser.BENEFICIEAIRE},
+        {'email': 'steph@laraffinerie.re', 'name': 'Steph', 'username': 'Steph','type': CustomUser.BENEFICIEAIRE},
+        {'email': 'stiff@laraffinerie.re', 'name': 'Stiff', 'username': 'Stiff','type': CustomUser.BENEFICIEAIRE},
+        {'email': 'celine@laraffinerie.re', 'name': 'Céline', 'username': 'Céline','type': CustomUser.BENEFICIEAIRE},
+        {'email': 'laetitia@laraffinerie.re', 'name': 'Laetitia', 'username': 'Laetitia','type': CustomUser.BENEFICIEAIRE},
+        {'email': 'guillaume.b@laraffinerie.re', 'name': 'Guillaume B', 'username': 'Guillaume B','type': CustomUser.BENEFICIEAIRE},
+        {'email': 'tim@laraffinerie.re', 'name': 'Tim', 'username': 'Tim','type': CustomUser.BENEFICIEAIRE},
+        {'email': 'antoine@laraffinerie.re', 'name': 'Antoine', 'username': 'Antoine','type': CustomUser.BENEFICIEAIRE},
+        {'email': 'claire@laraffinerie.re', 'name': 'Claire', 'username': 'Claire','type': CustomUser.BENEFICIEAIRE},
+        {'email': 'flore@laraffinerie.re', 'name': 'Flore', 'username': 'Flore','type': CustomUser.BENEFICIEAIRE},
+        {'email': 'anouk@laraffinerie.re', 'name': 'Anouk', 'username': 'Anouk','type': CustomUser.BENEFICIEAIRE},
+        {'email': 'manon.g@laraffinerie.re', 'name': 'Manon G', 'username': 'Manon G','type': CustomUser.BENEFICIEAIRE},
+        {'email': 'france@laraffinerie.re', 'name': 'France', 'username': 'France','type': CustomUser.BENEFICIEAIRE},
+        {'email': 'remy@laraffinerie.re', 'name': 'Remy', 'username': 'Remy','type': CustomUser.USER_QONTO},
+        {'email': 'georgete@laraffinerie.re', 'name': 'Georgette', 'username': 'Georgette','type': CustomUser.USER_QONTO},
+        {'email': 'huges@laraffinerie.re', 'name': 'Huges', 'username': 'Huges','type': CustomUser.USER_QONTO},
+        {'email': 'yvette@laraffinerie.re', 'name': 'Yvette', 'username': 'Yvette','type': CustomUser.USER_QONTO},
+    ]
+
+    #loop to create the users:
+    for user in users:
+        usr, created = CustomUser.objects.get_or_create(**user)
 
 
 # Creating the bases of Groupe db
