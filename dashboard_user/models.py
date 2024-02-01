@@ -32,6 +32,5 @@ class ContactProvisional(models.Model):
     name = models.CharField(max_length=100, unique=True, verbose_name='Nom')
 
     class Meta:
-        verbose_name = _('')
-        verbose_name_plural = _('')
+        verbose_name = _('Contact provisoir')
 

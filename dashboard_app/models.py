@@ -337,7 +337,7 @@ class Cost(models.Model):
     )
     type = models.CharField(max_length=4, choices=CHOICE_TYPE, default=CARING)
     class Meta:
-        verbose_name = _('Dépenses')
+        verbose_name_plural = _('Dépenses')
 
 
 # Creating the class Prevision, in french Prévisionnel
@@ -395,8 +395,8 @@ class RealCostInternSpending(models.Model):
     date = models.DateField()
 
     class Meta:
-        verbose_name = _('')
-        verbose_name_plural = _('')
+        verbose_name = _('Dépense réele interne')
+        verbose_name_plural = _('Dépenses réeles internes')
 
 
 # Il faut voir dans le futur si on va pas effacer le modele InternServiceCaring
