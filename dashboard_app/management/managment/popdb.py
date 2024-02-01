@@ -1,6 +1,6 @@
 from django.core.management.base import BaseCommand, CommandError
 from dashboard_app.models import Group, Pole, Cost, PrevisionCost, RealCost, RealCostExternService, RealCostInternSpending
-from dashboard_user.models import CustomUser
+from dashboard_user.models import CustomUser, ContactProvisional
 
 # creating provisoire users
 def create_prov_user():
@@ -26,8 +26,13 @@ def create_prov_user():
 
     #loop to create the users:
     for user in users:
-        usr, created = CustomUser.objects.get_or_create(**user)
+        CustomUser.objects.get_or_create(**user)
 
+
+# creating some provisoil contacts
+def create_contacts():
+    ContactProvisional.objects.get_or_create(email='vents@ravate.re', name='Ravate')
+    ContactProvisional.objects.get_or_create(email='vents@decathlon.re', name='Decathlon')
 
 # Creating the bases of Groupe db
 def create_groupes():
@@ -93,3 +98,24 @@ def prevision_cost():
     ]
     for prevision in previsions:
         prev, created = PrevisionCost.objects.get_or_create(**prevision)
+
+
+# deleting all the db
+def delete_models():
+    CustomUser.objects.all().delete()
+    ContactProvisional.objects.all().delete()
+    Group.objects.all().delete()
+    Pole.objects.all().delete()
+    Cost.objects.all().delete()
+    PrevisionCost.objects.all().delete()
+
+
+# BaseCommand to create DB
+class Command(BaseCommand):
+    def handle(self, *args, **options):
+        create_prov_user()
+        create_contacts()
+
+        #delete_models()
+
+
