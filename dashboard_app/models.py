@@ -390,7 +390,7 @@ class RealCostInternSpending(models.Model):
     type = models.ForeignKey(Cost, on_delete=models.PROTECT, related_name='real_cost_intern_spending', verbose_name='type')
     pole = models.ForeignKey(Pole, on_delete=models.PROTECT, related_name='real_cost_intern_spending', verbose_name='pôle')
     amount = models.DecimalField(max_digits=8, decimal_places=2, default=0, verbose_name='montant')
-    date = models.DateField()
+    date_cost = models.DateField(auto_now= True)
 
     class Meta:
         verbose_name = _('Dépense réele interne')

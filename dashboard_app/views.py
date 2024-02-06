@@ -9,13 +9,25 @@ from rest_framework.permissions import AllowAny, IsAuthenticated, IsAdminUser
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from dashboard_app.data import data
-
+from .models import PrevisionCost
 from dashboard_app.models import Contact, AccountAccount, AccountJournal, AccountAnalyticGroup, AccountAnalyticAccount, \
-    Badge, DepensesBienveillance
+    Badge, DepensesBienveillance, RealCostInternSpending
 from dashboard_app.odoo_api import OdooApi
 from dashboard_app.serializers import UserSerializer
 from .serializers import AccountAnalyticGroupSerializer
 from dashboard_app.models import AccountAccount
+
+# We'll create a fonction that will return a dictionary in the form adapted to
+# the generale tables
+def create_dict_with_data(slug_name, colonnes,lignes, titre_colonne=""):
+
+    return {
+        "slug": slug_name,
+        "titre": titre_colonne,
+        "colonnes": colonnes,
+        "lignes": lignes,
+        "total": True,
+    }
 
 
 def index(request):
@@ -42,17 +54,69 @@ def edit_tableau_generique(request, table, index):
     ligne = table['lignes'][index]
     if request.GET.get('edit'):
         return render(request, 'dashboard/tableau_generique_ligne_edit.html', context={'ligne':ligne, 'table':table, 'index':index})
-    else :
+    else:
         return render(request, 'dashboard/tableau_generique_ligne_read.html', context={'ligne':ligne, 'table':table, 'index':index})
 
+# methode generique qui va envoyer tous les données
 def suivi_budgetaire(request):
     #### DEBUT DU CONTROLEUR
+    # On va recupperer toute les données pour les filtrer par la suite
+    prevision_costs = PrevisionCost.objects.all()
+    # Créons une liste avec les listes des données pour les lignes
+    bienveillance_prevision_list = [[x.titled, str(x.amount)] for x in prevision_costs.filter(type__type='CAR')]
+    # base de colonnes pour les suivies budgetaires prévisions
+    col_prevision = [
+            # A verifier s'il faut 'list': True  OU 'input': True ???
+            {'nom':'','list': True},
+            {'nom':'montant', 'input': True}
+        ]
+    # creons la bd pour bienveillance prevision
+    bienveillance_prev = create_dict_with_data( "recap_recettes", col_prevision, bienveillance_prevision_list)
+
+    # creons une liste pour presta intern prevision
+    presta_int_prev_list = [[x.titled, str(x.amount)] for x in prevision_costs.filter(type__type='IN_S')]
+    # creons la bd pour prestations internes prevision
+    presta_int_prev = create_dict_with_data('recap_recettes',col_prevision, presta_int_prev_list)
+    # creons la bd pour bienveillance prevision
+    bienveillance_prev = create_dict_with_data( "recap_recettes", col_prevision, bienveillance_prevision_list)
+
+    # creons une liste pour les presta externs prevision
+    presta_ext_prev_list = [[x.titled, str(x.amount)] for x in prevision_costs.filter(type__type='EX_S')]
+    # creons la bd pour les prestations externes prevision
+    presta_ext_prev = create_dict_with_data('recap_recettes',col_prevision, presta_ext_prev_list)
+
+    # creons une liste pour les presta externs prevision
+    depenses_int_prev_list = [[x.titled, str(x.amount)] for x in prevision_costs.filter(type__type='SP_I')]
+    # creons la bd pour les prestations externes prevision
+    depenses_int_prev = create_dict_with_data('recap_recettes',col_prevision, depenses_int_prev_list)
+
+
+    # ajoutons les depenses réeles internes
+    # Nous devrons tout d'abourd ajouter une nouvelle variable colones basé
+    # sur les colone previsions
+
+    col_dep_inten_real = [
+        {'nom':'','list': True},
+        {'nom':'date', 'date': True, 'total': False},
+        {'nom':'montant', 'input': True}
+    ]
+    # creons une liste pour les presta externs prevision
+    depenses_int_real_list = [[x.titled, str(x.amount)] for x in RealCostInternSpending.objects.filter(type__type='SP_I')]
+    # creons la bd pour les prestations externes prevision
+    depenses_int_reel = create_dict_with_data('recap_recettes',col_dep_inten_real, depenses_int_real_list)
+
+
     base_template = "dashboard/partial.html" if request.htmx else "dashboard/base.html"
+    #import ipdb; ipdb.set_trace()
     context = {
         'base_template': base_template,
         'data': data,
+        'bienveillance_prev': bienveillance_prev,
+        'presta_int_prev': presta_int_prev,
+        'presta_ext_prev': presta_ext_prev,
+        'depenses_int_prev': depenses_int_prev,
+        'depenses_int_reel': depenses_int_reel,
     }
-
     return render(request, 'dashboard/pages_html/suivi_budgetaire.html', context=context)
 
 
@@ -68,7 +132,6 @@ def subventions(request):
     context = {
         'base_template': base_template,
         'data': data
-        #'name': request.user.email if request.user.is_authenticated else 'Anonymous',
     }
     return render(request, 'dashboard/pages_html/subventions.html', context=context)
 

@@ -1,6 +1,9 @@
 from django.core.management.base import BaseCommand, CommandError
 from dashboard_app.models import Groupe, Pole, Cost, PrevisionCost, RealCost, RealCostExternService, RealCostInternSpending
 from dashboard_user.models import CustomUser, ContactProvisional
+from time import timezone
+import uuid
+
 
 # creating provisoire users
 def create_prov_user():
@@ -118,15 +121,23 @@ def prevision_cost():
     previsions = [
         {'type': Cost.objects.get(type=Cost.CARING), 'titled': 'garant du cadre'},
         {'type': Cost.objects.get(type=Cost.CARING),'titled': 'ref budget'},
+        {'type': Cost.objects.get(type=Cost.CARING),'titled': 'ref communication'},
         {'type': Cost.objects.get(type=Cost.INTERN_SERVICE), 'titled': 'animation'},
         {'type': Cost.objects.get(type=Cost.INTERN_SERVICE), 'titled': 'entretien matérie'},
         {'type': Cost.objects.get(type=Cost.EXTERN_SERVICE), 'titled': 'matériel'},
         {'type': Cost.objects.get(type=Cost.EXTERN_SERVICE), 'titled': 'consomable'},
-        {'type': Cost.objects.get(type=Cost.INTERN_SPENDS), 'titled': 'consomable'},
-        {'type': Cost.objects.get(type=Cost.INTERN_SPENDS), 'titled': 'consomable'}
+        {'type': Cost.objects.get(type=Cost.INTERN_SPENDS), 'titled': 'micro-recylerie'},
+        {'type': Cost.objects.get(type=Cost.INTERN_SPENDS), 'titled': 'culture'},
+        {'type': Cost.objects.get(type=Cost.INTERN_SPENDS), 'titled': 'commun'}
     ]
     for prevision in previsions:
         prev, created = PrevisionCost.objects.get_or_create(**prevision)
+
+
+# Create db for interne cost real
+def intern_real_cost(dict_pole_pk):
+    intern_spend_real, created = RealCostInternSpending.objects.get_or_create(type=Cost.INTERN_SPENDS, pole_id= dict_pole_pk['Café culturel'])
+    intern_spend_real, created = RealCostInternSpending.objects.get_or_create(type=Cost.INTERN_SPENDS, pole_id= dict_pole_pk['Micro-forêt'])
 
 
 # deleting all the db
@@ -147,11 +158,14 @@ class Command(BaseCommand):
         create_contacts()
         # create the groups and collect the group objects in a dictionary
         group_dict = create_groupes(dict_user)
-        create_poles(dict_user, group_dict)
-
+        poles_pk = create_poles(dict_user, group_dict)
         # creating Cost basic elements
         cost_base()
         # creating prevision cost
         prevision_cost()
+        #import ipdb; ipdb.set_trace()
+        # creating real intern cost
+        intern_real_cost(poles_pk)
+
 
         #delete_models()

@@ -1,3 +1,6 @@
+# calling data from DB
+from .models import Groupe, Pole, Cost, PrevisionCost
+
 class data():
    
    #les paramètres sont de base en False, et mis en True si actifs
@@ -64,18 +67,24 @@ class data():
     
 ################## suivi budgétaire détaillé ################""
     ####  dépenses ###
+   # creating a list with Caring prevision cost data
+
+    #import ipdb; ipdb.set_trace()
     bienveillance_prev = {
         "slug": "recap_recettes",
         "titre": "",
         "colonnes": [
-            {'nom':'', 'input': True}, #les membres du collectif ayant le caractére bienveillant dans l'organigramme, peuvent ajouter des intulés 
-            {'nom':'montant', 'input': True}, #les membres du collectif ayant le caractére bienveillant dans l'organigramme, peuvent ajouter des montants 
+            {'nom':'', 'input': True}, #les membres du collectif ayant le caractére bienveillant dans l'organigramme, peuvent ajouter des intulés
+            {'nom':'montant', 'input': True}, #les membres du collectif ayant le caractére bienveillant dans l'organigramme, peuvent ajouter des montants
         ],
+
         "lignes": [
-            ['garant du cadre', 100],
-            ['ref budget', 100],
-            ['ref communication', 100],
-        ],
+
+                    ['Garant du cadre', 100],
+                    ['ref budget', 100],
+                    ['ref communication', 100],
+            ],
+
         "total": True,
     }
 
@@ -104,8 +113,8 @@ class data():
         "slug": "recap_recettes",
         "titre": "",
         "colonnes": [
-            {'nom':'', 'input': True}, #les membres du collectif ayant le caractére bienveillant dans l'organigramme, peuvent ajouter des intulés 
-            {'nom':'montant', 'input': True}, #les membres du collectif ayant le caractére bienveillant dans l'organigramme, peuvent ajouter des montants 
+            {'nom':'', 'input': True}, #les membres du collectif ayant le caractére bienveillant dans l'organigramme, peuvent ajouter des intulés
+            {'nom':'montant', 'input': True}, #les membres du collectif ayant le caractére bienveillant dans l'organigramme, peuvent ajouter des montants
         ],
         "lignes": [
             ['animation ateliers', 530],
@@ -184,7 +193,7 @@ class data():
         "titre": "",
         "colonnes": [
             {'nom':'', 'list': True}, #liste déroulante des projets
-            {'nom':'date', 'input': True, 'total': False}, #date à rentrer par un bienveillant
+            {'nom':'date', 'date': True, 'total': False}, #date à rentrer par un bienveillant
             {'nom':'montant', 'input': True}, #montant à rentrer par un bienveillant
         ],
         "lignes": [
