@@ -94,16 +94,15 @@ def suivi_budgetaire(request):
     # Nous devrons tout d'abourd ajouter une nouvelle variable colones basé
     # sur les colone previsions
 
-    col_dep_inten_real = [
+    col_with_date_amaunt = [
         {'nom':'','list': True},
         {'nom':'date', 'date': True, 'total': False},
         {'nom':'montant', 'input': True}
     ]
     # creons une liste pour les presta externs prevision
-    depenses_int_real_list = [[x.titled, str(x.amount)] for x in RealCostInternSpending.objects.filter(type__type='SP_I')]
+    depenses_int_real_list = [[x.pole.name, x.date_cost,str(x.amount)] for x in RealCostInternSpending.objects.filter(type__type='SP_I')]
     # creons la bd pour les prestations externes prevision
-    data0['depenses_int_reel'] = create_dict_with_data('recap_recettes',col_dep_inten_real, depenses_int_real_list)
-
+    data0['depenses_int_reel'] = create_dict_with_data('recap_recettes',col_with_date_amaunt, depenses_int_real_list)
 
     # On va recupperer les données de coûts reels
     # pour les filtrer par la suite
@@ -138,7 +137,6 @@ def suivi_budgetaire(request):
             {'nom':'payé',}, #si la facture est "payé" dans odoo, la checkbox est True, c'est une checkbox non modifiable par l'utilisateur
         ]
     # applons la bd des prestations externes reeles
-    #import ipdb; ipdb.set_trace()
     real_cost_spendings = RealCostExternService.objects.all()
     #créons la liste avec les dépenses externes réeles
     presta_ext_reel_list = [[ x.contact.name, x.titled, x.date, x.validated, x.payed] for x in real_cost_spendings]
@@ -156,9 +154,24 @@ def suivi_budgetaire(request):
     vente_prev_list = [[ x.group.name, str(x.montant)] for x in prestations_vents_recettes_int.filter(prev_ou_reel='P', recette__type='V')]
     data0['vente_prev'] = create_dict_with_data('recap_recettes', col_prevision, vente_prev_list)
 
-#   créons le liste avec les recettes internes
+    # créons le liste avec les recettes internes
     recettes_int_prev_list = [[ x.group.name, str(x.montant)] for x in prestations_vents_recettes_int.filter(prev_ou_reel='P', recette__type='R_IN')]
     data0['recettes_int_prev'] = create_dict_with_data('recap_recettes', col_prevision, recettes_int_prev_list)
+
+    # Recettes reeles
+    # Creation de la liste avec recettes prestation
+    presta_reel_list = [[ x.group.name, str(x.date), str(x.montant)] for x in prestations_vents_recettes_int.filter(prev_ou_reel='R', recette__type='P')]
+    data0['presta_reel'] = create_dict_with_data('recap_recettes', col_with_date_amaunt, presta_reel_list)
+
+    # Ventes reeles
+    # Creation de la liste avec recettes ventes
+    vente_reel_list = [[ x.group.name, str(x.date), str(x.montant)] for x in prestations_vents_recettes_int.filter(prev_ou_reel='R', recette__type='V')]
+    data0['vente_reel'] = create_dict_with_data('recap_recettes', col_with_date_amaunt, vente_reel_list)
+
+    # recettes internes reeles
+    # Creation de la liste avec recettes internes
+    recettes_int_reel_list = [[ x.group.name, str(x.date), str(x.montant)] for x in prestations_vents_recettes_int.filter(prev_ou_reel='R', recette__type='R_IN')]
+    data0['recettes_int_reel'] = create_dict_with_data('recap_recettes', col_with_date_amaunt, recettes_int_reel_list)
 
     base_template = "dashboard/partial.html" if request.htmx else "dashboard/base.html"
     context = {

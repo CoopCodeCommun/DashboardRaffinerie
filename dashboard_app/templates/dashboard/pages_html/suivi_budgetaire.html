@@ -69,6 +69,7 @@
                                                     </div>
                                                 </div>
                                             </div>
+                                        </div>
                                     </section>
 
                                     <!-- prestation interne -->
@@ -149,6 +150,7 @@
                                                     </div>
                                                 </div>
                                             </div>
+                                        </div>
                                     </section>
 
                                     <!-- Prestations -->
@@ -160,7 +162,7 @@
                                                     {% include 'dashboard/tableau_generique.html' with table=data0.presta_prev %}
                                                 </div>
                                                 <div class="col-md-6 p-2">
-                                                    {% include 'dashboard/tableau_generique.html' with table=data.presta_reel %}
+                                                    {% include 'dashboard/tableau_generique.html' with table=data0.presta_reel %}
                                                 </div>
                                             </div>
                                         </div>
@@ -175,7 +177,7 @@
                                                     {% include 'dashboard/tableau_generique.html' with table=data0.vente_prev %}
                                                 </div>
                                                 <div class="col-md-6 p-2">
-                                                    {% include 'dashboard/tableau_generique.html' with table=data.vente_reel %}
+                                                    {% include 'dashboard/tableau_generique.html' with table=data0.vente_reel %}
                                                 </div>
                                             </div>
                                         </div>
@@ -190,7 +192,7 @@
                                                     {% include 'dashboard/tableau_generique.html' with table=data0.recettes_int_prev %}
                                                 </div>
                                                 <div class="col-md-6 p-2">
-                                                    {% include 'dashboard/tableau_generique.html' with table=data.recettes_int_reel %}
+                                                    {% include 'dashboard/tableau_generique.html' with table=data0.recettes_int_reel %}
                                                 </div>
                                             </div>
                                       </div>

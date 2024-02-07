@@ -113,15 +113,14 @@ def create_poles(dict_user, group_pk_dict):
 
 # Creating cost base db
 def cost_base():
-    for i in range(8):
-        Cost.objects.get_or_create(type=Cost.CARING)
-        Cost.objects.get_or_create(type=Cost.INTERN_SERVICE)
-        Cost.objects.get_or_create(type=Cost.EXTERN_SERVICE)
-        Cost.objects.get_or_create(type=Cost.INTERN_SPENDS)
-        Cost.objects.get_or_create(type=Cost.SUBVENTION)
-        Cost.objects.get_or_create(type=Cost.SERVICE)
-        Cost.objects.get_or_create(type=Cost.SELL)
-        Cost.objects.get_or_create(type=Cost.INTERN_RECIPE)
+    Cost.objects.get_or_create(type=Cost.CARING)
+    Cost.objects.get_or_create(type=Cost.INTERN_SERVICE)
+    Cost.objects.get_or_create(type=Cost.EXTERN_SERVICE)
+    Cost.objects.get_or_create(type=Cost.INTERN_SPENDS)
+    Cost.objects.get_or_create(type=Cost.SUBVENTION)
+    Cost.objects.get_or_create(type=Cost.SERVICE)
+    Cost.objects.get_or_create(type=Cost.SELL)
+    Cost.objects.get_or_create(type=Cost.INTERN_RECIPE)
 
 
 # Creating prevision cost db
@@ -163,8 +162,8 @@ def real_extern_purchases_services(dic_cont):
 # Create db for interne cost real
 def intern_real_cost(dict_pole):
 
-    intern_spend_real, created = RealCostInternSpending.objects.get_or_create(type=Cost.INTERN_SPENDS, pole= dict_pole['Serre aquaponique'])
-    intern_spend_real, created = RealCostInternSpending.objects.get_or_create(type=Cost.INTERN_SPENDS, pole= dict_pole['Potager'])
+    intern_spend_real, created = RealCostInternSpending.objects.get_or_create(type=Cost.objects.get(type='SP_I'), pole= dict_pole['Serre aquaponique'])
+    intern_spend_real, created = RealCostInternSpending.objects.get_or_create(type=Cost.objects.get(type='SP_I'), pole= dict_pole['Potager'])
 
 # Creating Prestation Vents et recette intern as prevision or real
 def prest_vents_recete_prev_or_reel(group_pk_dict):
@@ -234,7 +233,7 @@ class Command(BaseCommand):
         # creating depenses achats externs
         real_extern_purchases_services(dict_contacts)
         # creating real intern cost
-        #intern_real_cost(poles)
+        intern_real_cost(poles)
         # creating the prestation model with all cases
         prest_vents_recete_prev_or_reel(group_dict)
 
