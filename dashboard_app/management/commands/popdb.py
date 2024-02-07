@@ -1,5 +1,6 @@
 from django.core.management.base import BaseCommand, CommandError
-from dashboard_app.models import Groupe, Pole, Cost, PrevisionCost, RealCost, RealCostExternService, RealCostInternSpending
+from dashboard_app.models import (Groupe, Pole, Cost, PrevisionCost, RealCost, RealCostExternService,
+                                  RealCostInternSpending, Recette, PrestationsVentsRecettesInt)
 from dashboard_user.models import CustomUser, ContactProvisional
 from time import timezone
 import uuid
@@ -38,8 +39,15 @@ def create_prov_user():
 
 # creating some provisoil contacts
 def create_contacts():
-    ContactProvisional.objects.get_or_create(email='vents@ravate.re', name='Ravate')
-    ContactProvisional.objects.get_or_create(email='vents@decathlon.re', name='Decathlon')
+    dict_contacts = {}
+    cont1, created = ContactProvisional.objects.get_or_create(email='vents@ravate.re', name='Ravate')
+    cont2, created = ContactProvisional.objects.get_or_create(email='vents@decathlon.re', name='Decathlon')
+
+    #populating our dictionary with the pk
+    dict_contacts[cont1.name] = cont1
+    dict_contacts[cont2.name] = cont2
+    return dict_contacts
+
 
 # Creating the bases of Groupe db
 def create_groupes(dict_users):
@@ -49,59 +57,59 @@ def create_groupes(dict_users):
     gr, created = Groupe.objects.get_or_create(name='Les communs', code= 10)
     gr.users.add(dict_users['Céline'])
     gr.users.add(dict_users['Steph'])
-    group_dict[gr.name] = gr.pk
+    group_dict[gr.name] = gr
     gr2, created = Groupe.objects.get_or_create(name='Alimentation', code= 20)
     gr2.users.add(create_prov_user()['Céline'])
-    group_dict[gr2.name] = gr2.pk
+    group_dict[gr2.name] = gr2
     gr3, created = Groupe.objects.get_or_create(name='Jardin', code= 30)
     gr3.users.add(dict_users['Stiff'])
-    group_dict[gr3.name] = gr3.pk
+    group_dict[gr3.name] = gr3
     gr4, created = Groupe.objects.get_or_create(name='Micro-Recylerie', code= 40)
     gr4.users.add(dict_users['Julien'])
-    group_dict[gr4.name] = gr4.pk
+    group_dict[gr4.name] = gr4
     gr5, created = Groupe.objects.get_or_create(name='Culture', code= 50)
     gr5.users.add(dict_users['Laetitia'])
-    group_dict[gr5.name] = gr5.pk
+    group_dict[gr5.name] = gr5
     gr6, created = Groupe.objects.get_or_create(name='Services', code= 70)
     gr6.users.add(dict_users['Guillaume B'])
-    group_dict[gr6.name] = gr6.pk
+    group_dict[gr6.name] = gr6
 
     return group_dict
 
 # Creating the bases of pole db
 def create_poles(dict_user, group_pk_dict):
-    dict_pk_pol = {}
-    pol0, created = Pole.objects.get_or_create(name='Interpole', code= 2, user=dict_user['Steph'], group_id=group_pk_dict['Les communs'])
-    dict_pk_pol[pol0.name] = pol0.pk
+    dict_pol = {}
+    pol0, created = Pole.objects.get_or_create(name='Interpole', code= 2, user=dict_user['Steph'], group=group_pk_dict['Les communs'])
+    dict_pol[pol0.name] = pol0
 
-    pol1, created = Pole.objects.get_or_create(name='Outils communs', code= 3, user=dict_user['Céline'], group_id=group_pk_dict['Les communs'])
-    dict_pk_pol[pol1.name] = pol1.pk
+    pol1, created = Pole.objects.get_or_create(name='Outils communs', code= 3, user=dict_user['Céline'], group=group_pk_dict['Les communs'])
+    dict_pol[pol1.name] = pol1
 
-    pol2, created = Pole.objects.get_or_create(name='Instances', code= 4, user=dict_user['Steph'], group_id=group_pk_dict['Les communs'])
-    dict_pk_pol[pol2.name] = pol2.pk
+    pol2, created = Pole.objects.get_or_create(name='Instances', code= 4, user=dict_user['Steph'], group=group_pk_dict['Les communs'])
+    dict_pol[pol2.name] = pol2
 
-    pol3, created = Pole.objects.get_or_create(name='Snack / Bar', code= 2, user=dict_user['Céline'], group_id=group_pk_dict['Alimentation'])
-    dict_pk_pol[pol3.name] = pol3.pk
+    pol3, created = Pole.objects.get_or_create(name='Snack / Bar', code= 2, user=dict_user['Céline'], group=group_pk_dict['Alimentation'])
+    dict_pol[pol3.name] = pol3
 
-    pol4, created = Pole.objects.get_or_create(name='Micro-forêt', code= 2, user=dict_user['Steph'], group_id=group_pk_dict['Jardin'])
-    dict_pk_pol[pol4.name] = pol4.pk
+    pol4, created = Pole.objects.get_or_create(name='Micro-forêt', code= 2, user=dict_user['Steph'], group=group_pk_dict['Jardin'])
+    dict_pol[pol4.name] = pol4
 
-    pol5, created = Pole.objects.get_or_create(name='Potager', code= 3, user=dict_user['Céline'], group_id=group_pk_dict['Jardin'])
-    dict_pk_pol[pol5.name] = pol5.pk
+    pol5, created = Pole.objects.get_or_create(name='Potager', code= 3, user=dict_user['Céline'], group=group_pk_dict['Jardin'])
+    dict_pol[pol5.name] = pol5
 
-    pol6, created = Pole.objects.get_or_create(name='Serre aquaponique', code= 4, user=dict_user['Steph'], group_id=group_pk_dict['Jardin'])
-    dict_pk_pol[pol6.name] = pol6.pk
+    pol6, created = Pole.objects.get_or_create(name='Serre aquaponique', code= 4, user=dict_user['Steph'], group=group_pk_dict['Jardin'])
+    dict_pol[pol6.name] = pol6
 
-    pol7, created = Pole.objects.get_or_create(name='Champignonnière', code= 5, user=dict_user['Céline'], group_id=group_pk_dict['Jardin'])
-    dict_pk_pol[pol7.name] = pol7.pk
+    pol7, created = Pole.objects.get_or_create(name='Champignonnière', code= 5, user=dict_user['Céline'], group=group_pk_dict['Jardin'])
+    dict_pol[pol7.name] = pol7
 
-    pol8, created = Pole.objects.get_or_create(name='Café culturel', code= 3, user=dict_user['Steph'], group_id=group_pk_dict['Culture'])
-    dict_pk_pol[pol8.name] = pol8.pk
+    pol8, created = Pole.objects.get_or_create(name='Café culturel', code= 3, user=dict_user['Steph'], group=group_pk_dict['Culture'])
+    dict_pol[pol8.name] = pol8
 
-    pol9, created = Pole.objects.get_or_create(name='Culture Lab', code= 2, user=dict_user['Céline'], group_id=group_pk_dict['Culture'])
-    dict_pk_pol[pol0.name] = pol9.pk
+    pol9, created = Pole.objects.get_or_create(name='Culture Lab', code= 2, user=dict_user['Céline'], group=group_pk_dict['Culture'])
+    dict_pol[pol0.name] = pol9
 
-    return dict_pk_pol
+    return dict_pol
 
 # Creating cost base db
 def cost_base():
@@ -133,11 +141,65 @@ def prevision_cost():
     for prevision in previsions:
         prev, created = PrevisionCost.objects.get_or_create(**prevision)
 
+# Creat db for real costs in Caring and Intern services
+def real_costs(dict_user):
+    # Creating the DB for real cost with two cases
+    # Caring and Intern service (Bienveillant et presta intern)
+    # data for Caring (bienveillance)
+    real_cost1_1, created = RealCost.objects.get_or_create(user=dict_user['Remy'], type=Cost.objects.get(type=Cost.CARING))
+    real_cost1_2, created = RealCost.objects.get_or_create(user=dict_user['Georgette'], type=Cost.objects.get(type=Cost.CARING))
+    real_cost1_3, created = RealCost.objects.get_or_create(user=dict_user['Huges'], type=Cost.objects.get(type=Cost.CARING))
+    real_cost1_4, created = RealCost.objects.get_or_create(user=dict_user['Yvette'], type=Cost.objects.get(type=Cost.CARING))
+
+    # data for Caring (bienveillance)
+    real_cost2_1, created = RealCost.objects.get_or_create(user=dict_user['Remy'], type=Cost.objects.get(type=Cost.INTERN_SERVICE))
+    real_cost2_2, created = RealCost.objects.get_or_create(user=dict_user['Georgette'], type=Cost.objects.get(type=Cost.INTERN_SERVICE))
+
+
+def real_extern_purchases_services(dic_cont):
+    ext_purch1, created = RealCostExternService.objects.get_or_create(type=Cost.objects.get(type=Cost.EXTERN_SERVICE),contact=dic_cont['Ravate'],titled='course')
+    ext_purch2, created = RealCostExternService.objects.get_or_create(type=Cost.objects.get(type=Cost.EXTERN_SERVICE), contact=dic_cont['Decathlon'], titled='matériel')
 
 # Create db for interne cost real
-def intern_real_cost(dict_pole_pk):
-    intern_spend_real, created = RealCostInternSpending.objects.get_or_create(type=Cost.INTERN_SPENDS, pole_id= dict_pole_pk['Café culturel'])
-    intern_spend_real, created = RealCostInternSpending.objects.get_or_create(type=Cost.INTERN_SPENDS, pole_id= dict_pole_pk['Micro-forêt'])
+def intern_real_cost(dict_pole):
+
+    intern_spend_real, created = RealCostInternSpending.objects.get_or_create(type=Cost.INTERN_SPENDS, pole= dict_pole['Serre aquaponique'])
+    intern_spend_real, created = RealCostInternSpending.objects.get_or_create(type=Cost.INTERN_SPENDS, pole= dict_pole['Potager'])
+
+# Creating Prestation Vents et recette intern as prevision or real
+def prest_vents_recete_prev_or_reel(group_pk_dict):
+    #Lests create the recettes
+    recette_presta, created = Recette.objects.get_or_create(type=Recette.PRESTATIONS)
+    recette_subvension, created = Recette.objects.get_or_create(type=Recette.SUBVENTIONS)
+    recette_ventes, created = Recette.objects.get_or_create(type=Recette.VENTES)
+    recette_internes , created = Recette.objects.get_or_create(type=Recette.RECETTES_INTERNES)
+
+    # Prestations Prev / Réel
+    # Prev
+    #import ipdb; ipdb.set_trace()
+    PrestationsVentsRecettesInt.objects.get_or_create(prev_ou_reel='P', recette=recette_presta, group=group_pk_dict['Micro-Recylerie'])
+    PrestationsVentsRecettesInt.objects.get_or_create(prev_ou_reel='P', recette=recette_presta, group=group_pk_dict['Culture'])
+    # Réel
+    PrestationsVentsRecettesInt.objects.get_or_create(prev_ou_reel='R', recette=recette_presta, group=group_pk_dict['Micro-Recylerie'])
+    PrestationsVentsRecettesInt.objects.get_or_create(prev_ou_reel='R', recette=recette_presta, group=group_pk_dict['Culture'])
+
+    # Vents Prev / Réel
+    # Prev
+    PrestationsVentsRecettesInt.objects.get_or_create(prev_ou_reel='P', recette=recette_ventes, group=group_pk_dict['Micro-Recylerie'])
+    PrestationsVentsRecettesInt.objects.get_or_create(prev_ou_reel='P', recette=recette_ventes, group=group_pk_dict['Culture'])
+    PrestationsVentsRecettesInt.objects.get_or_create(prev_ou_reel='P', recette=recette_ventes, group=group_pk_dict['Les communs'])
+    # Réel
+    PrestationsVentsRecettesInt.objects.get_or_create(prev_ou_reel='R', recette=recette_ventes, group=group_pk_dict['Micro-Recylerie'])
+    PrestationsVentsRecettesInt.objects.get_or_create(prev_ou_reel='R', recette=recette_ventes, group=group_pk_dict['Culture'])
+
+    # Vents Prev / Réel
+    # Prev
+    PrestationsVentsRecettesInt.objects.get_or_create(prev_ou_reel='P', recette=recette_internes, group=group_pk_dict['Micro-Recylerie'])
+    PrestationsVentsRecettesInt.objects.get_or_create(prev_ou_reel='P', recette=recette_internes, group=group_pk_dict['Culture'])
+    PrestationsVentsRecettesInt.objects.get_or_create(prev_ou_reel='P', recette=recette_internes, group=group_pk_dict['Les communs'])
+    # Réel
+    PrestationsVentsRecettesInt.objects.get_or_create(prev_ou_reel='R', recette=recette_internes, group=group_pk_dict['Micro-Recylerie'])
+    PrestationsVentsRecettesInt.objects.get_or_create(prev_ou_reel='R', recette=recette_internes, group=group_pk_dict['Culture'])
 
 
 # deleting all the db
@@ -148,6 +210,9 @@ def delete_models():
     Pole.objects.all().delete()
     Cost.objects.all().delete()
     PrevisionCost.objects.all().delete()
+    RealCost.objects.all().delete()
+    RealCostExternService.objects.all().delete()
+    Recette.objects.all().delete()
 
 
 # BaseCommand to create DB
@@ -155,17 +220,23 @@ class Command(BaseCommand):
     def handle(self, *args, **options):
         # create the users and collect the user objects in a dictionary
         dict_user = create_prov_user()
-        create_contacts()
+        dict_contacts = create_contacts()
         # create the groups and collect the group objects in a dictionary
         group_dict = create_groupes(dict_user)
-        poles_pk = create_poles(dict_user, group_dict)
+        poles = create_poles(dict_user, group_dict)
         # creating Cost basic elements
         cost_base()
         # creating prevision cost
         prevision_cost()
         #import ipdb; ipdb.set_trace()
+        #create data for real costs
+        real_costs(dict_user)
+        # creating depenses achats externs
+        real_extern_purchases_services(dict_contacts)
         # creating real intern cost
-        intern_real_cost(poles_pk)
+        #intern_real_cost(poles)
+        # creating the prestation model with all cases
+        prest_vents_recete_prev_or_reel(group_dict)
 
 
         #delete_models()

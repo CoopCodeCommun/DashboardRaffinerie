@@ -2,6 +2,7 @@ import random
 
 from django.db import models
 from uuid import uuid4
+from dashboard_user.models import ContactProvisional
 
 from solo.models import SingletonModel
 # Create your models here.
@@ -338,6 +339,37 @@ class Cost(models.Model):
         verbose_name_plural = _('Dépenses')
 
 
+# The Recette class. It will be a base for Prevision and Real recette tables
+class Recette(models.Model):
+    uuid = models.UUIDField(primary_key=True, default=uuid4, editable=False, unique=True)
+    PRESTATIONS, SUBVENTIONS,VENTES, RECETTES_INTERNES = 'P', 'SUB', 'V', 'R_IN'
+    CHOICE_TYPE = (
+        (PRESTATIONS, 'Prestations'),
+        (SUBVENTIONS, 'Subventions / Appels à projet'),
+        (VENTES, 'Ventes'),
+        (RECETTES_INTERNES, 'Recettes internes')
+    )
+    type = models.CharField(max_length=4, choices=CHOICE_TYPE, default=PRESTATIONS, verbose_name='Type de recette')
+
+
+# Creating a model for Prestations. The model will serve in two cases Prevision or Real
+class PrestationsVentsRecettesInt(models.Model):
+    uuid = models.UUIDField(primary_key=True, default=uuid4, editable=False, unique=True)
+    PREVISIONNEL, REEL = 'P','R'
+    PREVISION_OU_REEL = (
+        (PREVISIONNEL, 'Prévisionnel'),
+        (REEL, 'Réel')
+    )
+    prev_ou_reel = models.CharField(max_length=1, choices=PREVISION_OU_REEL, default=PREVISIONNEL, verbose_name='Prévisionnel ou Réel')
+    recette = models.ForeignKey(Recette, on_delete=models.PROTECT, related_name='prestations', verbose_name='type de recette')
+    date = models.DateField(auto_now=True)
+    group = models.ForeignKey(Groupe, on_delete=models.PROTECT, related_name='prestations', verbose_name='groupe')
+    montant = models.DecimalField(max_digits=8, decimal_places=2, default=0, verbose_name='montant')
+
+    class Meta:
+        verbose_name_plural = _('Prestations Vents Recettes Internes')
+
+
 # Creating the class Prevision, in french Prévisionnel
 class PrevisionCost(models.Model):
     uuid = models.UUIDField(primary_key=True, default=uuid4, editable=False, unique=True)
@@ -358,7 +390,7 @@ class RealCost(models.Model):
             null=True,
             related_name="prevision_cost",
             verbose_name='Intitulé')
-    date = models.DateField()
+    date = models.DateField(auto_now=True)
     validated = models.BooleanField(default=False, verbose_name='validé')
     invoiced = models.BooleanField(default=False, verbose_name='facturé')
     paid = models.BooleanField(default=False, verbose_name='payé')
@@ -373,9 +405,9 @@ class RealCost(models.Model):
 class RealCostExternService(models.Model):
     uuid = models.UUIDField(primary_key=True, default=uuid4, editable=False, unique=True)
     type = models.ForeignKey(Cost, on_delete=models.PROTECT, related_name='real_cost_extern_service', verbose_name='type')
-    contact = models.CharField(max_length=50, verbose_name='Fourniseur')
+    contact = models.ForeignKey(ContactProvisional,on_delete=models.PROTECT ,verbose_name='Fourniseur')
     titled = models.CharField(max_length=60, verbose_name='intitulé')
-    date = models.DateField()
+    date = models.DateField(auto_now=True)
     validated = models.BooleanField(default=False, verbose_name='Validé')
     payed = models.BooleanField(default=False, verbose_name='Payé')
 
