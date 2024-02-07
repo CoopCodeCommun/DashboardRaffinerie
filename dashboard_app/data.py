@@ -249,7 +249,7 @@ class data():
              
         ],
         "lignes": [
-            ['micro-recylerie','1000€'],
+            ['micro-recylerie','9800€'],
             ['Culture', '2000€'],
             ['commun', '2000€'],
         ],
@@ -310,7 +310,7 @@ class data():
         ],
         "lignes": [
             ['micro-recylerie','1000€'],
-            ['Culture', '2000€'],
+            ['Culture', '666€'],
             ['commun', '2000€'],
         ],
         "total": True,

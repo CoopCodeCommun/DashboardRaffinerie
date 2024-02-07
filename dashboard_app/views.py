@@ -11,7 +11,7 @@ from rest_framework.views import APIView
 from dashboard_app.data import data
 from .models import PrevisionCost
 from dashboard_app.models import Contact, AccountAccount, AccountJournal, AccountAnalyticGroup, AccountAnalyticAccount, \
-    RealCostInternSpending, RealCost, RealCostExternService, Badge, DepensesBienveillance
+    RealCostInternSpending, RealCost, RealCostExternService, PrestationsVentsRecettesInt, Badge, DepensesBienveillance
 from dashboard_app.odoo_api import OdooApi
 from dashboard_app.serializers import UserSerializer
 from .serializers import AccountAnalyticGroupSerializer
@@ -140,9 +140,25 @@ def suivi_budgetaire(request):
     # applons la bd des prestations externes reeles
     #import ipdb; ipdb.set_trace()
     real_cost_spendings = RealCostExternService.objects.all()
-    #créonls la liste avec les dépenses externes réeles
+    #créons la liste avec les dépenses externes réeles
     presta_ext_reel_list = [[ x.contact.name, x.titled, x.date, x.validated, x.payed] for x in real_cost_spendings]
     data0['presta_ext_reel'] = create_dict_with_data('recap_recettes',col_dep_reel_ext, presta_ext_reel_list)
+
+
+    #Creating the basics for Recettes tables (prevision or reel)
+    # Prestation previsionel, calling the data
+    prestations_vents_recettes_int = PrestationsVentsRecettesInt.objects.all()
+    # créons le liste avec les prestations prevision
+    presta_prev_list = [[ x.group.name, str(x.montant)] for x in prestations_vents_recettes_int.filter(prev_ou_reel='P', recette__type='P')]
+    data0['presta_prev'] = create_dict_with_data('recap_recettes', col_prevision, presta_prev_list)
+
+    # créons le liste avec les ventes prevision
+    vente_prev_list = [[ x.group.name, str(x.montant)] for x in prestations_vents_recettes_int.filter(prev_ou_reel='P', recette__type='V')]
+    data0['vente_prev'] = create_dict_with_data('recap_recettes', col_prevision, vente_prev_list)
+
+#   créons le liste avec les recettes internes
+    recettes_int_prev_list = [[ x.group.name, str(x.montant)] for x in prestations_vents_recettes_int.filter(prev_ou_reel='P', recette__type='R_IN')]
+    data0['recettes_int_prev'] = create_dict_with_data('recap_recettes', col_prevision, recettes_int_prev_list)
 
     base_template = "dashboard/partial.html" if request.htmx else "dashboard/base.html"
     context = {
