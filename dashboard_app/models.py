@@ -456,7 +456,7 @@ class Grant(models.Model):
     uuid = models.UUIDField(primary_key=True, default=uuid4, editable=False, unique=True)
     account_date_automatic = models.DateField(auto_now_add=True,verbose_name="Date comptable (automatique)")
     label = models.CharField(max_length=150, verbose_name="Libéllé")
-    reverence = models.CharField(max_length=70, verbose_name="Référence")
+    referee = models.CharField(max_length=70, verbose_name="Référent")
     amount = models.DecimalField(max_digits=8, decimal_places=2, default=0, verbose_name='montant')
     account_date = models.DateField(verbose_name="Date comptable")
     partnaire = models.CharField(max_length=60, verbose_name='Partenaire')
@@ -464,8 +464,8 @@ class Grant(models.Model):
     request_date = models.DateField(verbose_name="Date de la demande")
     acceptation_date = models.DateField(verbose_name="Date d'accéptation")
     notification_date = models.DateField(verbose_name="Date de notification")
-    initial_request_link = models.URLField(verbose_name='Lien de demande initiale')
-    convention_link = models.URLField(verbose_name='Lien convention')
+    initial_request_link = models.URLField(verbose_name='Lien de demande initiale', null=True, blank=True)
+    convention_link = models.URLField(verbose_name='Lien convention', null=True, blank=True)
     analytic_account = models.ForeignKey(
         AccountAnalyticAccount,
         on_delete=models.PROTECT,
