@@ -34,3 +34,6 @@ class ContactProvisional(models.Model):
     class Meta:
         verbose_name = _('Contact provisoir')
 
+    def __str__(self):
+        return self.name
+

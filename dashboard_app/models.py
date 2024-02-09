@@ -196,6 +196,9 @@ class Groupe(models.Model):
         verbose_name = _("Groupe")
         verbose_name_plural = _("Groupes")
 
+    def __str__(self):
+        return self.name
+
 
 
 # Seting the pol with its analytic code
@@ -219,6 +222,11 @@ class Pole(models.Model):
         verbose_name = _("Pôle")
         verbose_name_plural = _("Pôles")
 
+    # This part will healp with the identifications of the objects
+    # specialy in foreign key cases. Like exemple
+    def __str__(self):
+        return self.name
+
 
 # Creating the project models of  groups and poles
 class Project(models.Model):
@@ -237,6 +245,9 @@ class Project(models.Model):
     class Meta:
         verbose_name = _("Projet")
         verbose_name_plural = _("Projets")
+
+    def __str__(self):
+        return self.name
 
 
 # Creating the action models of  groups and poles
@@ -338,6 +349,9 @@ class Cost(models.Model):
     class Meta:
         verbose_name_plural = _('Dépenses')
 
+    def __str__(self):
+        return self.type
+
 
 # The Recette class. It will be a base for Prevision and Real recette tables
 class Recette(models.Model):
@@ -351,23 +365,8 @@ class Recette(models.Model):
     )
     type = models.CharField(max_length=4, choices=CHOICE_TYPE, default=PRESTATIONS, verbose_name='Type de recette')
 
-
-# Creating a model for Prestations. The model will serve in two cases Prevision or Real
-class PrestationsVentsRecettesInt(models.Model):
-    uuid = models.UUIDField(primary_key=True, default=uuid4, editable=False, unique=True)
-    PREVISIONNEL, REEL = 'P','R'
-    PREVISION_OU_REEL = (
-        (PREVISIONNEL, 'Prévisionnel'),
-        (REEL, 'Réel')
-    )
-    prev_ou_reel = models.CharField(max_length=1, choices=PREVISION_OU_REEL, default=PREVISIONNEL, verbose_name='Prévisionnel ou Réel')
-    recette = models.ForeignKey(Recette, on_delete=models.PROTECT, related_name='prestations', verbose_name='type de recette')
-    date = models.DateField(auto_now=True)
-    group = models.ForeignKey(Groupe, on_delete=models.PROTECT, related_name='prestations', verbose_name='groupe')
-    montant = models.DecimalField(max_digits=8, decimal_places=2, default=0, verbose_name='montant')
-
-    class Meta:
-        verbose_name_plural = _('Prestations Vents Recettes Internes')
+    def __str__(self):
+        return self.type
 
 
 # Creating the class Prevision, in french Prévisionnel
@@ -449,6 +448,24 @@ class InternServiceCaring(models.Model):
 
     class Meta:
         verbose_name = _('Bienveillance prestation interne')
+
+
+# Creating a model for Prestations. The model will serve in two cases Prevision or Real
+class PrestationsVentsRecettesInt(models.Model):
+    uuid = models.UUIDField(primary_key=True, default=uuid4, editable=False, unique=True)
+    PREVISIONNEL, REEL = 'P','R'
+    PREVISION_OU_REEL = (
+        (PREVISIONNEL, 'Prévisionnel'),
+        (REEL, 'Réel')
+    )
+    prev_ou_reel = models.CharField(max_length=1, choices=PREVISION_OU_REEL, default=PREVISIONNEL, verbose_name='Prévisionnel ou Réel')
+    recette = models.ForeignKey(Recette, on_delete=models.PROTECT, related_name='prestations', verbose_name='type de recette')
+    date = models.DateField(auto_now=True)
+    group = models.ForeignKey(Groupe, on_delete=models.PROTECT, related_name='prestations', verbose_name='groupe')
+    montant = models.DecimalField(max_digits=8, decimal_places=2, default=0, verbose_name='montant')
+
+    class Meta:
+        verbose_name_plural = _('Prestations Vents Recettes Internes')
 
 
 # Creating the grant model
