@@ -342,7 +342,7 @@ class data():
                     {'nom':'', 'list': True}, #liste déroulante des membres de odoo qui ont l'étiquette "Raffineur.euse"
                     {'nom':'presta interne', 'input': True}, #peut être coché par les admins 
                     {'nom':'garant du cadre', 'input': True}, #peut être coché par les admins
-                    {'nom':'référent budgtet / subvention', 'input': True}, #peut être coché par les admins
+                    {'nom':'référent budgt / subvention', 'input': True}, #peut être coché par les admins
                     {'nom':'référent tâche planning', 'input': True}, #peut être coché par les admins
         ],
         "lignes": [

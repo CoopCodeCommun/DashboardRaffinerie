@@ -1,6 +1,6 @@
 from django.core.management.base import BaseCommand, CommandError
 from dashboard_app.models import (Groupe, Pole, Cost, PrevisionCost, RealCost, RealCostExternService,
-                                  RealCostInternSpending, Recette, PrestationsVentsRecettesInt)
+    RealCostInternSpending, Recette, PrestationsVentsRecettesInt, OrganizationalChart)
 from dashboard_user.models import CustomUser, ContactProvisional
 from time import timezone
 import uuid
@@ -110,6 +110,26 @@ def create_poles(dict_user, group_pk_dict):
     dict_pol[pol0.name] = pol9
 
     return dict_pol
+
+
+# Creat db for organization chart
+def create_organization_chart(dict_user):
+    dict_organization_chart = {}
+
+    # create a dctionary with the org charts
+    org_charts = [
+        {'user':dict_user['Julien'], 'intern_services': True, 'settlement_agent': True, 'budget_referee': True, 'task_planning_referee': True},
+        {'user':dict_user['Stiff'], 'intern_services': False, 'settlement_agent': False, 'budget_referee': True, 'task_planning_referee': True},
+        {'user':dict_user['Flore'], 'intern_services': False, 'settlement_agent': False, 'budget_referee': False, 'task_planning_referee': False},
+        {'user':dict_user['Céline'], 'intern_services': True, 'settlement_agent': False, 'budget_referee': True, 'task_planning_referee': True},
+        {'user':dict_user['Steph'], 'intern_services': True, 'settlement_agent': True, 'budget_referee': True, 'task_planning_referee': False},
+    ]
+    for org_chart in org_charts:
+        org, created = OrganizationalChart.objects.get_or_create(**org_chart)
+        dict_organization_chart[org.user.name] = org
+
+    return dict_organization_chart
+
 
 # Creating cost base db
 def cost_base():
@@ -228,6 +248,8 @@ class Command(BaseCommand):
         # creating prevision cost
         prevision_cost()
         #import ipdb; ipdb.set_trace()
+        # create organizational_chart
+        create_organization_chart(dict_user)
         #create data for real costs
         real_costs(dict_user)
         # creating depenses achats externs

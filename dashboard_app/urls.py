@@ -1,5 +1,6 @@
 from django.conf import settings
 from django.urls import path, include
+from . import views
 from .views import contacts, lazy_loading_profil_image, \
     reload_contact_from_odoo, odoo_account, reload_account_from_odoo, \
     AccountAnalyticGroupAPI, OdooContactsAPI, julienjs_suivi_budgetaire, edit_tableau_generique
@@ -12,6 +13,7 @@ router.register(r'odoo_contacts', OdooContactsAPI, basename='odoo_contacts_api')
 
 urlpatterns = [
     # Pages d'exemple HTMX:
+    path('test/', views.send_user_to_organigrame, name='test_add_bt'),
     path('contacts/', contacts, name="odoo_contacts"),
     path('odoo_account/', odoo_account, name="odoo_account"),
 

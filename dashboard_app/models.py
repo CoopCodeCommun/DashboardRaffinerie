@@ -285,10 +285,12 @@ class OrganizationalChart(models.Model):
         verbose_name='Compte analytique'
     )
     role = models.ForeignKey(Role, on_delete=models.PROTECT, null=True, related_name='organigrame', verbose_name='Rôle')
-    
+    intern_services = models.BooleanField(default=False, verbose_name='presta interne')
+    settlement_agent = models.BooleanField(default=False, verbose_name='garant du cadre')
+    budget_referee = models.BooleanField(default=False, verbose_name='référent budget / subvention')
+    task_planning_referee = models.BooleanField(default=False, verbose_name='référent tâche planning')
     class Meta:
         verbose_name = _('Organigrame')
-        verbose_name_plural = _('Organigrames')
 
 
 # Bank Account model
