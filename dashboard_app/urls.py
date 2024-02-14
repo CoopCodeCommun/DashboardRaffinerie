@@ -13,7 +13,7 @@ router.register(r'odoo_contacts', OdooContactsAPI, basename='odoo_contacts_api')
 
 urlpatterns = [
     # Pages d'exemple HTMX:
-    path('test/', views.send_user_to_organigrame, name='test_add_bt'),
+    path('organigramme_new/', views.send_user_to_organigrame, name='organigramme_new'),
     path('contacts/', contacts, name="odoo_contacts"),
     path('odoo_account/', odoo_account, name="odoo_account"),
 

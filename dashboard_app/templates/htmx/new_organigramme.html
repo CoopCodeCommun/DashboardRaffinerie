@@ -1,0 +1,52 @@
+{% load static %}
+{% load tz %}
+
+{% block content %}
+
+<div class="container text-left">
+    <form action="{% url 'organigramme' %}" method="POST">
+  {% csrf_token %}
+
+        <select name="users" id="users" style="width: 50px">
+            <option value="" disabled selected hidden>Nom</option>
+            {% for user in users %}
+                <option value="{{ user.pk }}">{{ user.name }}</option>
+            {% endfor %}
+        </select>
+            <input id="{{ table.slug }}int_serv" value="check" type="checkbox" name="intern_services"/>
+            <input id="{{ table.slug }}settlement" value="check" type="checkbox" name="settlement_agent"/>
+            <input id="{{ table.slug }}budget" value="check" type="checkbox" name="budget_referee"/>
+        <td class="case_petite case_fonce" style="text-align: center;">
+            <input id="{{ table.slug }}planning" value="check" type="checkbox" name="task_planning_referee"/>
+        </td>
+            <input type="submit" value="Ajouter"/>
+
+    </form>
+    {##}
+{#<tr class="case_petite ligne_table">#}
+{#    {% for value, colonne in ligne|zip_lists:table.colonnes %}#}
+{#        {% if colonne.input %}#}
+{#            {% if value == True or value == False %}#}
+{#                <!-- Création d'une case à cocher éditable -->#}
+{#                <td class="case_petite case_fonce" style="text-align: center;">#}
+{#                    <input type="checkbox" {% if value %} checked {% endif %}/>#}
+{#                </td>#}
+{#            {% else %}#}
+{#                <!-- Création d'un champ input pour les autres types de données -->#}
+{#                <td><input type="text" value="{{ value }}" class="case_petite case_clair"/>#}
+{#                </td>#}
+{#            {% endif %}#}
+{#        {% elif value == True or value == False %}#}
+{#            <!-- Affichage d'une case à cocher non éditable -->#}
+{#            <td class="case_petite case_fonce" style="text-align: center;">#}
+{#                <input type="checkbox" {% if value %} checked {% endif %} disabled/>#}
+{#            </td>#}
+{#        {% else %}#}
+{#            <!-- Affichage normal pour les autres types de données -->#}
+{#            <td>{{ value }}</td>#}
+{#        {% endif %}#}
+{#    {% endfor %}#}
+{#</tr>#}
+</div>
+
+{% endblock content %}

@@ -1,6 +1,7 @@
 import time
 
 from django.contrib.auth import get_user_model
+from django.http import HttpResponseBadRequest
 from django.shortcuts import render, redirect
 from django.utils.html import format_html
 from rest_framework import status, viewsets
@@ -16,12 +17,12 @@ from dashboard_app.models import (Contact, AccountAccount, AccountJournal, Accou
     OrganizationalChart, Badge, DepensesBienveillance)
 from dashboard_app.odoo_api import OdooApi
 from dashboard_app.serializers import UserSerializer
-from .serializers import AccountAnalyticGroupSerializer
+from .serializers import AccountAnalyticGroupSerializer, OrganizationalChartValidator
 from dashboard_app.models import AccountAccount
 
 # We'll create a fonction that will return a dictionary in the form adapted to
 # the generale tables
-def create_dict_with_data(slug_name, colonnes,lignes, total,new_ligne,titre_colonne=""):
+def create_dict_with_data(slug_name, colonnes,lignes, total,new_ligne,new_line_name="",titre_colonne=""):
 
     return {
         "slug": slug_name,
@@ -30,6 +31,7 @@ def create_dict_with_data(slug_name, colonnes,lignes, total,new_ligne,titre_colo
         "lignes": lignes,
         "total": total,
         "ajouter_ligne" : new_ligne,
+        'new_line_name': new_line_name
     }
 
 
@@ -68,12 +70,19 @@ def suivi_budgetaire(request):
     prevision_costs = PrevisionCost.objects.all()
     # Créons une liste avec les listes des données pour les lignes
     bienveillance_prevision_list = [[x.titled, str(x.amount)] for x in prevision_costs.filter(type__type='CAR')]
+
+    for line_b in bienveillance_prevision_list:
+        line_b.append('&#x2705;')
+        line_b.append('&#x2716;')
     # base de colonnes pour les suivies budgetaires prévisions
     col_prevision = [
             # A verifier s'il faut 'list': True  OU 'input': True ???
             {'nom':'','list': True},
-            {'nom':'montant', 'input': True}
+            {'nom':'montant', 'input': True},
+            {'nom':'Edit', 'input': False},
+            {'nom':'Efface', 'input': False}
         ]
+
     # creons la bd pour bienveillance prevision
     data0['bienveillance_prev'] = create_dict_with_data( "recap_recettes", col_prevision,bienveillance_prevision_list, True, False)
 
@@ -174,7 +183,7 @@ def suivi_budgetaire(request):
     # recettes internes reeles
     # Creation de la liste avec recettes internes
     recettes_int_reel_list = [[ x.group.name, str(x.date), str(x.montant)] for x in prestations_vents_recettes_int.filter(prev_ou_reel='R', recette__type='R_IN')]
-    data0['recettes_int_reel'] = create_dict_with_data('recap_recettes', col_with_date_amaunt, recettes_int_reel_list, True, False)
+    data0['recettes_int_reel'] = create_dict_with_data('recap_recettes', col_with_date_amaunt, recettes_int_reel_list, True, True)
 
     base_template = "dashboard/partial.html" if request.htmx else "dashboard/base.html"
     context = {
@@ -231,27 +240,64 @@ def organigramme(request):
     ]
     # Creer la liste avec les données de l'organigrame
     organigramme_list = [[x.user.name, x.intern_services, x.settlement_agent, x.budget_referee, x.task_planning_referee] for x in OrganizationalChart.objects.all()]
-    dataO['organigramme'] = create_dict_with_data('organigramme', col_org, organigramme_list, False, True)
+    dataO['organigramme'] = create_dict_with_data('organigramme_new', col_org, organigramme_list, False, True,new_line_name='organigramme_new')
+
+    # Reciving data from new line and creating a new personne on organigramme
+    if request.method == 'POST':
+
+        # serch the validated data from serializer for the new line
+        new_organigramme_validator = OrganizationalChartValidator(data=request.POST)
+
+        if not new_organigramme_validator.is_valid():
+            base_template = "dashboard/partial.html" if request.htmx else "dashboard/base.html"
+            return render(request, 'dashboard/pages_html/organigramme.html', {'message_org_new': "Le nom choisit il existe déjà dans l'organigramme", 'base_template': base_template})
+
+        validated_data_org = new_organigramme_validator.validated_data
+
+        user_pk = validated_data_org.get('users').pk
+        user = CustomUser.objects.get(pk=user_pk)
+        # Attention if you do validated_data_org['intern_services'] it will search
+        # a key that doesn't exist and will return error in case the checkbox isn't
+        # 'on' if you do var_validated.get('name') it will search vor the name and
+        # won't return an error.
+        def refacto_check_var(var):
+            return True if validated_data_org.get(var) == 'check' else False
+
+        intern_services= refacto_check_var('intern_services')
+        settlement_agent= refacto_check_var('settlement_agent')
+        budget_referee= refacto_check_var('budget_referee')
+        task_planning_referee = refacto_check_var('task_planning_referee')
+
+        user_choice = CustomUser.objects.get(username=user)
+
+        OrganizationalChart.objects.create(user=user_choice,
+                                           intern_services=intern_services,
+                                           settlement_agent=settlement_agent,
+                                           budget_referee=budget_referee,
+                                           task_planning_referee=task_planning_referee
+                                           )
+        return redirect('organigramme')
+
+
     base_template = "dashboard/partial.html" if request.htmx else "dashboard/base.html"
     context = {
         'base_template': base_template,
         'data': data,
-        'dataO': dataO
+        'dataO': dataO,
     }
 
     # import ipdb; ipdb.set_trace()
     return render(request, 'dashboard/pages_html/organigramme.html', context=context)
 
 
-# send data to pos line in organigrame
+# send user to organigrame creating new line
 def send_user_to_organigrame(request):
     all_users = CustomUser.objects.all()
     context = {
-        'users':all_users
+        'users':all_users,
     }
 
-    return render(request, 'htmx/test.html', context=context)
-
+    return render(request, 'htmx/new_organigramme.html', context=context)
 
 
 def repertoire(request):

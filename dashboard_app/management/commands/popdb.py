@@ -223,16 +223,19 @@ def prest_vents_recete_prev_or_reel(group_pk_dict):
 
 # deleting all the db
 def delete_models():
-    CustomUser.objects.all().delete()
-    ContactProvisional.objects.all().delete()
-    Groupe.objects.all().delete()
-    Pole.objects.all().delete()
-    Cost.objects.all().delete()
     PrevisionCost.objects.all().delete()
     RealCost.objects.all().delete()
     RealCostExternService.objects.all().delete()
-    Recette.objects.all().delete()
+    RealCostInternSpending.objects.all().delete()
+    PrestationsVentsRecettesInt.objects.all().delete()
+    OrganizationalChart.objects.all().delete()
 
+    Recette.objects.all().delete()
+    Cost.objects.all().delete()
+    Pole.objects.all().delete()
+    Groupe.objects.all().delete()
+    ContactProvisional.objects.all().delete()
+    CustomUser.objects.all().delete()
 
 # BaseCommand to create DB
 class Command(BaseCommand):

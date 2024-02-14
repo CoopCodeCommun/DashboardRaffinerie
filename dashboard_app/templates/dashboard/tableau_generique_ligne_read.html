@@ -20,7 +20,22 @@
             </td>
         {% else %}
             <!-- Affichage normal pour les autres types de données -->
-            <td>{{ value }}</td>
+            {% if value == '&#x2705;'%}
+                <td>
+                    <button style="background: none; border: medium; cursor: pointer; font-size: 0.9em; outline: none;">
+                        '&#x2705;'
+                    </button>
+                </td>
+            {% elif value == '&#x2716;' %}
+                <td>
+                    <button style="background: none; color: red; border: medium; cursor: pointer; font-size: 0.9em; outline: none;">
+                        '&#x2716;'
+                    </button>
+
+                </td>
+            {% else %}
+                 <td>{{ value }}</td>
+            {% endif %}
         {% endif %}
     {% endfor %}
 </tr>

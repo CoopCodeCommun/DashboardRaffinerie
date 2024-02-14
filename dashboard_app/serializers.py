@@ -1,7 +1,7 @@
 from rest_framework import serializers
 
 from dashboard_user.models import CustomUser
-from dashboard_app.models import AccountAccount, AccountAnalyticGroup, PrevisionCost
+from .models import AccountAccount, AccountAnalyticGroup, PrevisionCost, OrganizationalChart
 
 
 class UserSerializer(serializers.ModelSerializer):
@@ -12,6 +12,42 @@ class UserSerializer(serializers.ModelSerializer):
             'email',
         ]
         read_only_fields = ('uuid', 'email',)
+
+
+# Validator for OrganizationalChart
+class OrganizationalChartValidator(serializers.Serializer):
+    users = serializers.PrimaryKeyRelatedField(queryset=CustomUser.objects.all())
+    intern_services = serializers.CharField(required=False, allow_null=True)
+    settlement_agent = serializers.CharField(required=False, allow_null=True)
+    budget_referee = serializers.CharField(required=False, allow_null=True)
+    task_planning_referee = serializers.CharField(required=False, allow_null=True)
+
+    #send the pk of the user
+
+
+    # Validate the intern_service checkbox send True if is checked or false in not
+    def validate_intern_services(self, value):
+        if value == 'check':
+            return value
+
+
+    # Validate the settlement_agent checkbox send True if is checked or false in not
+    def validate_settlement_agent(self, value):
+        if value == 'check':
+            return value
+
+
+    # Validate the budget_referee checkbox send True if is checked or false in not
+    def validate_budget_referee(self, value):
+        if value == 'check':
+            return value
+
+
+    # Validate the task_planning_referee checkbox send True if is checked or false in not
+    def validate_task_planning_referee(self, value):
+        if value == 'check':
+            return value
+
 
 
 class AccountAnalyticGroupSerializer(serializers.ModelSerializer):
