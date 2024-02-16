@@ -1,0 +1,31 @@
+
+{% load static %}
+
+{% block content %}
+    <head>
+        <script src='https://kit.fontawesome.com/a076d05399.js' crossorigin='anonymous'></script>
+    </head>
+
+<div class="container text-left">
+    <form action="/suivi_budg/table_budgetaire/" method="POST">
+    {% csrf_token %}
+
+        <input type="text", name="titled" style="width: 65px">
+        <input type="text" name="amount" style="width: 40px">
+
+        <input type="hidden" name="type" value='{{ cost_caring.pk }}'>
+        <input type="submit" value="Ajouter"/>
+
+        <button style="color:red; background: transparent"
+            hx-patch="/suivi_budg/table_budgetaire"
+            hx-trigger="click"
+            hx-swap="none"
+        >
+            '&#x2716;'
+        </button>
+
+    </form>
+
+</div>
+
+{% endblock content %}

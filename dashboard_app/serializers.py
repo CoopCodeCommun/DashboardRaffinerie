@@ -49,6 +49,13 @@ class OrganizationalChartValidator(serializers.Serializer):
             return value
 
 
+# Validator for previzion budget
+class PrevisionCostValidator(serializers.ModelSerializer):
+    class Meta:
+        model = PrevisionCost
+        fields = ['titled', 'amount','type']
+
+
 
 class AccountAnalyticGroupSerializer(serializers.ModelSerializer):
     class Meta:

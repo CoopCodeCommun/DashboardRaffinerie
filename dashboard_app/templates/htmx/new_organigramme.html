@@ -4,7 +4,7 @@
 {% block content %}
 
 <div class="container text-left">
-    <form action="{% url 'organigramme' %}" method="POST">
+    <form action="/suivi_budg/organizationalchart/" method="POST">
   {% csrf_token %}
 
         <select name="users" id="users" style="width: 50px">

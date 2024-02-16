@@ -13,11 +13,11 @@ from dashboard_app.data import data
 from dashboard_user.models import CustomUser
 from .models import PrevisionCost
 from dashboard_app.models import (Contact, AccountAccount, AccountJournal, AccountAnalyticGroup, AccountAnalyticAccount, \
-    RealCostInternSpending, RealCost, RealCostExternService, PrestationsVentsRecettesInt, Grant,
+    RealCostInternSpending, RealCost, RealCostExternService, PrestationsVentsRecettesInt, Grant, Cost,
     OrganizationalChart, Badge, DepensesBienveillance)
 from dashboard_app.odoo_api import OdooApi
 from dashboard_app.serializers import UserSerializer
-from .serializers import AccountAnalyticGroupSerializer, OrganizationalChartValidator
+from .serializers import AccountAnalyticGroupSerializer, OrganizationalChartValidator, PrevisionCostValidator
 from dashboard_app.models import AccountAccount
 
 # We'll create a fonction that will return a dictionary in the form adapted to
@@ -62,6 +62,240 @@ def edit_tableau_generique(request, table, index):
     else:
         return render(request, 'dashboard/tableau_generique_ligne_read.html', context={'ligne':ligne, 'table':table, 'index':index})
 
+
+# suivi budgetaire with Vieset
+class SuiviBudgetaireViewSet(viewsets.ViewSet):
+    def list(self, request):
+        "Controleur pour GET"
+
+        # the data0 dictionary will serve gatherign data of different cases
+        data1 = {}
+        # On va recupperer toute les données de prevision pour les filtrer par la suite
+        prevision_costs = PrevisionCost.objects.all()
+        # Créons une liste avec les listes des données pour les lignes
+        bienveillance_prevision_list = [[x.titled, str(x.amount)] for x in prevision_costs.filter(type__type='CAR')]
+
+        for line_b in bienveillance_prevision_list:
+            line_b.append('&#x2705;')
+            line_b.append('&#x2716;')
+        # base de colonnes pour les suivies budgetaires prévisions
+        col_prevision = [
+                # A verifier s'il faut 'list': True  OU 'input': True ???
+                {'nom':'','list': True},
+                {'nom':'montant', 'input': True},
+                {'nom':'Edit', 'input': False},
+                {'nom':'', 'input': False}
+            ]
+
+        # creons la bd pour bienveillance prevision
+        data1['bienveillance_prev'] = create_dict_with_data( "recap_recettes", col_prevision,bienveillance_prevision_list, True, True, new_line_name='new_prev_bienveill')
+
+        # creons une liste pour presta intern prevision
+        presta_int_prev_list = [[x.titled, str(x.amount)] for x in prevision_costs.filter(type__type='IN_S')]
+        # creons la bd pour prestations internes prevision
+        data1['presta_int_prev'] = create_dict_with_data('recap_recettes',col_prevision, presta_int_prev_list, True, False)
+
+        # creons une liste pour les presta externs prevision
+        presta_ext_prev_list = [[x.titled, str(x.amount)] for x in prevision_costs.filter(type__type='EX_S')]
+        # creons la bd pour les prestations externes prevision
+        data1['presta_ext_prev'] = create_dict_with_data('recap_recettes',col_prevision, presta_ext_prev_list, True, False)
+
+        # creons une liste pour les presta externs prevision
+        depenses_int_prev_list = [[x.titled, str(x.amount)] for x in prevision_costs.filter(type__type='SP_I')]
+        # creons la bd pour les prestations externes prevision
+        data1['depenses_int_prev'] = create_dict_with_data('recap_recettes',col_prevision, depenses_int_prev_list, True, False)
+
+
+        # ajoutons les depenses réeles internes
+        # Nous devrons tout d'abourd ajouter une nouvelle variable colones basé
+        # sur les colone previsions
+        col_with_date_amaunt = [
+        {'nom':'','list': True},
+        {'nom':'date', 'date': True, 'total': False},
+        {'nom':'montant', 'input': True}
+        ]
+        # creons une liste pour les presta externs prevision
+        depenses_int_real_list = [[x.pole.name, x.date_cost,str(x.amount)] for x in RealCostInternSpending.objects.filter(type__type='SP_I')]
+        # creons la bd pour les prestations externes prevision
+        data1['depenses_int_reel'] = create_dict_with_data('recap_recettes',col_with_date_amaunt, depenses_int_real_list, True, False)
+
+        # On va recupperer les données de coûts reels
+        # pour les filtrer par la suite
+        real_cost = RealCost.objects.all()
+        # Creaons une liste des données qu'on va afficher dans le table
+        # bienveillance réel
+        bienveillance_reel_list = [[x.user.username, x.date, str(x.proposition), x.validated, x.invoiced, x.paid] for x in real_cost.filter(type__type='CAR')]
+        col_dep_reel = [
+                {'nom':''}, #les bienveillants peuvent selectionné un nom si il créé une nouvelle ligne
+                {'nom':'date', 'input': True, 'total': False}, #les bienveillants peuvent remplir une date
+                {'nom':'propo.' , 'input': True}, #les bienveillants peuvent remplir un un montant
+                {'nom':'validé', 'input': True}, #les bienveillants peuvent valider
+                {'nom':'factu.', 'input': True}, #les bienveillants peuvent valider
+                {'nom':'payé'}, #si la facture est "payé" dans odoo, la checkbox est True, il y aura un peu de réflexion à avoir pour voir comment associé une proposition à une facture odoo
+        ]
+        # Creons le Bd pour la bienveillance reel
+        data1['bienveillance_reel'] = create_dict_with_data('recap_recettes',col_dep_reel, bienveillance_reel_list, True, False)
+
+        # Creaons une liste des données qu'on va afficher dans le table
+        # presta interne reel
+        presta_int_reel_list = [[x.user.username, x.date, str(x.proposition), x.validated, x.invoiced, x.paid] for x in real_cost.filter(type__type='IN_S')]
+        # creons la Bd pour presta intern reel
+        data1['presta_int_reel'] = create_dict_with_data('recap_recettes',col_dep_reel, presta_int_reel_list, True, False)
+
+
+        # Creons colonnes pour dépenses externes réels
+        col_dep_reel_ext = [
+                {'nom':''},  #le nom des facture de tout les articles sauf co-rem et presta int
+                {'nom':'intitulé'}, #l'intitulé des facture
+                {'nom':'date', 'total': False}, #date des factures
+                {'nom':'validé',},#si la facture est "validé" dans odoo, la checkbox est True, c'est une checkbox non modifiable par l'utilisateur
+                {'nom':'payé',}, #si la facture est "payé" dans odoo, la checkbox est True, c'est une checkbox non modifiable par l'utilisateur
+            ]
+        # applons la bd des prestations externes reeles
+        real_cost_spendings = RealCostExternService.objects.all()
+        #créons la liste avec les dépenses externes réeles
+        presta_ext_reel_list = [[ x.contact.name, x.titled, x.date, x.validated, x.payed] for x in real_cost_spendings]
+        data1['presta_ext_reel'] = create_dict_with_data('recap_recettes',col_dep_reel_ext, presta_ext_reel_list, True, False)
+
+
+        #Creating the basics for Recettes tables (prevision or reel)
+        # Prestation previsionel, calling the data
+        prestations_vents_recettes_int = PrestationsVentsRecettesInt.objects.all()
+        # créons le liste avec les prestations prevision
+        presta_prev_list = [[ x.group.name, str(x.montant)] for x in prestations_vents_recettes_int.filter(prev_ou_reel='P', recette__type='P')]
+        data1['presta_prev'] = create_dict_with_data('recap_recettes', col_prevision, presta_prev_list, True, False)
+
+        # créons le liste avec les ventes prevision
+        vente_prev_list = [[ x.group.name, str(x.montant)] for x in prestations_vents_recettes_int.filter(prev_ou_reel='P', recette__type='V')]
+        data1['vente_prev'] = create_dict_with_data('recap_recettes', col_prevision, vente_prev_list, True, False)
+
+        # créons le liste avec les recettes internes
+        recettes_int_prev_list = [[ x.group.name, str(x.montant)] for x in prestations_vents_recettes_int.filter(prev_ou_reel='P', recette__type='R_IN')]
+        data1['recettes_int_prev'] = create_dict_with_data('recap_recettes', col_prevision, recettes_int_prev_list, True, False)
+
+        # Recettes reeles
+        # Creation de la liste avec recettes prestation
+        presta_reel_list = [[ x.group.name, str(x.date), str(x.montant)] for x in prestations_vents_recettes_int.filter(prev_ou_reel='R', recette__type='P')]
+        data1['presta_reel'] = create_dict_with_data('recap_recettes', col_with_date_amaunt, presta_reel_list, True, False)
+
+        # Ventes reeles
+        # Creation de la liste avec recettes ventes
+        vente_reel_list = [[ x.group.name, str(x.date), str(x.montant)] for x in prestations_vents_recettes_int.filter(prev_ou_reel='R', recette__type='V')]
+        data1['vente_reel'] = create_dict_with_data('recap_recettes', col_with_date_amaunt, vente_reel_list, True, False)
+
+        # recettes internes reeles
+        # Creation de la liste avec recettes internes
+        recettes_int_reel_list = [[ x.group.name, str(x.date), str(x.montant)] for x in prestations_vents_recettes_int.filter(prev_ou_reel='R', recette__type='R_IN')]
+        data1['recettes_int_reel'] = create_dict_with_data('recap_recettes', col_with_date_amaunt, recettes_int_reel_list, True, True)
+
+
+
+
+        base_template = "dashboard/partial.html" if request.htmx else "dashboard/base.html"
+        context = {
+            'base_template': base_template,
+            'data1': data1,
+        }
+
+        return render(request, 'dashboard/pages_html/suivi_budgetaire.html', context=context)
+
+
+    # creating budget cost
+    def create(self, request):
+        "Controleur pour POST"
+        serializer = PrevisionCostValidator(data=request.data)
+        base_template = "dashboard/partial.html" if request.htmx else "dashboard/base.html"
+
+        if serializer.is_valid():
+            serializer.save()
+
+            return redirect('/suivi_budg/table_budgetaire/')
+
+
+        return redirect('/suivi_budg/table_budgetaire/')
+
+
+
+    # updating budget cost
+    def update(self, request, pk=None):
+        "Controleur pour PUT"
+        pass
+
+
+    # deleting budget cost
+    def destroy(self, request, pk=None):
+        "Controleur pour DELETE"
+
+
+# class viewset for organigramme
+class OrganizationalChartViewSet(viewsets.ViewSet):
+
+    # method for listing organigramme
+    def list(self, request):
+        data1 = {}
+        # creating colones
+        col_org = [
+            {'nom':'', 'list': True},
+                        {'nom':'presta interne', 'input': True},
+                        {'nom':'garant du cadre', 'input': True},
+                        {'nom':'référent budgt / subvention', 'input': True},
+                        {'nom':'référent tâche planning', 'input': True}
+        ]
+        # Creer la liste avec les données de l'organigrame
+        organigramme_list = [[x.user.name, x.intern_services, x.settlement_agent, x.budget_referee, x.task_planning_referee] for x in OrganizationalChart.objects.all()]
+        data1['organigramme'] = create_dict_with_data('organigramme_new', col_org, organigramme_list, False, True,new_line_name='organigramme_new')
+
+        base_template = "dashboard/partial.html" if request.htmx else "dashboard/base.html"
+        context = {
+            'base_template': base_template,
+            'data1': data1,
+        }
+
+        return render(request, 'dashboard/pages_html/organigramme.html', context=context)
+
+
+    # method for creating organigramme
+    def create(self, request):
+        "Controleur pour POST"
+        # Reciving data from new line and creating a new personne on organigramme
+
+        if request.method == 'POST':
+
+            # serch the validated data from serializer for the new line
+            new_organigramme_validator = OrganizationalChartValidator(data=request.POST)
+
+            if not new_organigramme_validator.is_valid():
+                base_template = "dashboard/partial.html" if request.htmx else "dashboard/base.html"
+                return render(request, 'dashboard/pages_html/organigramme.html', {'message_org_new': "Veuillez choisir un nom dans la liste.", 'base_template': base_template})
+
+            validated_data_org = new_organigramme_validator.validated_data
+
+            user_pk = validated_data_org.get('users').pk
+            user = CustomUser.objects.get(pk=user_pk)
+            # Attention if you do validated_data_org['intern_services'] it will search
+            # a key that doesn't exist and will return error in case the checkbox isn't
+            # 'on' if you do var_validated.get('name') it will search vor the name and
+            # won't return an error.
+            def refacto_check_var(var):
+                return True if validated_data_org.get(var) == 'check' else False
+
+            intern_services= refacto_check_var('intern_services')
+            settlement_agent= refacto_check_var('settlement_agent')
+            budget_referee= refacto_check_var('budget_referee')
+            task_planning_referee = refacto_check_var('task_planning_referee')
+
+            user_choice = CustomUser.objects.get(username=user)
+
+            OrganizationalChart.objects.create(user=user_choice,
+                                               intern_services=intern_services,
+                                               settlement_agent=settlement_agent,
+                                               budget_referee=budget_referee,
+                                               task_planning_referee=task_planning_referee
+                                               )
+
+        return redirect('/suivi_budg/organizationalchart/')
+
+
 # methode generique qui va envoyer tous les données
 def suivi_budgetaire(request):
     # the data0 dictionary will serve gatherign data of different cases
@@ -85,7 +319,7 @@ def suivi_budgetaire(request):
 
     # creons la bd pour bienveillance prevision
     data0['bienveillance_prev'] = create_dict_with_data( "recap_recettes", col_prevision,bienveillance_prevision_list, True, False)
-
+############"
     # creons une liste pour presta intern prevision
     presta_int_prev_list = [[x.titled, str(x.amount)] for x in prevision_costs.filter(type__type='IN_S')]
     # creons la bd pour prestations internes prevision
@@ -202,7 +436,7 @@ def tableau_de_bord_perso(request):
 
 
 def send_subventions(request):
-    data0 = {}
+    data1 = {}
     # Cherchons les données de la table subvention (Grant)
     subventions = Grant.objects.all()
     # Creat list of subventions for données de base
@@ -210,7 +444,7 @@ def send_subventions(request):
     # create the columns
     col_sub_base = [{'nom':''}, {'nom':'Référent'}, {'nom':'Partenaire'}, {'nom':'service'}, {'nom':'référence'}]
     # creating the dictionary with the data
-    data0['subvention_donne_de_base'] = create_dict_with_data('donnees_de_base',col_sub_base,subvention_donne_de_base_list, True, False)
+    data1['subvention_donne_de_base'] = create_dict_with_data('donnees_de_base',col_sub_base,subvention_donne_de_base_list, True, False)
 
     # Subvention history part
     # Create history list
@@ -242,7 +476,7 @@ def organigramme(request):
     organigramme_list = [[x.user.name, x.intern_services, x.settlement_agent, x.budget_referee, x.task_planning_referee] for x in OrganizationalChart.objects.all()]
     dataO['organigramme'] = create_dict_with_data('organigramme_new', col_org, organigramme_list, False, True,new_line_name='organigramme_new')
 
-    # Reciving data from new line and creating a new personne on organigramme
+    #Reciving data from new line and creating a new personne on organigramme
     if request.method == 'POST':
 
         # serch the validated data from serializer for the new line
@@ -286,9 +520,14 @@ def organigramme(request):
         'dataO': dataO,
     }
 
-    # import ipdb; ipdb.set_trace()
     return render(request, 'dashboard/pages_html/organigramme.html', context=context)
 
+
+# send data to Caring (bienveillance) form
+def caring_data_form(request):
+    cost_caring = Cost.objects.get(type='CAR')
+
+    return render(request, 'htmx/new_budget_cost.html', {'cost_caring': cost_caring})
 
 # send user to organigrame creating new line
 def send_user_to_organigrame(request):
