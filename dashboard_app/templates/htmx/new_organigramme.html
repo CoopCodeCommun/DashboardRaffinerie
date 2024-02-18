@@ -2,24 +2,31 @@
 {% load tz %}
 
 {% block content %}
+<div id="button_reappearing" style="display: none ">
+    {% include 'buttons/ajouter_ligne.html' %}
+</div>
 
-<div class="container text-left">
+<div class="container text-left" id="new_line_organigramme">
     <form action="/suivi_budg/organizationalchart/" method="POST">
   {% csrf_token %}
 
-        <select name="users" id="users" style="width: 50px">
+        <select name="user" id="users" style="width: 50px">
             <option value="" disabled selected hidden>Nom</option>
-            {% for user in users %}
-                <option value="{{ user.pk }}">{{ user.name }}</option>
+            {% for us in user %}
+                <option value="{{ us.pk }}">{{ us.name }}</option>
             {% endfor %}
         </select>
-            <input id="{{ table.slug }}int_serv" value="check" type="checkbox" name="intern_services"/>
-            <input id="{{ table.slug }}settlement" value="check" type="checkbox" name="settlement_agent"/>
-            <input id="{{ table.slug }}budget" value="check" type="checkbox" name="budget_referee"/>
+            <input id="{{ table.slug }}int_serv" type="checkbox" name="intern_services"/>
+            <input id="{{ table.slug }}settlement" type="checkbox" name="settlement_agent"/>
+            <input id="{{ table.slug }}budget" type="checkbox" name="budget_referee"/>
         <td class="case_petite case_fonce" style="text-align: center;">
-            <input id="{{ table.slug }}planning" value="check" type="checkbox" name="task_planning_referee"/>
+            <input id="{{ table.slug }}planning" type="checkbox" name="task_planning_referee"/>
         </td>
             <input type="submit" value="Ajouter"/>
+            <i type="button" class="fa fa-close"
+               _="on click hide #new_line_organigramme then show #button_reappearing"
+               style="font-size:20px;color:red"></i>
+
 
     </form>
     {##}

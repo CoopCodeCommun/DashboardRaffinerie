@@ -5,6 +5,7 @@
     {% include 'dashboard/tableau_generique.html' with table=tableau nom_table=nom_table %}
 {% endfor %}
 
+
 <section class="col-md-4" style="display: flex; align-items: stretch;">
     <div class="p-1 case_clair">
         <div style="cursor: pointer;" _="on click toggle .d-none on the next .contentToShowHide">{{ table.titre }}</div>
@@ -22,6 +23,9 @@
                         {% for ligne in table.lignes %}
                             {% include 'dashboard/tableau_generique_ligne_read.html' with index=forloop.counter0 colonnes=table.colonnes %}
                         {% endfor %}
+
+                    {% include 'dashboard/tableau_generique_ligne_read_bis.html' %}
+
                     </tbody>
                     <tfoot>
                     <div id="test">
@@ -29,12 +33,9 @@
                     {% if table.ajouter_ligne %}
                         <tr>
                             <td colspan="4">
-                                <button class="ajouter-ligne-btn" data-tableau-id="{{ nom_table }}" id="{{ nom_table }}" style="background: none; border: medium; cursor: pointer; font-size: 0.9em; outline: none;"
-                                        hx-get="/{{ table.new_line_name }}/"
-                                        hx-swap="outerHTML"
-                                >
-                                    Ajouter ligne +
-                                </button>
+                                <div id="ajout_button">
+                                       {% include 'buttons/ajouter_ligne.html' %}
+                                </div>
                             </td>
                         </tr>
                     {% endif %}

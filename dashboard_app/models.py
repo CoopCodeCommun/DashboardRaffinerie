@@ -274,7 +274,6 @@ class OrganizationalChart(models.Model):
     user = models.ForeignKey(
         settings.AUTH_USER_MODEL,
         on_delete=models.PROTECT,
-        null=True,
         related_name="organigrame",
         verbose_name='Membre')
     analytic_account = models.ForeignKey(

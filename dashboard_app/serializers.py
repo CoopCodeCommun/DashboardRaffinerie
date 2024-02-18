@@ -15,39 +15,41 @@ class UserSerializer(serializers.ModelSerializer):
 
 
 # Validator for OrganizationalChart
-class OrganizationalChartValidator(serializers.Serializer):
+class OrganizationalChartValidator(serializers.ModelSerializer):
+    class Meta:
+        model = OrganizationalChart
+
+        fields = ['user', 'intern_services', 'settlement_agent', 'budget_referee', 'task_planning_referee']
+
+    '''
+    
     users = serializers.PrimaryKeyRelatedField(queryset=CustomUser.objects.all())
     intern_services = serializers.CharField(required=False, allow_null=True)
     settlement_agent = serializers.CharField(required=False, allow_null=True)
     budget_referee = serializers.CharField(required=False, allow_null=True)
     task_planning_referee = serializers.CharField(required=False, allow_null=True)
 
-    #send the pk of the user
-
-
     # Validate the intern_service checkbox send True if is checked or false in not
     def validate_intern_services(self, value):
         if value == 'check':
             return value
-
 
     # Validate the settlement_agent checkbox send True if is checked or false in not
     def validate_settlement_agent(self, value):
         if value == 'check':
             return value
 
-
     # Validate the budget_referee checkbox send True if is checked or false in not
     def validate_budget_referee(self, value):
         if value == 'check':
             return value
-
 
     # Validate the task_planning_referee checkbox send True if is checked or false in not
     def validate_task_planning_referee(self, value):
         if value == 'check':
             return value
 
+    '''
 
 # Validator for previzion budget
 class PrevisionCostValidator(serializers.ModelSerializer):

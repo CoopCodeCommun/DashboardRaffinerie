@@ -20,21 +20,20 @@
             </td>
         {% else %}
             <!-- Affichage normal pour les autres types de données -->
-            {% if value == '&#x2705;'%}
+            {% if value == 'edit'%}
+                <div id="valid_appear" style="display: none">
+                    {% include 'buttons/valid.html' %}
+                </div>
+                <div id="appear_edit"
+                _="on click hide me then show #valid_appear"
+                >
+                    <td>
+                        {% include 'buttons/editer.html' %}
+                    </td>
+                </div>
+            {% elif value == 'efface' %}
                 <td>
-                    <button style="background: none; border: medium; cursor: pointer; font-size: 0.9em; outline: none;">
-                        <i class="fa fa-pencil-square-o" style="font-size:20px;color:green"></i>
-
-                        {#                        '&#x2705;'#}
-                    </button>
-                </td>
-            {% elif value == '&#x2716;' %}
-                <td>
-                    <button style="background: none; color: red; border: medium; cursor: pointer; font-size: 0.9em; outline: none;">
-                        <i class="fa fa-trash-o" style="font-size:20px;color:red"></i>
-{#                        '&#x2716;'#}
-                    </button>
-
+                    {% include 'buttons/effacer.html' %}
                 </td>
             {% else %}
                  <td>{{ value }}</td>
