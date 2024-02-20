@@ -1,43 +1,53 @@
 {% load my_filters %}
 
 <tr class="case_petite ligne_table">
-    {% for value, colonne in ligne|zip_lists:table.colonnes %}
-        {% if colonne.input %}
-            {% if value == True or value == False %}
-                <!-- Création d'une case à cocher éditable -->
-                <td class="case_petite case_fonce" style="text-align: center;">
-                    <input type="checkbox" {% if value %} checked {% endif %}/>
-                </td>
-            {% else %}
-                <!-- Création d'un champ input pour les autres types de données -->
-                <td><input type="text" value="{{ value }}" class="case_petite case_clair"/>
-                </td>
-            {% endif %}
-        {% elif value == True or value == False %}
-            <!-- Affichage d'une case à cocher non éditable -->
-            <td class="case_petite case_fonce" style="text-align: center;">
-                <input type="checkbox" {% if value %} checked {% endif %} disabled/>
-            </td>
-        {% else %}
-            <!-- Affichage normal pour les autres types de données -->
-            {% if value == 'edit'%}
-                <div id="valid_appear" style="display: none">
-                    {% include 'buttons/valid.html' %}
-                </div>
-                <div id="appear_edit"
-                _="on click hide me then show #valid_appear"
-                >
-                    <td>
-                        {% include 'buttons/editer.html' %}
-                    </td>
-                </div>
-            {% elif value == 'efface' %}
-                <td>
-                    {% include 'buttons/effacer.html' %}
-                </td>
-            {% else %}
-                 <td>{{ value }}</td>
-            {% endif %}
-        {% endif %}
-    {% endfor %}
+
+{% for colonne in colonnes %}
+    {% if colonne.input == True %}
+        {% for line in lines %}
+            {% for key, value in line.items %}
+
+                {% if key != 'edit' and key != 'efface' and key != 'pk' %}
+{#                    <input type="hidden" value="{{ value }}" />#}
+
+
+                    {% if value == True or value == False %}
+                        <tr>
+                            <!-- Création d'une case à cocher éditable -->
+                            <td class="case_petite case_fonce" style="text-align: center;">
+                                <input type="checkbox" {% if value %} checked {% endif %}/>
+                            </td>
+                        </tr>
+                        {% else %}
+                            <!-- Création d'un champ input pour les autres types de données -->
+                            <td>
+                                <input type="text" value="{{ value }}" class="case_petite case_clair"/>
+                            </td>
+                        {% endif %}
+                {% else %}
+                    <!-- Affichage normal pour les autres types de données -->
+                    {% if key == 'edit'%}
+                        <div id="valid_appear" style="display: none">
+                            {% include 'buttons/valid.html' %}
+                        </div>
+
+                        <div id="appear_edit"
+                             _="on click hide me then show #valid_appear"
+                        >
+                            <td>
+                                {% include 'buttons/editer.html' %}
+                            </td>
+                        </div>
+                        {% elif key == 'efface' %}
+                            <td>
+                                {% include 'buttons/effacer.html' %}
+                            </td>
+                    {% endif %}
+                {% endif %}
+            {% endfor %}
+        {% endfor %}
+
+
+    {% endif %}
+{% endfor %}
 </tr>

@@ -20,12 +20,9 @@
                         </tr>
                    </thead>
                     <tbody hx-target="closest tr" hx-swap="outerHTML" {% if table.total %}class="d-none"{% endif %}>
-                        {% for ligne in table.lignes %}
+                        {% for lines in table.lignes %}
                             {% include 'dashboard/tableau_generique_ligne_read.html' with index=forloop.counter0 colonnes=table.colonnes %}
                         {% endfor %}
-
-                    {% include 'dashboard/tableau_generique_ligne_read_bis.html' %}
-
                     </tbody>
                     <tfoot>
                     <div id="test">
