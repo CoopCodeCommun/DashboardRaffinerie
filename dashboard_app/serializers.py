@@ -1,7 +1,8 @@
 from rest_framework import serializers
 
 from dashboard_user.models import CustomUser
-from .models import AccountAccount, AccountAnalyticGroup, PrevisionCost, OrganizationalChart
+from .models import (AccountAccount, AccountAnalyticGroup, PrevisionCost, OrganizationalChart,
+            PrestationsVentsRecettesInt)
 
 
 class UserSerializer(serializers.ModelSerializer):
@@ -55,8 +56,14 @@ class OrganizationalChartValidator(serializers.ModelSerializer):
 class PrevisionCostValidator(serializers.ModelSerializer):
     class Meta:
         model = PrevisionCost
-        fields = ['titled', 'amount','type']
+        fields = ['titled', 'amount','type', 'pk']
 
+
+# VAlidator for PrestationsVentsRecettesInt
+class PrestationsVentsRecettesIntValidator(serializers.ModelSerializer):
+    class Meta:
+        model = PrestationsVentsRecettesInt
+        fields = ['date', 'amount', 'pk']
 
 
 class AccountAnalyticGroupSerializer(serializers.ModelSerializer):
@@ -93,7 +100,7 @@ class PrevisionCostSerializer(serializers.Serializer):
             "titre": "",
             "colonnes": [
                 {'nom':'', 'input': True}, #les membres du collectif ayant le caractére bienveillant dans l'organigramme, peuvent ajouter des intulés
-                {'nom':'montant', 'input': True}, #les membres du collectif ayant le caractére bienveillant dans l'organigramme, peuvent ajouter des montants
+                {'nom':'amount', 'input': True}, #les membres du collectif ayant le caractére bienveillant dans l'organigramme, peuvent ajouter des montants
             ],
             "lignes": [titled,amount],
             "total":True

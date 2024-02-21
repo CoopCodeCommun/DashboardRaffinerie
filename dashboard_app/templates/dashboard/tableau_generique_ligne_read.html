@@ -8,22 +8,18 @@
             {% for key, value in line.items %}
 
                 {% if key != 'edit' and key != 'efface' and key != 'pk' %}
-{#                    <input type="hidden" value="{{ value }}" />#}
-
 
                     {% if value == True or value == False %}
-                        <tr>
-                            <!-- Création d'une case à cocher éditable -->
-                            <td class="case_petite case_fonce" style="text-align: center;">
-                                <input type="checkbox" {% if value %} checked {% endif %}/>
-                            </td>
-                        </tr>
-                        {% else %}
-                            <!-- Création d'un champ input pour les autres types de données -->
-                            <td>
-                                <input type="text" value="{{ value }}" class="case_petite case_clair"/>
-                            </td>
-                        {% endif %}
+                        <!-- Création d'une case à cocher éditable -->
+                        <td class="case_petite case_fonce" style="text-align: center;">
+                            <input type="checkbox" {% if value %} checked {% endif %}/>
+                        </td>
+                    {% else %}
+                        <!-- Création d'un champ input pour les autres types de données -->
+                        <td>
+                            <input type="text" value="{{ value }}" class="case_petite case_clair"/>
+                        </td>
+                    {% endif %}
                 {% else %}
                     <!-- Affichage normal pour les autres types de données -->
                     {% if key == 'edit'%}
@@ -39,9 +35,13 @@
                             </td>
                         </div>
                         {% elif key == 'efface' %}
-                            <td>
-                                {% include 'buttons/effacer.html' %}
-                            </td>
+                            <form action="{{ table.crud_url }}{{ value }}/" method="DELETE">
+                            {% csrf_token %}
+                                <td>
+                                    <input type="hidden" name="_method" value="{{ value }}" />
+                                    {% include 'buttons/effacer.html' %}
+                                </td>
+                            </form>
                     {% endif %}
                 {% endif %}
             {% endfor %}

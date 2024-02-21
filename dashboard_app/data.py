@@ -75,7 +75,7 @@ class data():
         "titre": "",
         "colonnes": [
             {'nom':'', 'input': True}, #les membres du collectif ayant le caractére bienveillant dans l'organigramme, peuvent ajouter des intulés
-            {'nom':'montant', 'input': True}, #les membres du collectif ayant le caractére bienveillant dans l'organigramme, peuvent ajouter des montants
+            {'nom':'amount', 'input': True}, #les membres du collectif ayant le caractére bienveillant dans l'organigramme, peuvent ajouter des montants
         ],
 
         "lignes": [
@@ -94,7 +94,7 @@ class data():
         "colonnes": [
             {'nom':''}, #les bienveillants peuvent selectionné un nom si il créé une nouvelle ligne
             {'nom':'date', 'input': True, 'total': False}, #les bienveillants peuvent remplir une date
-            {'nom':'propo.' , 'input': True}, #les bienveillants peuvent remplir un un montant
+            {'nom':'propo.' , 'input': True}, #les bienveillants peuvent remplir un un amount
             {'nom':'validé', 'input': True}, #les bienveillants peuvent valider
             {'nom':'factu.', 'input': True}, #les bienveillants peuvent valider
             {'nom':'payé'}, #si la facture est "payé" dans odoo, la checkbox est True, il y aura un peu de réflexion à avoir pour voir comment associé une proposition à une facture odoo
@@ -114,7 +114,7 @@ class data():
         "titre": "",
         "colonnes": [
             {'nom':'', 'input': True}, #les membres du collectif ayant le caractére bienveillant dans l'organigramme, peuvent ajouter des intulés
-            {'nom':'montant', 'input': True}, #les membres du collectif ayant le caractére bienveillant dans l'organigramme, peuvent ajouter des montants
+            {'nom':'amount', 'input': True}, #les membres du collectif ayant le caractére bienveillant dans l'organigramme, peuvent ajouter des montants
         ],
         "lignes": [
             ['animation ateliers', 530],
@@ -129,7 +129,7 @@ class data():
         "colonnes": [
             {'nom':'', 'liste': True}, #liste déroulante des presta interne de l'organigramme
             {'nom':'date', 'input': True, 'total': False}, #les presta int concerné peuvent remplir un une date
-            {'nom':'propo.', 'input': True}, #les presta int concerné peuvent remplir un un montant
+            {'nom':'propo.', 'input': True}, #les presta int concerné peuvent remplir un un amount
             {'nom':'validé'}, #les bienveillants peuvent valider
             {'nom':'factu.'}, #les presta int concerné peuvent valider
             {'nom':'payé'}, #si la facture est "payé" dans odoo, la checkbox est True 
@@ -146,7 +146,7 @@ class data():
         "titre": "",
         "colonnes": [
             {'nom':'', 'input': True}, #les membres du collectif ayant le caractére bienveillant dans l'organigramme, peuvent ajouter des intulés 
-            {'nom':'montant', 'input': True}, #les membres du collectif ayant le caractére bienveillant dans l'organigramme, peuvent ajouter des montants 
+            {'nom':'amount', 'input': True}, #les membres du collectif ayant le caractére bienveillant dans l'organigramme, peuvent ajouter des montants
         ],
         "lignes": [
             ['matériel', 500],
@@ -177,7 +177,7 @@ class data():
         "titre": "",
         "colonnes": [
             {'nom':'', 'input': True}, #les membres du collectif ayant le caractére bienveillant dans l'organigramme, peuvent ajouter des intulés 
-            {'nom':'montant', 'input': True}, #les membres du collectif ayant le caractére bienveillant dans l'organigramme, peuvent ajouter des montants 
+            {'nom':'amount', 'input': True}, #les membres du collectif ayant le caractére bienveillant dans l'organigramme, peuvent ajouter des montants
         ],
         "lignes": [
             ['micro-recylerie','1000€'],
@@ -194,7 +194,7 @@ class data():
         "colonnes": [
             {'nom':'', 'list': True}, #liste déroulante des projets
             {'nom':'date', 'date': True, 'total': False}, #date à rentrer par un bienveillant
-            {'nom':'montant', 'input': True}, #montant à rentrer par un bienveillant
+            {'nom':'amount', 'input': True}, #amount à rentrer par un bienveillant
         ],
         "lignes": [
             ['micro-recylerie', '03/05/23','1000€'],
@@ -245,7 +245,7 @@ class data():
         "titre": "",
         "colonnes": [
             {'nom':'', 'input': True},  #les membres du collectif ayant le caractére bienveillant dans l'organigramme, peuvent ajouter des intulés 
-            {'nom':'montant', 'input': True}, #les membres du collectif ayant le caractére bienveillant dans l'organigramme, peuvent ajouter des montants 
+            {'nom':'amount', 'input': True}, #les membres du collectif ayant le caractére bienveillant dans l'organigramme, peuvent ajouter des montants
              
         ],
         "lignes": [
@@ -262,7 +262,7 @@ class data():
         "colonnes": [
             {'nom':'', 'input': False}, #factures client avec l'article presta ext via odoo
             {'nom':'date', 'total': False}, # date des factures 
-            {'nom':'montant'},# montant des factures
+            {'nom':'amount'},# amount des factures
         ],
         "lignes": [
             ['micro-recylerie', '03/05/23','1000€'],
@@ -276,7 +276,7 @@ class data():
         "titre": "",
         "colonnes": [
             {'nom':'', 'input': True}, #les membres du collectif ayant le caractére bienveillant dans l'organigramme, peuvent ajouter des intulés 
-            {'nom':'montant', 'input': True}, #les membres du collectif ayant le caractére bienveillant dans l'organigramme, peuvent ajouter des montants 
+            {'nom':'amount', 'input': True}, #les membres du collectif ayant le caractére bienveillant dans l'organigramme, peuvent ajouter des montants
         ],
         "lignes": [
             ['micro-recylerie','1000€'],
@@ -292,7 +292,7 @@ class data():
         "colonnes": [
             {'nom':'',}, #factures client avec l'article vente via odoo
             {'nom':'date', 'total': False},  #date des factures 
-            {'nom':'montant',},  #montant des factures 
+            {'nom':'amount',},  #amount des factures
         ],
         "lignes": [
             ['micro-recylerie', '03/05/23','1000€'],
@@ -306,7 +306,7 @@ class data():
         "titre": "",
         "colonnes": [
             {'nom':'', 'input': True}, #les membres du collectif ayant le caractére bienveillant dans l'organigramme, peuvent ajouter des intulés 
-            {'nom':'montant', 'input': True}, #les membres du collectif ayant le caractére bienveillant dans l'organigramme, peuvent ajouter des montants 
+            {'nom':'amount', 'input': True}, #les membres du collectif ayant le caractére bienveillant dans l'organigramme, peuvent ajouter des montants
         ],
         "lignes": [
             ['micro-recylerie','1000€'],
@@ -323,7 +323,7 @@ class data():
         "colonnes": [
             {'nom': '', 'list': False}, 
             {'nom': 'date', 'input': True, 'total': False},
-            {'nom': 'montant', 'input': True},
+            {'nom': 'amount', 'input': True},
         ],
         "lignes": [
             ['micro-recylerie', '03/05/23','1000€'],
@@ -367,7 +367,7 @@ class data():
                     {'nom':'référent'}, #corespond au référent inscrit dans l'organigramme
                     {'nom':'partenaire', 'input': True}, #rempli par l'admin
                     {'nom':'service', 'input': True}, #rempli par l'admin
-                    {'nom':'montant', 'input': True}, #rempli par l'admin
+                    {'nom':'amount', 'input': True}, #rempli par l'admin
         ],
         "lignes": [
             ['micro-forêt', 'economik', 'Marc', 'OFB', '', '22 500€'],

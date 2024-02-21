@@ -214,7 +214,7 @@ let tableaux = {
             columns: [
                 { name: 'pôle', dropdown: true,  options: ['Option 1', 'Option 2', 'Option 3'], shouldTotal: false, },
                 { name: 'date', input: true, shouldTotal: false,},
-                { name: 'montant', input: true,  },          
+                { name: 'amount', input: true,  },
             ],
         },
 

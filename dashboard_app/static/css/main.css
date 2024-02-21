@@ -233,3 +233,9 @@ div[onclick="toggleContent(this)"] {
 .hidden-on-total {
     display: none;
 }
+
+/* Htmx being used to opacity the lignes that are ereased */
+tr.htmx-swapping td {
+  opacity: 0;
+  transition: opacity 1s ease-out;
+}

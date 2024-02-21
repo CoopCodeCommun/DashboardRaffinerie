@@ -5,7 +5,7 @@ from .views import (contacts, lazy_loading_profil_image, \
     reload_contact_from_odoo, odoo_account, reload_account_from_odoo, \
     AccountAnalyticGroupAPI, OdooContactsAPI, julienjs_suivi_budgetaire, OrganizationalChartViewSet,
     edit_tableau_generique, SuiviBudgetaireViewSet)
-from .views import index, suivi_budgetaire, send_subventions, organigramme, repertoire, objectifs_indicateurs, api_exemple, tableau_de_bord_perso
+from .views import index, send_subventions, new_line_cost, suivi_budgetaire, repertoire, objectifs_indicateurs, api_exemple, tableau_de_bord_perso
 from rest_framework import routers
 
 router = routers.DefaultRouter()
@@ -15,13 +15,19 @@ router.register(r'odoo_contacts', OdooContactsAPI, basename='odoo_contacts_api')
 router.register(r'table_budgetaire', SuiviBudgetaireViewSet, basename='table_budgetaire')
 # sending url url with new organigramme
 router.register(r'organizationalchart', OrganizationalChartViewSet, basename='organizationalchart')
+
 urlpatterns = [
 
     # sending url with Viewset class
     path('suivi_budg/', include(router.urls)),
     # Pages d'exemple HTMX:
     path('organigramme_new/', views.send_user_to_organigrame, name='organigramme_new'),
-    path('new_prev_bienveill/', views.caring_data_form, name='new_prev_bienveill'),
+    path('new_prev_bienveillance/', views.caring_data_form, name='new_prev_bienveillance'),
+    path('int_serv_prev/', views.intern_serv_prev_form, name='int_serv_prev'),
+
+    # url for the new line costs
+    path('new_line_prev_cost', new_line_cost, name='new_line_prev_cost'),
+
     path('contacts/', contacts, name="odoo_contacts"),
     path('odoo_account/', odoo_account, name="odoo_account"),
 

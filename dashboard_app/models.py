@@ -324,7 +324,7 @@ class Invoice(models.Model):
     date_invoicing = models.DateField(verbose_name='Date de facturation')
     deadline = models.DateField(verbose_name="Date d'échéance")
     account_date = models.DateField(null=True, blank=True, verbose_name='Date comptable')
-    amount = models.DecimalField(max_digits=8, decimal_places=2, default=0, verbose_name='montant')
+    amount = models.DecimalField(max_digits=8, decimal_places=2, default=0, verbose_name='amount')
     validated = models.BooleanField(default=False, verbose_name='Validé')
     payed = models.BooleanField(default=False, verbose_name='Payé')
 
@@ -374,7 +374,7 @@ class Recette(models.Model):
 class PrevisionCost(models.Model):
     uuid = models.UUIDField(primary_key=True, default=uuid4, editable=False, unique=True)
     type = models.ForeignKey(Cost, on_delete=models.PROTECT, related_name='prevision_cost', verbose_name='type')
-    amount = models.DecimalField(max_digits=8, decimal_places=2, default=0, verbose_name='montant')
+    amount = models.DecimalField(max_digits=8, decimal_places=2, default=0, verbose_name='amount')
     titled = models.CharField(max_length=60, verbose_name='intitulé')
     class Meta:
         verbose_name = _('Dépenses Prévisionnel')
@@ -421,7 +421,7 @@ class RealCostInternSpending(models.Model):
     uuid = models.UUIDField(primary_key=True, default=uuid4, editable=False, unique=True)
     type = models.ForeignKey(Cost, on_delete=models.PROTECT, related_name='real_cost_intern_spending', verbose_name='type')
     pole = models.ForeignKey(Pole, on_delete=models.PROTECT, related_name='real_cost_intern_spending', verbose_name='pôle')
-    amount = models.DecimalField(max_digits=8, decimal_places=2, default=0, verbose_name='montant')
+    amount = models.DecimalField(max_digits=8, decimal_places=2, default=0, verbose_name='amount')
     date_cost = models.DateField(auto_now= True)
 
     class Meta:
@@ -463,7 +463,7 @@ class PrestationsVentsRecettesInt(models.Model):
     recette = models.ForeignKey(Recette, on_delete=models.PROTECT, related_name='prestations', verbose_name='type de recette')
     date = models.DateField(auto_now=True)
     group = models.ForeignKey(Groupe, on_delete=models.PROTECT, related_name='prestations', verbose_name='groupe')
-    montant = models.DecimalField(max_digits=8, decimal_places=2, default=0, verbose_name='montant')
+    amount = models.DecimalField(max_digits=8, decimal_places=2, default=0, verbose_name='amount')
 
     class Meta:
         verbose_name_plural = _('Prestations Vents Recettes Internes')
@@ -475,7 +475,7 @@ class Grant(models.Model):
     account_date_automatic = models.DateField(auto_now_add=True,verbose_name="Date comptable (automatique)")
     label = models.CharField(max_length=150, verbose_name="Libéllé")
     referee = models.CharField(max_length=70, verbose_name="Référent")
-    amount = models.DecimalField(max_digits=8, decimal_places=2, default=0, verbose_name='montant')
+    amount = models.DecimalField(max_digits=8, decimal_places=2, default=0, verbose_name='amount')
     account_date = models.DateField(verbose_name="Date comptable")
     partnaire = models.CharField(max_length=60, verbose_name='Partenaire')
     reference = models.CharField(max_length=60, verbose_name='Référence')

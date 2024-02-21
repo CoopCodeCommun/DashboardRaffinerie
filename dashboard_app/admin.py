@@ -199,7 +199,7 @@ admin.site.register(RealCostInternSpending, RealCostInternSpendingAdmin)
 # creating admin for Recettes
 class PrestationsVentsRecettesIntAdmin(admin.ModelAdmin):
     # list of fields
-    list_display = ('prev_ou_reel', 'group_name', 'recette_type', 'date', 'montant')
+    list_display = ('prev_ou_reel', 'group_name', 'recette_type', 'date', 'amount')
 
     # filter by type of recette if it's real or prevision and from the groupe name
     list_filter = ['prev_ou_reel', 'recette__type']

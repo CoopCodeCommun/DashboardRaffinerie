@@ -1,11 +1,12 @@
 {% load static %}
 <script src='{% static "js/main.js" %}' type="application/javascript"></script>
 
-{#Creating the form for delete object#}
-<form action="/suivi_budg/organizationalchart/" method="DELETE">
-{% csrf_token %}
-    <button type='submit' style="background: none; color: red; border: medium; cursor: pointer; font-size: 0.9em; outline: none;">
+{#Creating the htmx for delete object#}
+    <button type='submit' style="background: none; color: red; border: medium; cursor: pointer; font-size: 0.9em; outline: none;"
+            hx-delete='{{ url_viewset }}{{ pk }}/'
+            hx-confirm="Êtes vous sûre de vouloir supprimmer l'objet?"
+            hx-target="closest tr"
+            hx-swap="outerHTML swap:1s"
+    >
         <i class="fa fa-trash-o" style="font-size:20px;color:red"></i>
     </button>
-
-</form>
