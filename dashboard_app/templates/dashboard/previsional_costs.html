@@ -1,0 +1,30 @@
+<tr class="case_petite ligne_table">
+    {% if line.date %}
+    <td>
+        {{ line.date|date:"d/m/Y" }}
+    </td>
+    {% else %}
+    <td>
+        <p class="case_petite case_clair">{{ line.titled }} </p>
+    </td>
+    {% endif %}
+
+    <td>
+        <p class="case_petite case_clair">{{ line.amount }}</p>
+    </td>
+
+    <div id="appear_edit"
+         _="on click hide me then show #valid_appear"
+    >
+        <td>
+            {% include 'buttons/editer.html' %}
+            </td>
+    </div>
+
+    <div>
+        <td>
+            <input type="hidden" name="_method" value="{{ value }}"/>
+            {% include 'buttons/effacer.html' with url_viewset='/suivi_budg/table_budgetaire/' pk=line.pk %}
+        </td>
+    </div>
+</tr>
