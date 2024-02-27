@@ -20,10 +20,15 @@
                         </tr>
                    </thead>
 
-                    <tbody hx-target="closest tr" hx-swap="outerHTML" {% if table.total %}class="d-none"{% endif %}>
-                    {% for line in table.lignes %}
-                        {% include 'dashboard/previsional_costs.html' with index=forloop.counter0 colonnes=table.colonnes %}
-                    {% endfor %}
+                    <tbody id="line" hx-target="closest tr" hx-swap="outerHTML" {% if table.total %}class="d-none"{% endif %}>
+{#                        {% for line in table.lignes %}#}
+{#                            {% include 'dashboard/previsional_costs.html' with index=forloop.counter0 colonnes=table.colonnes %}#}
+{#                        {% endfor %}#}
+                        {% for all_lines in table.lignes %}
+                            {% include 'dashboard/tableau_generique_ligne_read.html' with index=forloop.counter0 colonnes=table.colonnes %}
+                        {% endfor %}
+
+
                     </tbody>
                     <tfoot>
 

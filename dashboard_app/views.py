@@ -3,6 +3,7 @@ import time
 from django.contrib.auth import get_user_model
 from django.http import HttpResponseBadRequest
 from django.shortcuts import render, redirect, get_object_or_404
+from django.db.models import F
 from django.utils.html import format_html
 from rest_framework import status, viewsets
 from rest_framework.decorators import permission_classes
@@ -11,19 +12,19 @@ from rest_framework.response import Response
 from rest_framework.views import APIView
 from dashboard_app.data import data
 from dashboard_user.models import CustomUser
-from .models import PrevisionCost
+from .models import PrevisionCost, Recette
 from dashboard_app.models import (Contact, AccountAccount, AccountJournal, AccountAnalyticGroup, AccountAnalyticAccount, \
     RealCostInternSpending, RealCost, RealCostExternService, PrestationsVentsRecettesInt, Grant, Cost,
     OrganizationalChart, Badge, DepensesBienveillance)
 from dashboard_app.odoo_api import OdooApi
 from dashboard_app.serializers import UserSerializer
-from .serializers import (AccountAnalyticGroupSerializer, OrganizationalChartValidator,
-                PrestationsVentsRecettesIntValidator, PrevisionCostValidator)
+from .serializers import (AccountAnalyticGroupSerializer, OrganizationalChartValidator, RealcostSerializer,
+                          PrestationsVentsRecettesIntValidator, PrevisionCostValidator)
 from dashboard_app.models import AccountAccount
 
 # We'll create a fonction that will return a dictionary in the form adapted to
 # the generale tables
-def create_dict_with_data(slug_name, colonnes,lignes, total,new_ligne,new_line_name="",titre_colonne=""):
+def create_dict_with_data(slug_name, colonnes,lignes, total,new_ligne,new_line_name="", url_viewset="",titre_colonne=""):
 
     return {
         "slug": slug_name,
@@ -32,7 +33,8 @@ def create_dict_with_data(slug_name, colonnes,lignes, total,new_ligne,new_line_n
         "lignes": lignes,
         "total": total,
         "ajouter_ligne" : new_ligne,
-        'new_line_name': new_line_name
+        'new_line_name': new_line_name,
+        'url_viewset': url_viewset
     }
 
 
@@ -64,16 +66,13 @@ def edit_tableau_generique(request, table, index):
         return render(request, 'dashboard/tableau_generique_ligne_read.html', context={'ligne':ligne, 'table':table, 'index':index})
 
 
-# Add edit and efface  buton lines
+#Add edit and efface  buton lines
 def edit_efface(list): # A ajoutter dans la classe SuviBudgetaireViewSet
-    for l in list:
-        l.append({'edit': l[0]['pk']})
-        l.append({'efface': l[0]['pk']})
+    pass
+    # for l in list:
+    #     l['edit'] = l['pk']
+    #     l['efface'] = l['pk']
 
-def add_buttons(list): # A ajoutter dans la classe SuviBudgetaireViewSet
-    for l in list:
-        l.append('edit')
-        l.append('efface')
 
 # suivi budgetaire with Vieset
 class SuiviBudgetaireViewSet(viewsets.ViewSet):
@@ -85,6 +84,7 @@ class SuiviBudgetaireViewSet(viewsets.ViewSet):
         '''
         # the data0 dictionary will serve gatherign data of different cases
         data0 = {}
+        data1 = {}
 
         # base de colonnes pour les suivies budgetaires prévisions
         col_prevision = [
@@ -99,38 +99,60 @@ class SuiviBudgetaireViewSet(viewsets.ViewSet):
         prev_cost = PrevisionCost.objects.all()
 
         # filtrons pour  Caring (bienveillance)
-        prev_cost_caring = prev_cost.filter(type__type='CAR')
-        # creons la bd pour bienveillance prevision
-        data0['prev_cost_caring'] = create_dict_with_data( "prev_beinveillance", col_prevision,prev_cost_caring, True, True, new_line_name='new_prev_bienveillance')
-
+        prev_cost_caring_filt = prev_cost.filter(type__type='CAR')
+        prev_cost_caring_dict = prev_cost_caring_filt.values('pk', 'titled','amount')
+        # add edit and efface button
+        for l in prev_cost_caring_dict:
+            l['edit'] = l['pk']
+            l['efface'] = l['pk']
+        data1['prev_cost_caring'] = create_dict_with_data( "prev_beinveillance", col_prevision, prev_cost_caring_dict, True, True, new_line_name='new_prev_bienveillance',url_viewset='/suivi_budg/table_budgetaire/')
 
         # filtrons pour  Interne services (Prestation internes)
-        prev_intern_service_cost = prev_cost.filter(type__type='IN_S')
-        data0['prev_intern_service_cost'] = create_dict_with_data('prev_intern_serv',col_prevision, prev_intern_service_cost, True, True, new_line_name='int_serv_prev')
-
+        prev_intern_service_cost_filt = prev_cost.filter(type__type='IN_S')
+        prev_intern_service_cost_dict = prev_intern_service_cost_filt.values('pk', 'titled','amount')
+        for l in prev_intern_service_cost_dict:
+            l['edit'] = l['pk']
+            l['efface'] = l['pk']
+        data1['prev_intern_service_cost'] = create_dict_with_data('prev_intern_serv',col_prevision, prev_intern_service_cost_dict, True, True, new_line_name='new_line_prev_cost', url_viewset='/suivi_budg/table_budgetaire/')
 
         # filtrons pour  Extern service (Prestation externes achats)
-        prev_ext_service_cost = prev_cost.filter(type__type='EX_S')
+        prev_ext_service_cost_filt = prev_cost.filter(type__type='EX_S')
+        prev_ext_service_cost_dict = prev_ext_service_cost_filt.values('pk', 'titled','amount')
+        for l in prev_ext_service_cost_dict:
+            l['edit'] = l['pk']
+            l['efface'] = l['pk']
 
         # creons la bd pour les prestations externes prevision
-        data0['prev_ext_service_cost'] = create_dict_with_data('recap_recettes',col_prevision, prev_ext_service_cost, True, True)
+        data1['prev_ext_service_cost'] = create_dict_with_data('recap_recettes',col_prevision, prev_ext_service_cost_dict, True, True, new_line_name='ext_prev_cost', url_viewset='/suivi_budg/table_budgetaire/')
 
 
         # filtrons pour  Intern spendings (Prestation externes achats)
-        prev_intern_spend_cost = prev_cost.filter(type__type='SP_I')
+        prev_intern_spend_cost_filt = prev_cost.filter(type__type='SP_I')
+        prev_intern_spend_cost_dict = prev_intern_spend_cost_filt.values('pk', 'titled','amount')
+        for l in prev_intern_spend_cost_dict:
+            l['edit'] = l['pk']
+            l['efface'] = l['pk']
         # creons la bd pour les prestations externes prevision
-        data0['prev_intern_spend_cost'] = create_dict_with_data('recap_recettes',col_prevision, prev_intern_spend_cost, True, True)
+        data1['prev_intern_spend_cost'] = create_dict_with_data('recap_recettes',col_prevision, prev_intern_spend_cost_dict, True, True, new_line_name='intern_spend_prev', url_viewset='/suivi_budg/table_budgetaire/')
 
+
+        '''
+        FIN CHANGING VALUE test
+        '''
 
         #       --------------------       ---------------------           -------------------    #
         #Creating the basics for Recettes tables (prevision or reel)
         # Prestation previsionel, calling the data
         prestations_vents_recettes_int = PrestationsVentsRecettesInt.objects.all()
 
-        # créons le liste avec les prestations prevision
         # créons le liste avec les prestations prevision recettes
-        recette_presta_prev = prestations_vents_recettes_int.filter(prev_ou_reel='P', recette__type='P')
-        data0['recette_presta_prev'] = create_dict_with_data('recap_recettes',col_prevision, recette_presta_prev, True, True, )
+        recette_presta_prev_filt = prestations_vents_recettes_int.filter(prev_ou_reel='P', recette__type='P')
+        recette_presta_prev_dict = recette_presta_prev_filt.values('pk', 'date','amount')
+        for l in recette_presta_prev_dict:
+            l['edit'] = l['pk']
+            l['efface'] = l['pk']
+        # creons la bd pour les prestations externes prevision
+        data1['recette_presta_prev'] = create_dict_with_data('recap_recettes',col_prevision, recette_presta_prev_dict, True, True, new_line_name='new_recette_1_prev', url_viewset='/suivi_budg/table_budgetaire/')
 
         # créons le liste avec les ventes prevision recettes
         vents_recett_prev = prestations_vents_recettes_int.filter(prev_ou_reel='P', recette__type='V')
@@ -140,7 +162,6 @@ class SuiviBudgetaireViewSet(viewsets.ViewSet):
         intern_recett_prev = prestations_vents_recettes_int.filter(prev_ou_reel='P', recette__type='R_IN')
         data0['intern_recett_prev'] = create_dict_with_data('recap_recettes',col_prevision, intern_recett_prev, True, True)
 
-        data1 = {}
         '''
             END OF TESTING OTHER KIND OF TEMPLATE
 
@@ -156,23 +177,36 @@ class SuiviBudgetaireViewSet(viewsets.ViewSet):
         {'nom':'', 'input': False},
         {'nom':'', 'input': False}
         ]
-        # creons une liste pour les presta externs prevision
-        depenses_int_real_list = [[{'pk':x.pk}, {'pole_id': x.pole.name}, {'date': str(x.date_cost)}, {'amount': str(x.amount)}] for x in RealCostInternSpending.objects.filter(type__type='SP_I')]
-        # Add edit and efface  butons
-        edit_efface(depenses_int_real_list)
 
-        # creons la bd pour les prestations externes prevision
-        data1['depenses_int_reel'] = create_dict_with_data('recap_recettes',col_with_date_amaunt, depenses_int_real_list, True, True)
+
+        # créons le liste filtre avec les depenses internes reel
+        depenses_int_real_filt = RealCostInternSpending.objects.filter(type__type='SP_I')
+        depenses_int_real_dict = depenses_int_real_filt.values('pk', 'date_cost','pole_id', 'amount')
+        # Add edit and efface  butons
+        for l in depenses_int_real_dict:
+            l['edit'] = l['pk']
+            l['efface'] = l['pk']
+
+        # creons la bd pour les prestations internne prevision
+        data1['depenses_int_reel'] = create_dict_with_data('recap_recettes',col_with_date_amaunt, depenses_int_real_dict, True, True, new_line_name='new_line_prev_cost', url_viewset='/suivi_budg/table_budgetaire/')
+
 
         # On va recupperer les données de coûts reels
         # pour les filtrer par la suite
         real_cost = RealCost.objects.all()
-        # Creaons une liste des données qu'on va afficher dans le table
-        # bienveillance réel
-        bienveillance_reel_list = [[{'pk':x.pk},{'username':x.user.username}, {'date': x.date}, {'proposition': str(x.proposition)}, {'validated': x.validated}, {'invoiced': x.invoiced}, {'paid': x.paid}] for x in real_cost.filter(type__type='CAR')]
 
-        # Add edit and efface  butons
-        edit_efface(bienveillance_reel_list)
+        real_cost_ser = RealcostSerializer(data=request.GET)
+        # filter on Caring
+        real_cost_caring_filt = real_cost.filter(type__type='CAR')
+
+        # let's create the dictionary
+        real_cost_caring_dict = real_cost_caring_filt.values('pk','user_id','date','proposition','validated', 'invoiced','paid')
+            # using the annotate method
+            #annotate.username=F('user__username'))
+        for l in real_cost_caring_dict:
+            l['edit'] = l['pk']
+            l['efface'] = l['pk']
+
 
         col_dep_reel = [
                 {'nom':''}, #les bienveillants peuvent selectionné un nom si il créé une nouvelle ligne
@@ -182,20 +216,27 @@ class SuiviBudgetaireViewSet(viewsets.ViewSet):
                 {'nom':'factu.', 'input': True}, #les bienveillants peuvent valider
                 {'nom':'payé'}, #si la facture est "payé" dans odoo, la checkbox est True, il y aura un peu de réflexion à avoir pour voir comment associé une proposition à une facture odoo
                 {'nom':'', 'input': False},
-                {'nom':'', 'input': False}
+                {'nom':'', 'input': False},
+
         ]
         # Creons le Bd pour la bienveillance reel
-        data1['bienveillance_reel'] = create_dict_with_data('recap_recettes',col_dep_reel, bienveillance_reel_list, True, True)
+
+        # creons la bd pour les prestations externes prevision
+        data1['bienveillance_reel'] = create_dict_with_data('recap_recettes',col_dep_reel, real_cost_caring_dict, True, True, new_line_name='new_recette_1_prev', url_viewset='/suivi_budg/table_budgetaire/')
+
 
         # Creaons une liste des données qu'on va afficher dans le table
         # presta interne reel
-        presta_int_reel_list = [[{'pk':x.pk},{'username':x.user.username}, {'date': x.date}, {'proposition': str(x.proposition)}, {'validated': x.validated}, {'invoiced': x.invoiced}, {'paid': x.paid}] for x in real_cost.filter(type__type='IN_S')]
+        presta_int_reel_filt = real_cost.filter(type__type='IN_S')
+        presta_int_reel_dict = presta_int_reel_filt.values('pk','date','proposition','validated', 'paid','proposition')
 
         # Add edit and efface  butons
-        edit_efface(presta_int_reel_list)
+        for l in presta_int_reel_dict:
+            l['edit'] = l['pk']
+            l['efface'] = l['pk']
 
         # creons la Bd pour presta intern reel
-        data1['presta_int_reel'] = create_dict_with_data('recap_recettes',col_dep_reel, presta_int_reel_list, True, True)
+        data1['presta_int_reel'] = create_dict_with_data('recap_recettes',col_dep_reel, presta_int_reel_dict, True, True, new_line_name='new_recette_1_prev', url_viewset='/suivi_budg/table_budgetaire/')
 
         # Creons colonnes pour dépenses externes réels
         col_dep_reel_ext = [
@@ -208,14 +249,18 @@ class SuiviBudgetaireViewSet(viewsets.ViewSet):
                 {'nom':'', 'input': False}
             ]
         # applons la bd des prestations externes reeles
-        real_cost_spendings = RealCostExternService.objects.all()
+        presta_ext_reel0 = RealCostExternService.objects.all()
 
-        #créons la liste avec les dépenses externes réeles
-        presta_ext_reel_list = [[{'pk':x.pk},{'contact_name':x.contact.name}, {'titled': x.titled}, {'date': x.date}, {'validated': x.validated}, {'payed': x.payed}] for x in real_cost_spendings]
+        # depense reel exterieur
+        presta_ext_reel_dict = presta_ext_reel0.values('pk','titled','date','validated', 'payed')
+
         # Add edit and efface  butons
-        edit_efface(presta_ext_reel_list)
+        for l in presta_ext_reel_dict:
+            l['edit'] = l['pk']
+            l['efface'] = l['pk']
 
-        data1['presta_ext_reel'] = create_dict_with_data('recap_recettes',col_dep_reel_ext, presta_ext_reel_list, True, True)
+        data1['presta_ext_reel'] = create_dict_with_data('recap_recettes',col_dep_reel_ext, presta_ext_reel_dict, True, True, new_line_name='new_recette_1_prev', url_viewset='/suivi_budg/table_budgetaire/')
+
 
         #Creating the basics for Recettes tables (prevision or reel)
         # Prestation previsionel, calling the data
@@ -252,14 +297,7 @@ class SuiviBudgetaireViewSet(viewsets.ViewSet):
         if serializer.is_valid():
             serializer.save()
 
-            return redirect('/suivi_budg/table_budgetaire/')
-
-        # creating PrestationsVentsRecettesInt
-        if serializer_recettes.is_valid():
-            serializer_recettes.save()
-
-        return redirect('/suivi_budg/table_budgetaire/')
-
+            return render(request, 'dashboard/pages_html/suivi_budgetaire.html')
 
 
     # updating budget cost
@@ -334,43 +372,13 @@ class OrganizationalChartViewSet(viewsets.ViewSet):
 
         # return redirect('/suivi_budg/organizationalchart/')
 
-# Creating the options for new line in a generic html doc
-def new_line_cost(request):
-    data2 = {}
-    prevision_cost = PrevisionCost.objects.all()
-    # adding the type to the data for the caring case
-    type = prevision_cost.filter(type__type='CAR').first()
-    id = 'prev_caring'
-    data2['prev_caring'] = {'type_id': type.pk, 'id': id}
-
-    # adding the type to the data for the Internal service case case
-    type = prevision_cost.filter(type__type='IN_S').first()
-    id = 'prev_intern_service'
-    data2['prev_intern_services'] = {'type_id': type.pk, 'id': id}
-
-    # adding the type to the data for the External service case case
-    type = prevision_cost.filter(type__type='EX_S').first()
-    id = 'prev_external_service'
-    data2['prev_ext_serv_purchase'] = {'type_id': type.pk, 'id': id}
-
-
-    # adding the type to the data for the Internal spendings (dépenses internes) case
-    type = prevision_cost.filter(type__type='SP_I').first()
-    id = 'prev_intern_spendings'
-    data2['prev_intern_spendings'] = {'type_id': type.pk, 'id': id}
-
-    context= {
-        'data2': data2
-    }
-
-    return render(request, 'new_lines/new_line_cost.html', context=context)
-
 
 def tableau_de_bord_perso(request):
     context = {
         'name': request.user.email if request.user.is_authenticated else 'Anonymous',
     }
     return render(request, 'tableau_de_bord_perso.html', context=context)
+
 
 
 def send_subventions(request):
@@ -461,18 +469,60 @@ def organigramme(request):
     return render(request, 'dashboard/pages_html/organigramme.html', context=context)
 
 
+'''
+Sending data to the forms of nwe line in Prevision Cost tables
+We'll send all to one template but with different url and the variable
+will be called the same with different values depended on the cases
+'''
+# ------------ Start
 # send data to Caring (bienveillance) form
-def caring_data_form(request):
-    cost_caring = Cost.objects.get(type='CAR')
 
-    return render(request, 'htmx/new_budget_cost.html', {'cost_caring': cost_caring})
+def caring_data_form(request):
+    cost_type = Cost.objects.get(type='CAR')
+
+    return render(request, 'new_lines/new_budget_cost_prev.html', {'cost_type': cost_type})
 
 
 # send data to intern prevision cost form
 def intern_serv_prev_form(request):
-    intern_service = Cost.objects.get(type='IN_S')
+    cost_type = Cost.objects.get(type='IN_S')
 
-    return render(request, 'htmx/new_prev_cost_intern.html', {'intern_service': intern_service})
+    return render(request, 'new_lines/new_budget_cost_prev.html', {'cost_type': cost_type})
+
+
+# send data to extern prevision cost form
+def ext_serv_prev_form(request):
+    cost_type = Cost.objects.get(type='EX_S')
+
+    return render(request, 'new_lines/new_budget_cost_prev.html', {'cost_type': cost_type})
+
+# send data to intern spendings cost form
+def intern_spend_prev_form(request):
+    cost_type = Cost.objects.get(type='SP_I')
+
+    return render(request, 'new_lines/new_budget_cost_prev.html', {'cost_type': cost_type})
+
+#---------------- FIN FORM NEW LINE PREV COST --------
+
+
+'''
+Sending data to the forms of nwe line in RECETTES tables
+We'll send all to one template but with different url and the variable
+will be called the same with different values depended on the cases
+'''
+# ------------ Start
+
+# form for Prestation prevision
+def recette_form_prev_1(request):
+    recette = Recette.objects.get(type='P') # SUB   v   RIN
+    prev_ou_reel = 'P'
+    return render(request, 'new_lines/new_line_recettes.html', {'recette': recette, 'prev_ou_reel': prev_ou_reel })
+
+
+
+
+#---------------- FIN FORM NEW LINE RECETTES --------
+
 
 
 # send user to organigrame creating new line

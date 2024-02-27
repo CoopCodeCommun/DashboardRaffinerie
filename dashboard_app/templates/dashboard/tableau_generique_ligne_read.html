@@ -2,49 +2,44 @@
 
 <tr class="case_petite ligne_table">
 
+
 {% for colonne in colonnes %}
     {% if colonne.input == True %}
-        {% for line in lines %}
-            {% for key, value in line.items %}
+        {% for key, value in all_lines.items %}
+            {% if key != 'pk' and key != 'edit' and key != 'efface' %}
 
-                {% if key != 'edit' and key != 'efface' and key != 'pk' %}
-
-                    {% if value == True or value == False %}
-                        <!-- Création d'une case à cocher éditable -->
-                        <td class="case_petite case_fonce" style="text-align: center;">
-                            <input type="checkbox" {% if value %} checked {% endif %}/>
-                        </td>
-                    {% else %}
-                        <!-- Création d'un champ input pour les autres types de données -->
-                        <td>
-                            <input type="text" value="{{ value }}" class="case_petite case_clair"/>
-                        </td>
-                    {% endif %}
+                {% if value is True or value is False and key != 'amount' %}
+                    <!-- Création d'une case à cocher éditable -->
+                    <td class="case_petite case_fonce" style="text-align: center;">
+                        <input type="checkbox" {% if value %} checked {% endif %}/>
+                    </td>
                 {% else %}
-                    <!-- Affichage normal pour les autres types de données -->
-                    {% if key == 'edit'%}
-                        <div id="valid_appear" style="display: none">
-                            {% include 'buttons/valid.html' %}
-                        </div>
-
-                        <div id="appear_edit"
-                             _="on click hide me then show #valid_appear"
-                        >
-                            <td>
-                                {% include 'buttons/editer.html' %}
-                            </td>
-                        </div>
-                        {% elif key == 'efface' %}
-                            <form action="{{ table.crud_url }}{{ value }}/" method="DELETE">
-                            {% csrf_token %}
-                                <td>
-                                    <input type="hidden" name="_method" value="{{ value }}" />
-                                    {% include 'buttons/effacer.html' %}
-                                </td>
-                            </form>
-                    {% endif %}
+                    <!-- Création d'un champ input pour les autres types de données -->
+                    <td>
+                        <input type="text" value="{{ value }}" class="case_petite case_clair"/>
+                    </td>
                 {% endif %}
-            {% endfor %}
+            {% else %}
+                <!-- Affichage normal pour les autres types de données -->
+                {% if key == 'edit' %}
+                    <div id="valid_appear" style="display: none">
+                        {% include 'buttons/valid.html' %}
+                    </div>
+
+                    <div id="appear_edit"
+                         _="on click hide me then show #valid_appear"
+                    >
+                        <td>
+                            {% include 'buttons/editer.html' %}
+                        </td>
+                    </div>
+                {% elif key == 'efface' %}
+
+                    <td>
+                        {% include 'buttons/effacer.html' with pk=value url_viewset=table.url_viewset %}
+                    </td>
+                {% endif %}
+            {% endif %}
         {% endfor %}
 
 

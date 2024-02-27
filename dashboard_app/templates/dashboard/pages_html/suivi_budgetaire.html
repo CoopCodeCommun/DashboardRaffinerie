@@ -7,12 +7,12 @@
     <!-- suivi budgétaire -->
     <!-- membre + recap -->
     <section class="row">
-        
+
     <!-- membre du collectif -->
     <div class="col-md-4 m-2 p-2 case rose">
         {% include 'dashboard/section_generique.html' with titre='Membres du Collectif' %}
             <div style="width: 100%; overflow-x: auto;">
-                {% include 'dashboard/tableau_generique.html' with table=data.membres_du_collectif %}
+        {% include 'dashboard/tableau_generique.html' with table=data.membres_du_collectif %}
         </div>
     </div>
 
@@ -27,7 +27,7 @@
                 {% include 'dashboard/tableau_generique.html' with table=data.recap_recettes %}
             </div>
         </section>
-       
+
     </div>
 
     </section>
@@ -62,7 +62,7 @@
                                             <div class="contentToShowHide">
                                                 <div class="row">
                                                     <div class="col-md-4 p-2 width: 100%; overflow-x: auto;">
-                                                        {% include 'dashboard/tableau_generique.html' with table=data0.prev_cost_caring %}
+                                                        {% include 'dashboard/tableau_generique.html' with table=data1.prev_cost_caring %}
                                                     </div>
                                                     <div class="col-md-8 p-2 width: 100%; overflow-x: auto;">
                                                         {% include 'dashboard/tableau_generique.html' with table=data1.bienveillance_reel %}
@@ -78,7 +78,7 @@
                                         <div class="contentToShowHide">
                                             <div class="row">
                                                 <div class="col-md-4 p-2">
-                                                    {% include 'dashboard/tableau_generique.html' with table=data0.prev_intern_service_cost %}
+                                                    {% include 'dashboard/tableau_generique.html' with table=data1.prev_intern_service_cost %}
                                                 </div>
                                                 <div class="col-md-8 p-2">
                                                     {% include 'dashboard/tableau_generique.html' with table=data1.presta_int_reel %}
@@ -93,7 +93,7 @@
                                         <div class="contentToShowHide">
                                             <div class="row">
                                                 <div class="col-md-4 p-2">
-                                                    {% include 'dashboard/tableau_generique.html' with table=data0.prev_ext_service_cost %}
+                                                    {% include 'dashboard/tableau_generique.html' with table=data1.prev_ext_service_cost %}
                                                 </div>
                                                 <div class="col-md-8 p-2">
                                                     {% include 'dashboard/tableau_generique.html' with table=data1.presta_ext_reel %}
@@ -108,7 +108,7 @@
                                         <div class="contentToShowHide">
                                             <div class="row">
                                                 <div class="col-md-4 p-2">
-                                                    {% include 'dashboard/tableau_generique.html' with table=data0.prev_intern_spend_cost %}
+                                                    {% include 'dashboard/tableau_generique.html' with table=data1.prev_intern_spend_cost %}
                                                 </div>
                                                 <div class="col-md-8 p-2">
                                                     {% include 'dashboard/tableau_generique.html' with table=data1.depenses_int_reel %}
@@ -159,7 +159,7 @@
                                         <div class="contentToShowHide">
                                             <div class="row">
                                                 <div class="col-md-6 p-2">
-                                                    {% include 'dashboard/tableau_generique.html' with table=data0.recette_presta_prev %}
+                                                    {% include 'dashboard/tableau_generique.html' with table=data1.recette_presta_prev %}
                                                 </div>
                                                 <div class="col-md-6 p-2">
                                                     {% include 'dashboard/tableau_generique.html' with table=data0.presta_recett_reel %}

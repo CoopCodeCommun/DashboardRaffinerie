@@ -2,7 +2,7 @@ from rest_framework import serializers
 
 from dashboard_user.models import CustomUser
 from .models import (AccountAccount, AccountAnalyticGroup, PrevisionCost, OrganizationalChart,
-            PrestationsVentsRecettesInt)
+                     PrestationsVentsRecettesInt, RealCost)
 
 
 class UserSerializer(serializers.ModelSerializer):
@@ -65,6 +65,16 @@ class PrestationsVentsRecettesIntValidator(serializers.ModelSerializer):
         model = PrestationsVentsRecettesInt
         fields = ['date', 'amount', 'pk']
 
+
+class RealcostSerializer(serializers.ModelSerializer):
+    username = serializers.SerializerMethodField()
+
+    class Meta:
+        model = RealCost
+        fields = ['pk', 'user_id', 'date', 'proposition', 'validated', 'invoiced','paid' ]
+
+    def get_user_name(self, obj):
+        return obj.user.username
 
 class AccountAnalyticGroupSerializer(serializers.ModelSerializer):
     class Meta:

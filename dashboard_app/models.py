@@ -207,7 +207,7 @@ class Pole(models.Model):
     name = models.CharField(max_length=30, verbose_name="Nom du pôle")
     # The second numbers of the analytic code
     code = models.SmallIntegerField(verbose_name='Code')
-    group = models.ForeignKey(Groupe, related_name="poles", on_delete=models.PROTECT, verbose_name="Groupe")
+    group = models.ForeignKey(Groupe, related_name="poles", null=True, on_delete=models.PROTECT, verbose_name="Groupe")
     user = models.ForeignKey(settings.AUTH_USER_MODEL,
                              on_delete=models.CASCADE,
                              related_name="pole",
@@ -462,7 +462,7 @@ class PrestationsVentsRecettesInt(models.Model):
     prev_ou_reel = models.CharField(max_length=1, choices=PREVISION_OU_REEL, default=PREVISIONNEL, verbose_name='Prévisionnel ou Réel')
     recette = models.ForeignKey(Recette, on_delete=models.PROTECT, related_name='prestations', verbose_name='type de recette')
     date = models.DateField(auto_now=True)
-    group = models.ForeignKey(Groupe, on_delete=models.PROTECT, related_name='prestations', verbose_name='groupe')
+    group = models.ForeignKey(Groupe, on_delete=models.PROTECT, null=True, related_name='prestations', verbose_name='groupe')
     amount = models.DecimalField(max_digits=8, decimal_places=2, default=0, verbose_name='amount')
 
     class Meta:

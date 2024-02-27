@@ -1,0 +1,36 @@
+
+{% load static %}
+
+{% block content %}
+
+    <head>
+        <script src='https://kit.fontawesome.com/a076d05399.js' crossorigin='anonymous'></script>
+    </head>
+
+    <div id="button_reappearing1" style="display: none">
+        {% include 'buttons/ajouter_ligne.html' %}
+    </div>
+
+    <div class="container text-left" id="new_line_budget">
+
+        <form id="form-caring-new-line"
+              hx-post='/suivi_budg/table_budgetaire/'
+              hx-target="#form-caring-new-line"
+              hx-trigger='click'
+        >
+
+            <input type="text" , name="titled" style="width: 65px">
+            <input type="text" name="amount" style="width: 40px">
+
+            <input type="hidden" name="type" value='{{ cost_type.pk }}'>
+            <input type="submit" value="Ajouter"/>
+
+            <i type="button" class="fa fa-close"
+               _="on click hide #new_line_budget then show #button_reappearing1"
+               style="font-size:20px;color:red">
+            </i>
+        </form>
+
+
+    </div>
+{% endblock content %}
