@@ -100,9 +100,15 @@ class PrevisionBudgetViewset(viewsets.ModelViewSet):
         prev_cost = PrevisionCost.objects.get(pk=pk)
         prev_cost_serializer = PrevisionCostSerializer(prev_cost, many=False)
 
+        base_template = "dashboard/partial.html" if request.htmx else "dashboard/base.html"
+
         if 'cancel' in request.GET:
+            # import ipdb; ipdb.set_trace()
+            line = prev_cost_serializer.data
             # Return the original table row HTML
-            return render(request, 'dashboard/tableau_generique_ligne_read.html', {'prev_cost': prev_cost})
+            context = {'base_template': base_template, 'line': line, 'list': ['titled', 'amount']}
+
+            return render(request, 'dashboard/tableau_generique_ligne_read.html', context=context)
 
         return render(request, 'htmx/cost_prev_row_edit.html', {'prev_cost_serializer': prev_cost_serializer})
 
