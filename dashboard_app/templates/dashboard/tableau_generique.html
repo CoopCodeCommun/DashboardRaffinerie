@@ -14,28 +14,27 @@
                 <table class="no-border table-spacing" id="{{ nom_table }}">
                     <thead>
                         <tr>
-                            {% for colonne in table.colonnes %}
+                            {% for colonne in table.columns %}
                                 <th class="header-text">{{ colonne.nom }}</th>
                             {% endfor %}
                         </tr>
                    </thead>
 
-                    <tbody id="line" hx-target="closest tr" hx-swap="outerHTML" {% if table.total %}class="d-none"{% endif %}>
+                    <tbody id="{{ table.name_table }}" hx-target="closest tr" hx-swap="outerHTML" {% if table.total %}class="d-none"{% endif %}>
 {#                        {% for line in table.lignes %}#}
 {#                            {% include 'dashboard/previsional_costs.html' with index=forloop.counter0 colonnes=table.colonnes %}#}
 {#                        {% endfor %}#}
-                        {% for all_lines in table.lignes %}
-                            {% include 'dashboard/tableau_generique_ligne_read.html' with index=forloop.counter0 colonnes=table.colonnes %}
+
+                        {% for line in table.lines %}
+                                {% include 'dashboard/tableau_generique_ligne_read.html' with list=table.list_include %}
                         {% endfor %}
-
-
                     </tbody>
                     <tfoot>
 
-                    <tr>
+                    <tr id="ajout_button">
                         <td colspan="4">
-                            <div id="ajout_button">
-                                {% include 'buttons/ajouter_ligne.html' %}
+                            <div>
+                                {% include 'buttons/ajouter_ligne.html' with tab_name=table.name_table %}
                             </div>
                         </td>
                     </tr>

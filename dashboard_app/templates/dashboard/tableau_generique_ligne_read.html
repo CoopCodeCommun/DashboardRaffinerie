@@ -2,47 +2,71 @@
 
 <tr class="case_petite ligne_table">
 
-
-{% for colonne in colonnes %}
-    {% if colonne.input == True %}
-        {% for key, value in all_lines.items %}
-            {% if key != 'pk' and key != 'edit' and key != 'efface' %}
-
-                {% if value is True or value is False and key != 'amount' %}
-                    <!-- Création d'une case à cocher éditable -->
-                    <td class="case_petite case_fonce" style="text-align: center;">
-                        <input type="checkbox" {% if value %} checked {% endif %}/>
-                    </td>
-                {% else %}
-                    <!-- Création d'un champ input pour les autres types de données -->
-                    <td>
-                        <input type="text" value="{{ value }}" class="case_petite case_clair"/>
-                    </td>
-                {% endif %}
-            {% else %}
-                <!-- Affichage normal pour les autres types de données -->
-                {% if key == 'edit' %}
-                    <div id="valid_appear" style="display: none">
-                        {% include 'buttons/valid.html' %}
-                    </div>
-
-                    <div id="appear_edit"
-                         _="on click hide me then show #valid_appear"
-                    >
-                        <td>
-                            {% include 'buttons/editer.html' %}
-                        </td>
-                    </div>
-                {% elif key == 'efface' %}
-
-                    <td>
-                        {% include 'buttons/effacer.html' with pk=value url_viewset=table.url_viewset %}
-                    </td>
-                {% endif %}
+    {% for key, value in line.items %}
+        {% if key in list %}
+            {% if value is True or value is False %}
+                <!-- Création d'une case à cocher éditable -->#}
+                <td class="case_petite case_fonce" style="text-align: center;">
+                    <input type="checkbox" {% if value %} checked {% endif %}/>
+                </td>
             {% endif %}
-        {% endfor %}
+            <td class="case_petite case_clair"> {{ value }} </td>
+        {% endif %}
 
+    {% endfor %}
+{% for k, v in line.items %}
+    {% if k == 'pk' %}
+        <td>
+            {% include 'buttons/editer.html' with id=v %}
+        </td>
+        <td id="efface{{ v }}">
+            {% include 'buttons/effacer.html' with pk=v url_viewset=table.url_viewset %}
+        </td>
 
     {% endif %}
 {% endfor %}
+
+
+{#                    <div id="appear_edit"#}
+{#                         _="on click hide me then show #valid_appear"#}
+{#                    >#}
+
+{#{% for colonne in colonnes %}#}
+{#     {% if colonne.input == True %}#}
+{#        {% for key, value in all_lines.items %}#}
+{##}
+{#            {% if key != 'pk' and colonne.nom != 'edit' and colonne.name != 'efface' %}#}
+{#            {% if key in list %}#}
+{##}
+{##}
+{#                {% if value is True or value is False and key != 'amount' %}#}
+{#                    <!-- Création d'une case à cocher éditable -->#}
+{#                    <td class="case_petite case_fonce" style="text-align: center;">#}
+{#                        <input type="checkbox" {% if value %} checked {% endif %}/>#}
+{#                    </td>#}
+{#                {% else %}#}
+{#                    <!-- Création d'un champ input pour les autres types de données -->#}
+{#                    <td>#}
+{#                        <input type="text" value="{{ value }}" class="case_petite case_clair"/>#}
+{#                    </td>#}
+{#                {% endif %}#}
+{#                <!-- Affichage normal pour les autres types de données -->#}
+{#                    <div id="appear_edit"#}
+{#                         _="on click hide me then show #valid_appear"#}
+{#                    >#}
+{#                        <td>#}
+{#                            {% include 'buttons/editer.html' %}#}
+{#                        </td>#}
+{#                    </div>#}
+{##}
+{#                    <td>#}
+{#                        {% include 'buttons/effacer.html' with pk=value url_viewset=table.url_viewset %}#}
+{#                    </td>#}
+{##}
+{#            {% endif %}#}
+{#        {% endfor %}#}
+
+
+{#    {% endif %}#}
+{#{% endfor %}#}
 </tr>

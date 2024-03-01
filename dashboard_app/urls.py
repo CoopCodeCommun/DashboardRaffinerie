@@ -4,7 +4,7 @@ from . import views
 from .views import (contacts, lazy_loading_profil_image, \
     reload_contact_from_odoo, odoo_account, reload_account_from_odoo, \
     AccountAnalyticGroupAPI, OdooContactsAPI, julienjs_suivi_budgetaire, OrganizationalChartViewSet,
-    edit_tableau_generique, SuiviBudgetaireViewSet)
+    edit_tableau_generique, SuiviBudgetaireViewSet, PrevisionBudgetViewset)
 from .views import index, send_subventions, suivi_budgetaire, repertoire, objectifs_indicateurs, api_exemple, tableau_de_bord_perso
 from rest_framework import routers
 
@@ -15,7 +15,8 @@ router.register(r'odoo_contacts', OdooContactsAPI, basename='odoo_contacts_api')
 router.register(r'table_budgetaire', SuiviBudgetaireViewSet, basename='table_budgetaire')
 # sending url url with new organigramme
 router.register(r'organizationalchart', OrganizationalChartViewSet, basename='organizationalchart')
-
+# Trying automus way:
+router.register(r'prevision', PrevisionBudgetViewset, basename='budget_prevision')
 urlpatterns = [
 
     # sending url with Viewset class
@@ -24,7 +25,7 @@ urlpatterns = [
     path('organigramme_new/', views.send_user_to_organigrame, name='organigramme_new'),
 
     # url for the new line costs
-    path('new_prev_bienveillance/', views.caring_data_form, name='new_prev_bienveillance'),
+    path('previsionCAR/', views.caring_data_form, name='previsionCAR'),
     path('new_line_prev_cost/', views.intern_serv_prev_form, name='new_line_prev_cost'),
     path('ext_prev_cost/', views.ext_serv_prev_form, name='ext_prev_cost'),
     path('intern_spend_prev/', views.intern_spend_prev_form, name='intern_spend_prev'),

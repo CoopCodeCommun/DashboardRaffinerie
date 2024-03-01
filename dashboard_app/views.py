@@ -12,14 +12,14 @@ from rest_framework.response import Response
 from rest_framework.views import APIView
 from dashboard_app.data import data
 from dashboard_user.models import CustomUser
-from .models import PrevisionCost, Recette
+from dashboard_app.models import PrevisionCost, Recette
 from dashboard_app.models import (Contact, AccountAccount, AccountJournal, AccountAnalyticGroup, AccountAnalyticAccount, \
     RealCostInternSpending, RealCost, RealCostExternService, PrestationsVentsRecettesInt, Grant, Cost,
     OrganizationalChart, Badge, DepensesBienveillance)
 from dashboard_app.odoo_api import OdooApi
 from dashboard_app.serializers import UserSerializer
-from .serializers import (AccountAnalyticGroupSerializer, OrganizationalChartValidator, RealcostSerializer,
-                          PrestationsVentsRecettesIntValidator, PrevisionCostValidator)
+from dashboard_app.serializers import (AccountAnalyticGroupSerializer, OrganizationalChartValidator, RealcostSerializer,
+                          PrestationsVentsRecettesIntValidator, PrevisionCostSerializer)
 from dashboard_app.models import AccountAccount
 
 # We'll create a fonction that will return a dictionary in the form adapted to
@@ -72,6 +72,83 @@ def edit_efface(list): # A ajoutter dans la classe SuviBudgetaireViewSet
     # for l in list:
     #     l['edit'] = l['pk']
     #     l['efface'] = l['pk']
+
+# creating a method that returns the columns for the prevision cost
+def columns_buget_prev():
+    return [{'nom':''}, {'nom':'amount'},{'nom':'edit'},{'nom':'efface'}]
+class PrevisionBudgetViewset(viewsets.ModelViewSet):
+    def list(self, request):
+        prevision_cost = {}
+        # taking datas from the serializer
+        queryset = PrevisionCost.objects.all()
+        prev_cost_serializer = PrevisionCostSerializer(queryset, many=True)
+        # creating the dictionary that will send thee datas through context
+        prevision_cost['lines'] = prev_cost_serializer.data
+        prevision_cost['name_table'] = 'prev_cost_tab'
+        prevision_cost['columns'] = columns_buget_prev()
+        prevision_cost['list_include'] = ['titled','amount']
+        prevision_cost['new_line_name'] = 'previsionCAR'
+
+        base_template = "dashboard/partial.html" if request.htmx else "dashboard/base.html"
+        context = { 'base_template': base_template,'prevision_cost': prevision_cost}
+
+        return render(request, 'dashboard/pages_html/suivi_budgetaire.html', context=context)
+
+
+
+    def retrieve(self, request, pk=None):
+        prev_cost = PrevisionCost.objects.get(pk=pk)
+        prev_cost_serializer = PrevisionCostSerializer(prev_cost, many=False)
+
+        if 'cancel' in request.GET:
+            # Return the original table row HTML
+            return render(request, 'dashboard/tableau_generique_ligne_read.html', {'prev_cost': prev_cost})
+
+        return render(request, 'htmx/cost_prev_row_edit.html', {'prev_cost_serializer': prev_cost_serializer})
+
+    def create(self, request):
+        serializer = PrevisionCostSerializer(data=request.data)
+        # searching
+        if serializer.is_valid():
+            serializer.save()
+
+            line = serializer.data
+
+            # import ipdb; ipdb.set_trace()
+
+            base_template = "dashboard/partial.html" if request.htmx else "dashboard/base.html"
+            context = { 'base_template': base_template, 'line': line, 'list':['titled','amount']}
+
+            return render(request, 'dashboard/tableau_generique_ligne_read.html', context=context)
+
+
+    def update(self, request, pk=None):
+        queryset = PrevisionCost.objects.all()
+        car = get_object_or_404(queryset, pk=pk)
+        serializer = PrevisionCostSerializer(car, data=request.data, partial=True)
+
+        if serializer.is_valid():
+            serializer.save()
+
+            line = serializer.data
+
+            base_template = "dashboard/partial.html" if request.htmx else "dashboard/base.html"
+            context = { 'base_template': base_template, 'line': line, 'list':['titled','amount']}
+
+            return render(request, 'dashboard/tableau_generique_ligne_read.html', context=context)
+
+
+
+    def destroy(self, request, pk=None):
+        all_objects = PrevisionCost.objects.all()
+        obj = get_object_or_404(all_objects, pk=pk)
+        obj.delete()
+
+        base_template = "dashboard/partial.html" if request.htmx else "dashboard/base.html"
+        context = { 'base_template': base_template}
+
+        return render(request, 'dashboard/tableau_generique_ligne_read.html', context=context)
+
 
 
 # suivi budgetaire with Vieset
@@ -290,7 +367,7 @@ class SuiviBudgetaireViewSet(viewsets.ViewSet):
     # creating budget cost
     def create(self, request):
         "Controleur pour POST"
-        serializer = PrevisionCostValidator(data=request.data)
+        serializer = PrevisionCostSerializer(data=request.data)
         # searching
         serializer_recettes = PrestationsVentsRecettesIntValidator(data=request.data)
 

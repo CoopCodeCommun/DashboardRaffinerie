@@ -62,7 +62,8 @@
                                             <div class="contentToShowHide">
                                                 <div class="row">
                                                     <div class="col-md-4 p-2 width: 100%; overflow-x: auto;">
-                                                        {% include 'dashboard/tableau_generique.html' with table=data1.prev_cost_caring %}
+{#                                                        {% include 'dashboard/tableau_generique.html' with table=data1.prev_cost_caring %}#}
+                                                        {% include 'dashboard/tableau_generique.html' with table=prevision_cost %}
                                                     </div>
                                                     <div class="col-md-8 p-2 width: 100%; overflow-x: auto;">
                                                         {% include 'dashboard/tableau_generique.html' with table=data1.bienveillance_reel %}

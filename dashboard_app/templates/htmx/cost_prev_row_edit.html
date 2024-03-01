@@ -1,0 +1,17 @@
+{% load my_filters %}
+
+<tr class="case_petite ligne_table">
+    <td><input style="width: 45px" type="text" name="titled" value="{{ prev_cost_serializer.titled.value }}"></td>
+    <td><input style="width: 40px" type="text" name="amount" value="{{ prev_cost_serializer.amount.value }}"></td>
+    <input type="hidden" name="pk" value="{{ prev_cost_serializer.pk.value }}"\>
+
+    <td>
+        {% include 'buttons/valid.html' with pk=prev_cost_serializer.pk.value %}
+    </td>
+
+    <td>
+        <i type="submit" class="fa fa-window-close-o" style="font-size:22px;color:red"
+        hx-get="/suivi_budg/prevision/{{ prev_cost_serializer.pk.value }}/?cancel=true"
+        ></i>
+    </td>
+</tr>

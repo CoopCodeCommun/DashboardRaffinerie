@@ -53,7 +53,7 @@ class OrganizationalChartValidator(serializers.ModelSerializer):
     '''
 
 # Validator for previzion budget
-class PrevisionCostValidator(serializers.ModelSerializer):
+class PrevisionCostSerializer(serializers.ModelSerializer):
     class Meta:
         model = PrevisionCost
         fields = ['titled', 'amount','type', 'pk']
@@ -96,25 +96,23 @@ class AccountAnalyticGroupSerializer(serializers.ModelSerializer):
 
 
 
-class PrevisionCostSerializer(serializers.Serializer):
-    # amount = serializers.DecimalField()
-    # titled = serializers.DecimalField()
-
-
-    def dictionary_with_prevision_cost(self):
-        prevision_costs = PrevisionCost.objects.filter(type__type='CAR')
-        titled = prevision_costs.titled
-        amount = prevision_costs.amount
-        bienveillance_prev = {
-            "slug": "recap_recettes",
-            "titre": "",
-            "colonnes": [
-                {'nom':'', 'input': True}, #les membres du collectif ayant le caractére bienveillant dans l'organigramme, peuvent ajouter des intulés
-                {'nom':'amount', 'input': True}, #les membres du collectif ayant le caractére bienveillant dans l'organigramme, peuvent ajouter des montants
-            ],
-            "lignes": [titled,amount],
-            "total":True
-        }
-        return
-
-
+# class PrevisionCostSerializer(serializers.Serializer):
+#     # amount = serializers.DecimalField()
+#     # titled = serializers.DecimalField()
+#
+#
+#     def dictionary_with_prevision_cost(self):
+#         prevision_costs = PrevisionCost.objects.filter(type__type='CAR')
+#         titled = prevision_costs.titled
+#         amount = prevision_costs.amount
+#         bienveillance_prev = {
+#             "slug": "recap_recettes",
+#             "titre": "",
+#             "colonnes": [
+#                 {'nom':'', 'input': True}, #les membres du collectif ayant le caractére bienveillant dans l'organigramme, peuvent ajouter des intulés
+#                 {'nom':'amount', 'input': True}, #les membres du collectif ayant le caractére bienveillant dans l'organigramme, peuvent ajouter des montants
+#             ],
+#             "lignes": [titled,amount],
+#             "total":True
+#         }
+#         return

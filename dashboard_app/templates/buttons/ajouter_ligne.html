@@ -1,13 +1,15 @@
 {% load static %}
 <script src='{% static "js/main.js" %}' type="application/javascript"></script>
 
+<div>
+    <button class="ajouter-ligne-btn" data-tableau-id="{{ nom_table }}" id="new_{{ tab_name }}"
+            style="background: none; border: medium; cursor: pointer; font-size: 0.9em; outline: none;"
+            hx-get="/{{ table.new_line_name }}/"
+            hx-target="closest div"
+            _="onclick hide #new_{{ tab_name }}"
 
-<button class="ajouter-ligne-btn" data-tableau-id="{{ nom_table }}" id="{{ table.slug }}"
-        style="background: none; border: medium; cursor: pointer; font-size: 0.9em; outline: none;"
-        hx-get="/{{ table.new_line_name }}/"
-        hx-swap="outerHTML"
-        _="onclick"
->
-    Ajouter ligne +
+    >
+        Ajouter ligne +
 
-</button>
+    </button>
+</div>
