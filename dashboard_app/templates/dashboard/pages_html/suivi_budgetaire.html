@@ -79,7 +79,7 @@
                                         <div class="contentToShowHide">
                                             <div class="row">
                                                 <div class="col-md-4 p-2">
-                                                    {% include 'dashboard/tableau_generique.html' with table=data1.prev_intern_service_cost %}
+                                                    {% include 'dashboard/tableau_generique.html' with table=prevision_intern_service %}
                                                 </div>
                                                 <div class="col-md-8 p-2">
                                                     {% include 'dashboard/tableau_generique.html' with table=data1.presta_int_reel %}
@@ -94,7 +94,7 @@
                                         <div class="contentToShowHide">
                                             <div class="row">
                                                 <div class="col-md-4 p-2">
-                                                    {% include 'dashboard/tableau_generique.html' with table=data1.prev_ext_service_cost %}
+                                                    {% include 'dashboard/tableau_generique.html' with table=data_prev.EX_S %}
                                                 </div>
                                                 <div class="col-md-8 p-2">
                                                     {% include 'dashboard/tableau_generique.html' with table=data1.presta_ext_reel %}
@@ -109,7 +109,7 @@
                                         <div class="contentToShowHide">
                                             <div class="row">
                                                 <div class="col-md-4 p-2">
-                                                    {% include 'dashboard/tableau_generique.html' with table=data1.prev_intern_spend_cost %}
+                                                    {% include 'dashboard/tableau_generique.html' with table=data_prev.SP_I %}
                                                 </div>
                                                 <div class="col-md-8 p-2">
                                                     {% include 'dashboard/tableau_generique.html' with table=data1.depenses_int_reel %}
