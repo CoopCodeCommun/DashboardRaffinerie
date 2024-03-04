@@ -71,9 +71,9 @@ class RealcostSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = RealCost
-        fields = ['pk', 'user_id', 'date', 'proposition', 'validated', 'invoiced','paid' ]
+        fields = ['username', 'date', 'proposition', 'validated', 'invoiced','paid', 'pk' ]
 
-    def get_user_name(self, obj):
+    def get_username(self, obj):
         return obj.user.username
 
 class AccountAnalyticGroupSerializer(serializers.ModelSerializer):

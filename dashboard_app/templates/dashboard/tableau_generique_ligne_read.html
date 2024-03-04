@@ -5,13 +5,14 @@
 
     {% for key, value in line.items %}
         {% if key in list %}
-            {% if value is True or value is False %}
+            {% if value == True or value == False %}
                 <!-- Création d'une case à cocher éditable -->#}
                 <td class="case_petite case_fonce" style="text-align: center;">
                     <input type="checkbox" {% if value %} checked {% endif %}/>
                 </td>
-            {% endif %}
+            {% else %}
             <td class="case_petite case_clair"> {{ value }} </td>
+                {% endif %}
         {% endif %}
 
     {% endfor %}

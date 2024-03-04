@@ -1,11 +1,10 @@
 from django.conf import settings
 from django.urls import path, include
 from . import views
-from .views import (contacts, lazy_loading_profil_image, \
-                    reload_contact_from_odoo, odoo_account, reload_account_from_odoo, \
-                    AccountAnalyticGroupAPI, OdooContactsAPI, julienjs_suivi_budgetaire,
-                    OrganizationalChartViewSet, edit_tableau_generique, SuiviBudgetaireViewSet,
-                    PrevisionBudgetCaringViewset, PrevisionCostInterService)
+from dashboard_app.views import (contacts, lazy_loading_profil_image, \
+        reload_contact_from_odoo, odoo_account, reload_account_from_odoo, AccountAnalyticGroupAPI,
+        OdooContactsAPI, julienjs_suivi_budgetaire, OrganizationalChartViewSet, edit_tableau_generique,
+        PrevisionBudgetCaringViewset, RealCostCaringInternServiceViewSet)
 from .views import index, send_subventions, suivi_budgetaire, repertoire, objectifs_indicateurs, api_exemple, tableau_de_bord_perso
 from rest_framework import routers
 
@@ -37,13 +36,11 @@ router = routers.DefaultRouter()
 router.register(r'account_analytic_group', AccountAnalyticGroupAPI, basename='account_analytic_group_api')
 router.register(r'odoo_contacts', OdooContactsAPI, basename='odoo_contacts_api')
 # creating router register for Budget Viewset
-router.register(r'table_budgetaire', SuiviBudgetaireViewSet, basename='table_budgetaire')
 # sending url url with new organigramme
 router.register(r'organizationalchart', OrganizationalChartViewSet, basename='organizationalchart')
 # Trying automus way:
-# router.register(r'prevision', PrevisionBudgetCaringViewset, basename='budget_prevision')
-router.register(r'prevision', PrevisionCostInterService, basename='budget_prevision')
-
+router.register(r'prevision', PrevisionBudgetCaringViewset, basename='budget_prevision')
+# router.register(r'prevision', RealCostCaringInternServiceViewSet, basename='budget_prevision')
 
 urlpatterns = [
 
@@ -55,8 +52,8 @@ urlpatterns = [
     # url for the new line costs
     path('previsionCAR/', views.caring_data_form, name='previsionCAR'),
     path('previsionIN_S/', views.intern_serv_prev_form, name='previsionIN_S'),
-    path('ext_prev_cost/', views.ext_serv_prev_form, name='ext_prev_cost'),
-    path('intern_spend_prev/', views.intern_spend_prev_form, name='intern_spend_prev'),
+    path('previsionEX_S/', views.ext_serv_prev_form, name='previsionEX_S'),
+    path('previsionSP_I/', views.intern_spend_prev_form, name='previsionSP_I'),
 
     # url for the new line Recettes
     path('new_recette_1_prev/', views.recette_form_prev_1, name='new_recette_1_prev'),
