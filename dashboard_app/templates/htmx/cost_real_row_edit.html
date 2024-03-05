@@ -1,0 +1,34 @@
+{% load my_filters %}
+
+<tr class="case_petite ligne_table" id="edit_{{ real_cost_serialized_data.pk }}">
+
+    <td class="case_petite case_clair"> {{ real_cost_serialized_data.username }} </td>
+    <td><input style="width: 45px" type="date" name="date" value="{{ real_cost_serialized_data.date }}"/></td>
+    <td><input style="width: 40px" type="text" name="proposition" value="{{ real_cost_serialized_data.proposition }}"/></td>
+    <td class="case_petite case_fonce" style="text-align: center;"><input type="checkbox" name="validated"
+               value="{{ real_cost_serialized_data.validated }}"
+               {% if real_cost_serialized_data.validated %} checked {% endif %}
+               style="width: 15px" /></td>
+    <td class="case_petite case_fonce" style="text-align: center;"><input type="checkbox" name="invoiced"
+               value="{{ real_cost_serialized_data.invoiced }}"
+               {% if real_cost_serialized_data.invoiced %} checked {% endif %}
+               style="width: 15px"/></td>
+
+    <td class="case_petite case_fonce" style="text-align: center;"><input type="checkbox" name="paid"
+               value="{{ real_cost_serialized_data.paid }}"
+               {% if real_cost_serialized_data.paid %} checked {% endif %}
+               style="width: 15px"/></td>
+
+    <input type="hidden" name="pk" value="{{ real_cost_serialized_data.pk }}"\>
+
+    <td>
+        {% include 'buttons/valid.html' with pk=real_cost_serialized_data.pk %}
+    </td>
+    <td>
+        <i type="submit" class="fa fa-window-close-o" style="font-size:22px;color:red"
+        hx-get="/suivi_budg/prevision/{{ real_cost_serialized_data.pk }}/?cancel=true"
+        hx-target="closest tr"
+        hx-swap="innerHTML"
+        ></i>
+    </td>
+</tr>

@@ -24,6 +24,9 @@ class CustomUser(AbstractUser):
                             )
     compta_admin = models.BooleanField(default=False)
 
+    class Meta:
+        verbose_name = "custom_user"
+
 
 # creating provisional contact model for stimualtion:
 class ContactProvisional(models.Model):

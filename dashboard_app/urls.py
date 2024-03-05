@@ -4,7 +4,7 @@ from . import views
 from dashboard_app.views import (contacts, lazy_loading_profil_image, \
         reload_contact_from_odoo, odoo_account, reload_account_from_odoo, AccountAnalyticGroupAPI,
         OdooContactsAPI, julienjs_suivi_budgetaire, OrganizationalChartViewSet, edit_tableau_generique,
-        PrevisionBudgetCaringViewset, RealCostCaringInternServiceViewSet)
+        PrevisionBudgetCaringViewset, RealCostCaringInternServiceViewSet, CombinedView)
 from .views import index, send_subventions, suivi_budgetaire, repertoire, objectifs_indicateurs, api_exemple, tableau_de_bord_perso
 from rest_framework import routers
 
@@ -39,8 +39,9 @@ router.register(r'odoo_contacts', OdooContactsAPI, basename='odoo_contacts_api')
 # sending url url with new organigramme
 router.register(r'organizationalchart', OrganizationalChartViewSet, basename='organizationalchart')
 # Trying automus way:
-router.register(r'prevision', PrevisionBudgetCaringViewset, basename='budget_prevision')
-# router.register(r'prevision', RealCostCaringInternServiceViewSet, basename='budget_prevision')
+# router.register(r'prevision', PrevisionBudgetCaringViewset, basename='budget_prevision')
+router.register(r'prevision', RealCostCaringInternServiceViewSet, basename='budget_prevision')
+# router.register(r'prevision2', CombinedView.as_view(), basename='prevision')
 
 urlpatterns = [
 
@@ -49,11 +50,15 @@ urlpatterns = [
     # Pages d'exemple HTMX:
     path('organigramme_new/', views.send_user_to_organigrame, name='organigramme_new'),
 
-    # url for the new line costs
+    # url for the new line costs for prevision and real
+    # prevision
     path('previsionCAR/', views.caring_data_form, name='previsionCAR'),
     path('previsionIN_S/', views.intern_serv_prev_form, name='previsionIN_S'),
     path('previsionEX_S/', views.ext_serv_prev_form, name='previsionEX_S'),
     path('previsionSP_I/', views.intern_spend_prev_form, name='previsionSP_I'),
+    # real
+    path('real_costCAR/', views.real_caring_form, name='real_costCAR'),
+    path('real_costIN_S/', views.real_in_s_form, name='real_costIN_S'),
 
     # url for the new line Recettes
     path('new_recette_1_prev/', views.recette_form_prev_1, name='new_recette_1_prev'),

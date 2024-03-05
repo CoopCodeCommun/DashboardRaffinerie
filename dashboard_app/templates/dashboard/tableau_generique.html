@@ -21,7 +21,6 @@
                    </thead>
 
                     <tbody id="{{ table.name_table }}" hx-target="closest tr" hx-swap="outerHTML" {% if table.total %}class="d-none"{% endif %}>
-
                         {% for line in table.lines %}
                                 {% include 'dashboard/tableau_generique_ligne_read.html' with list=table.list_include name_tab=table.name_table true_false=table.true_false%}
                         {% endfor %}

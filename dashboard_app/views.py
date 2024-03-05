@@ -69,29 +69,22 @@ def edit_tableau_generique(request, table, index):
 
 # in this method we will factorize the method of filtering the data for PrevisionCost,
 # serializing and thant creating the data dictionary taht will send to the template
-def refactor_cost_prev(model,data_type,type, serializer):
+def refactor_cost_prev(model,data_type,type,name_table,serializer):
     # passing datas through the serializer by selecting the type of Cost Prevision
     queryset = model.filter(type__type=type)
     prev_cost_serializer = serializer(queryset, many=True)
     # creating the dictionary that will send thee datas through context
     data_type['lines'] = prev_cost_serializer.data
-    data_type['name_table'] = 'prev_cost_tab'+type
+    data_type['total'] = True
+    data_type['name_table'] = name_table+type
     data_type['columns'] = [{'nom':''}, {'nom':'amount'},{'nom':'edit'},{'nom':'efface'}]
     data_type['list_include'] = ['titled', 'amount']
     data_type['new_line_name'] = 'prevision'+type
 
 
-# creating a refacor for creating method for all viewsets of Cost prevision
-def create_refacor(given_data):
-    serializer = PrevisionCostSerializer(data=given_data)
-    if serializer.is_valid():
-        serializer.save()
-
-        return serializer.data
-
 
 # creating a refacor for destroyn selected object from all viewsets of Cost prevision
-def destroy_refacrot(given_pk):
+def destroy_refactor(given_pk):
     all_objects = PrevisionCost.objects.all()
     obj = get_object_or_404(all_objects, pk=given_pk)
     obj.delete()
@@ -103,10 +96,10 @@ class PrevisionBudgetCaringViewset(viewsets.ModelViewSet): #PrevisionBudgetCarin
         prevision_cost, prevision_intern_service = {}, {}
         prevision_extern_service, intern_spends = {},{}
         model = PrevisionCost.objects.all()
-        refactor_cost_prev(model,prevision_cost, 'CAR', PrevisionCostSerializer)
-        refactor_cost_prev(model, prevision_intern_service, 'IN_S', PrevisionCostSerializer)
-        refactor_cost_prev(model,prevision_extern_service, 'EX_S', PrevisionCostSerializer)
-        refactor_cost_prev(model, intern_spends, 'SP_I', PrevisionCostSerializer)
+        refactor_cost_prev(model,prevision_cost, 'CAR','prev_cost_tab', PrevisionCostSerializer)
+        refactor_cost_prev(model, prevision_intern_service, 'IN_S', 'prev_cost_tab',PrevisionCostSerializer)
+        refactor_cost_prev(model,prevision_extern_service, 'EX_S', 'prev_cost_tab', PrevisionCostSerializer)
+        refactor_cost_prev(model, intern_spends, 'SP_I', 'prev_cost_tab',PrevisionCostSerializer)
 
         base_template = "dashboard/partial.html" if request.htmx else\
             "dashboard/base.html"
@@ -124,13 +117,14 @@ class PrevisionBudgetCaringViewset(viewsets.ModelViewSet): #PrevisionBudgetCarin
     def retrieve(self, request, pk=None):
         prev_cost = PrevisionCost.objects.get(pk=pk)
         prev_cost_serializer = PrevisionCostSerializer(prev_cost, many=False)
+        prev_cost_ser_data = prev_cost_serializer.data
 
         base_template = "dashboard/partial.html" if request.htmx else\
             "dashboard/base.html"
 
         if 'cancel' in request.GET:
 
-            line = prev_cost_serializer.data
+            line = prev_cost_ser_data
             # Return the original table row HTML
             context = {
                 'base_template': base_template, 'line': line,
@@ -142,19 +136,27 @@ class PrevisionBudgetCaringViewset(viewsets.ModelViewSet): #PrevisionBudgetCarin
                           context=context)
 
         return render(request, 'htmx/cost_prev_row_edit.html',
-                      {'prev_cost_serializer': prev_cost_serializer})
+                      {'prev_cost_ser_data': prev_cost_ser_data})
 
     def create(self, request):
-        line = create_refacor(request.data)
-
+        serializer = PrevisionCostSerializer(data=request.data)
         base_template = "dashboard/partial.html" if request.htmx else\
             "dashboard/base.html"
-        context = {'base_template': base_template, 'line': line,
-                   'list': ['titled', 'amount']}
 
-        return render(request,
+        if serializer.is_valid():
+            serializer.save()
+            line = serializer.data
+
+            context = {'base_template': base_template, 'line': line,
+                       'list': ['titled', 'amount']}
+
+            return render(request,
                 'dashboard/tableau_generique_ligne_read.html',
                       context=context)
+        context = {'base_template': base_template,'message': f"Saisie incorrecte"}
+
+        return render(request,
+                'dashboard/tableau_generique_ligne_read.html',context=context)
 
 
     def update(self, request, pk=None):
@@ -179,7 +181,7 @@ class PrevisionBudgetCaringViewset(viewsets.ModelViewSet): #PrevisionBudgetCarin
 
 
     def destroy(self, request, pk=None):
-        destroy_refacrot(pk)
+        destroy_refactor(pk)
 
         base_template = "dashboard/partial.html" if request.htmx else\
             "dashboard/base.html"
@@ -196,11 +198,13 @@ class RealCostCaringInternServiceViewSet(viewsets.ModelViewSet):
         caring_real, int_service_real = {}, {}
         model = RealCost.objects.all()
 
-        refactor_cost_prev(model,caring_real, 'CAR', RealcostSerializer)
-        refactor_cost_prev(model,int_service_real, 'IN_S', RealcostSerializer)
+        refactor_cost_prev(model,caring_real, 'CAR', 'real_cost_tab',RealcostSerializer)
+        refactor_cost_prev(model,int_service_real, 'IN_S', 'real_cost_tab', RealcostSerializer)
 
         caring_real['columns'] = [{'nom':''},{'nom':'date'},{'nom':'proposition'},{'nom':'validé'}, {'nom':'facturé'}, {'nom':'payé'}]
         caring_real['list_include'] = ['username','date','proposition','validated', 'invoiced','paid']
+        caring_real['new_line_name'] = 'real_cost'+'CAR'
+        int_service_real['new_line_name'] = 'real_cost'+'IN_S'
 
         int_service_real['columns'] = [{'nom':''},{'nom':'date'},{'nom':'proposition'},{'nom':'validé'}, {'nom':'facturé'}, {'nom':'payé'}]
         int_service_real['list_include'] = ['username','date','proposition','validated', 'invoiced','paid']
@@ -217,46 +221,111 @@ class RealCostCaringInternServiceViewSet(viewsets.ModelViewSet):
 
 
     def retrieve(self, request, pk=None):
-        pass
+        real_cost_car = RealCost.objects.get(pk=pk)
+        real_cost_car_serializer = RealcostSerializer(real_cost_car, many=False)
+        real_cost_serialized_data = real_cost_car_serializer.data
+
+
+
+        list = ['username','date','proposition','validated', 'invoiced','paid']
+
+        base_template = "dashboard/partial.html" if request.htmx else\
+            "dashboard/base.html"
+
+        if 'cancel' in request.GET:
+
+            line = real_cost_serialized_data
+            # Return the original table row HTML
+            context = {
+                'base_template': base_template, 'line': line,
+                'list': list
+            }
+
+            return render(request,
+                    'dashboard/tableau_generique_ligne_read.html',
+                          context=context)
+
+        return render(request, 'htmx/cost_real_row_edit.html',
+                      {'real_cost_serialized_data': real_cost_serialized_data})
 
 
     def create(self, request):
-        pass
+        given_data = request.POST.copy()
+        real_cost_serializer = RealcostSerializer(data=given_data)
+
+        base_template = "dashboard/partial.html" if request.htmx else\
+            "dashboard/base.html"
+
+        # import ipdb; ipdb.set_trace()
+        if real_cost_serializer.is_valid():
+            real_cost_serializer.save()
+            line = real_cost_serializer.data
+            list = ['username','date','proposition','validated', 'invoiced','paid']
+
+            context = {'base_template': base_template, 'line': line,
+                       'list': list}
+
+            return render(request,
+                'dashboard/tableau_generique_ligne_read.html',
+                      context=context)
+        context = {'base_template': base_template,'message': f"Saisie incorrecte"}
+
+        return render(request,
+                'dashboard/tableau_generique_ligne_read.html',context=context)
+
 
 
     def update(self, request, pk=None):
-        pass
+        queryset = RealCost.objects.all()
+        cost_reel = get_object_or_404(queryset, pk=pk)
+        given_data = request.POST.copy()
+        serializer = RealcostSerializer(cost_reel, data=given_data, partial=True)
+        # import ipdb; ipdb.set_trace()
+        list = ['username','date','proposition','validated', 'invoiced','paid']
+
+
+        if serializer.is_valid():
+            serializer.save()
+
+            line = serializer.data
+
+            base_template = "dashboard/partial.html" if request.htmx else\
+                "dashboard/base.html"
+            context = { 'base_template': base_template, 'line': line,
+                        'list':list}
+
+        return render(request,
+            'dashboard/tableau_generique_ligne_read.html',
+                      context=context)
+
 
 
     def destroy(self, request, pk=None):
-        pass
+        all_objects = RealCost.objects.all()
+        obj = get_object_or_404(all_objects, pk=pk)
+        obj.delete()
+
+        base_template = "dashboard/partial.html" if request.htmx else\
+            "dashboard/base.html"
+        context = { 'base_template': base_template}
+
+        return render(request,
+            'dashboard/tableau_generique_ligne_read.html',
+                      context=context)
+
+
 # Refactory the Viesets method
-# class BookCarRouter(APIView):
-#     def get(self, request, *args, **kwargs):
-#         viewset_type = request.META.get('HTTP_X_VIEWSET_TYPE', None)
-#         if viewset_type == 'book':
-#             viewset = BookViewset.as_view({'get': 'list'})
-#         elif viewset_type == 'car':
-#             viewset = CarViewset.as_view({'get': 'list'})
-#         else:
-#             return Response({"error": "Invalid viewset type header"}, status=status.HTTP_400_BAD_REQUEST)
-#
-#         return viewset(request, *args, **kwargs)
-
-'''
-# gathering viewset so we can have the same url
-class PrevisionBudgetRouter(APIView):
-    def get(self, request, *args, **kwargs):
-        type_param = request.query_params.get('type', None)
-        if type_param == 'CAR':
-            viewset = PrevisionBudgetCaringViewset.as_view({'get': 'list'})
-        elif type_param == 'IN_S':
-            viewset = PrevisionCostInterService.as_view({'get': 'list'})
-        else:
-            return Response({"error": "Invalid type parameter"}, status=status.HTTP_400_BAD_REQUEST)
-
-        return viewset(request, *args, **kwargs)
-'''
+class CombinedView(APIView):
+    pass
+    # def get(self, request,*args,**kwargs):
+    #     # Instantiate the viewsets
+    #     caring_viewset = PrevisionBudgetCaringViewset()
+    #     int_serv_viewset = RealCostCaringInternServiceViewSet()
+    #
+    #     context = {'caring_viewset': caring_viewset,
+    #                 'int_serv_viewset':int_serv_viewset}
+    #     # Render the template with the combined data
+    #     return render(request, 'general.html',context=context)
 
 
 
@@ -419,7 +488,6 @@ will be called the same with different values depended on the cases
 '''
 # ------------ Start
 # send data to Caring (bienveillance) form
-
 def caring_data_form(request):
     cost_type = Cost.objects.get(type='CAR')
     tab_name = "prev_cost_tabCAR"
@@ -452,8 +520,33 @@ def intern_spend_prev_form(request):
     return render(request, 'new_lines/new_budget_cost_prev.html',
                   {'cost_type': cost_type,'tab_name': tab_name})
 
-#---------------- FIN FORM NEW LINE PREV COST --------
 
+# send data to Caring (bienveillance) real form
+def real_caring_form(request):
+    cost_type = Cost.objects.get(type='CAR')
+    users = CustomUser.objects.all()
+    us = users.last()
+    tab_name = "real_cost_tabCAR"
+
+    return render(request, 'new_lines/new_budget_cost_real.html',
+                  {'cost_type': cost_type,
+                        'tab_name': tab_name,
+                        'users': users, 'us':us})
+
+
+# send data to intern service real form
+def real_in_s_form(request):
+    cost_type = Cost.objects.get(type='IN_S')
+    tab_name = "real_cost_tabIN_S"
+    users = CustomUser.objects.all()
+
+    return render(request, 'new_lines/new_budget_cost_real.html',
+                  {'cost_type': cost_type,
+                   'tab_name': tab_name,
+                   'users': users})
+
+
+#---------------- FIN FORM NEW LINE PREV COST --------
 
 '''
 Sending data to the forms of nwe line in RECETTES tables
@@ -494,10 +587,7 @@ def suivi_budgetaire(request):
     }
     return render(request, 'dashboard/pages_html/suivi_budgetaire.html', context=context)
 
-
 #################################
-
-
 
 
 def repertoire(request):
@@ -666,4 +756,3 @@ class lazy_loading_profil_image(APIView):
             'contact': Contact.objects.get(pk=uuid)
         }
         return render(request, 'htmx/lazy_loading.html', context=context)
-    

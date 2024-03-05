@@ -22,35 +22,7 @@ class OrganizationalChartValidator(serializers.ModelSerializer):
 
         fields = ['user', 'intern_services', 'settlement_agent', 'budget_referee', 'task_planning_referee']
 
-    '''
-    
-    users = serializers.PrimaryKeyRelatedField(queryset=CustomUser.objects.all())
-    intern_services = serializers.CharField(required=False, allow_null=True)
-    settlement_agent = serializers.CharField(required=False, allow_null=True)
-    budget_referee = serializers.CharField(required=False, allow_null=True)
-    task_planning_referee = serializers.CharField(required=False, allow_null=True)
 
-    # Validate the intern_service checkbox send True if is checked or false in not
-    def validate_intern_services(self, value):
-        if value == 'check':
-            return value
-
-    # Validate the settlement_agent checkbox send True if is checked or false in not
-    def validate_settlement_agent(self, value):
-        if value == 'check':
-            return value
-
-    # Validate the budget_referee checkbox send True if is checked or false in not
-    def validate_budget_referee(self, value):
-        if value == 'check':
-            return value
-
-    # Validate the task_planning_referee checkbox send True if is checked or false in not
-    def validate_task_planning_referee(self, value):
-        if value == 'check':
-            return value
-
-    '''
 
 # Validator for previzion budget
 class PrevisionCostSerializer(serializers.ModelSerializer):
@@ -71,10 +43,19 @@ class RealcostSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = RealCost
-        fields = ['username', 'date', 'proposition', 'validated', 'invoiced','paid', 'pk' ]
+        fields = ['user','username', 'date', 'proposition', 'validated', 'invoiced','paid', 'type', 'pk' ]
 
     def get_username(self, obj):
         return obj.user.username
+
+    # Geting the checkbox values in false when it's not checked
+    def to_internal_value(self, data):
+        # Provide default values for unchecked checkboxes
+        data.setdefault('validated', False)
+        data.setdefault('invoiced', False)
+        data.setdefault('paid', False)
+        return super().to_internal_value(data)
+
 
 class AccountAnalyticGroupSerializer(serializers.ModelSerializer):
     class Meta:
