@@ -19,7 +19,7 @@
                {% if real_cost_serialized_data.paid %} checked {% endif %}
                style="width: 15px"/></td>
 
-    <input type="hidden" name="pk" value="{{ real_cost_serialized_data.pk }}"\>
+    <input type="hidden" name="pk" value="{{ real_cost_serialized_data.pk }}"/>
 
     <td>
         {% include 'buttons/valid.html' with pk=real_cost_serialized_data.pk %}

@@ -90,10 +90,12 @@ class PrestationsVentsRecettesIntSerializer(serializers.ModelSerializer):
     groupe_name = serializers.SerializerMethodField()
     class Meta:
         model = PrestationsVentsRecettesInt
-        fields = ['groupe_name', 'amount', 'recette', 'pk']
+        fields = ['groupe_name', 'group','amount', 'recette', 'prev_ou_reel','pk']
 
     def get_groupe_name(self, obj):
         return obj.group.name
+
+
 class AccountAnalyticGroupSerializer(serializers.ModelSerializer):
     class Meta:
         model = AccountAnalyticGroup

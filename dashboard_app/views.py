@@ -12,7 +12,7 @@ from rest_framework.response import Response
 from rest_framework.views import APIView
 from dashboard_app.data import data
 from dashboard_user.models import CustomUser, ContactProvisional
-from dashboard_app.models import PrevisionCost, Recette
+from dashboard_app.models import PrevisionCost, Recette, Groupe
 from dashboard_app.models import (Contact, AccountAccount, AccountJournal, AccountAnalyticGroup, AccountAnalyticAccount, \
     RealCostInternSpending, RealCost, RealCostExternService, PrestationsVentsRecettesInt, Grant, Cost,
     OrganizationalChart, Badge, DepensesBienveillance, Pole)
@@ -579,52 +579,115 @@ def refactor_recette(model,p_or_r,data_type,type,name_table,serializer, total):
     # creating the dictionary that will send thee datas through context
     data_type['lines'] = cost_serializer.data
     data_type['total'] = total
-    data_type['name_table'] = name_table+type
+    data_type['name_table'] = name_table+p_or_r+type
     data_type['columns'] = [{'nom':''}, {'nom':'amount'},{'nom':'editer'},{'nom':'effacer'}]
     data_type['list_include'] = ['groupe_name', 'amount']
-    data_type['new_line_name'] = 'recette'+type
+    data_type['new_line_name'] = 'recette'+p_or_r+type
 
 
 # creating viewset class for recettes
 class PrestationsVentsRecettesIntViewset(viewsets.ModelViewSet):
     def list(self, request):
-        recettest_presta_prev, recettest_presta_reel = {}, {}
-        recette_sells_prev, recette_sells_reel = {}, {}
-        recette_intern_prev, recette_intern_reel = {}, {}
+        recettest_presta_prev, recettest_presta_real = {}, {}
+        recette_sells_prev, recette_sells_real = {}, {}
+        recette_intern_prev, recette_intern_real = {}, {}
 
         model = PrestationsVentsRecettesInt.objects.all()
-        refactor_recette(model,'P',recettest_presta_prev,'P','recette_prev',PrestationsVentsRecettesIntSerializer,True)
-        refactor_recette(model,'R',recettest_presta_reel,'P','recette_reel',PrestationsVentsRecettesIntSerializer,True)
-        refactor_recette(model,'P',recette_sells_prev,'V','recette_prev',PrestationsVentsRecettesIntSerializer,True)
-        refactor_recette(model,'R',recette_sells_reel,'V','recette_reel',PrestationsVentsRecettesIntSerializer,True)
-        refactor_recette(model,'P',recette_intern_prev,'R_IN','recette_prev',PrestationsVentsRecettesIntSerializer,True)
-        refactor_recette(model,'R',recette_intern_reel,'R_IN','recette_reel',PrestationsVentsRecettesIntSerializer,True)
+        refactor_recette(model,'P',recettest_presta_prev,'P','recette_prev_tab',PrestationsVentsRecettesIntSerializer,True)
+        refactor_recette(model,'R',recettest_presta_real,'P','recette_real_tab',PrestationsVentsRecettesIntSerializer,True)
+        refactor_recette(model,'P',recette_sells_prev,'V','recette_prev_tab',PrestationsVentsRecettesIntSerializer,True)
+        refactor_recette(model,'R',recette_sells_real,'V','recette_real_tab',PrestationsVentsRecettesIntSerializer,True)
+        refactor_recette(model,'P',recette_intern_prev,'R_IN','recette_prev_tab',PrestationsVentsRecettesIntSerializer,True)
+        refactor_recette(model,'R',recette_intern_real,'R_IN','recette_real_tab',PrestationsVentsRecettesIntSerializer,True)
 
         base_template = "dashboard/partial.html" if request.htmx else \
             "dashboard/base.html"
 
         context = {'base_template': base_template,
                    'recettest_presta_prev':recettest_presta_prev,
-                   'recettest_presta_reel':recettest_presta_reel,
-                   'recettest_presta_prev':recettest_presta_prev,
-                   'recettest_presta_reel':recettest_presta_reel,
+                   'recettest_presta_real':recettest_presta_real,
+                   'recette_sells_prev':recette_sells_prev,
+                   'recette_sells_real':recette_sells_real,
                    'recette_intern_prev':recette_intern_prev,
-                   'recette_intern_reel':recette_intern_reel
+                   'recette_intern_real':recette_intern_real
                    }
 
         return render(request, 'dashboard/pages_html/suivi_budgetaire.html',
                    context=context)
 
     def retrieve(self, request, pk=None):
-        pass
+        recette_serialized_data = refactor_retrive(PrestationsVentsRecettesInt,pk, PrestationsVentsRecettesIntSerializer)
+
+        base_template = "dashboard/partial.html" if request.htmx else\
+            "dashboard/base.html"
+
+        list = ['groupe_name', 'amount']
+
+        # import ipdb; ipdb.set_trace()
+        if 'cancel' in request.GET:
+
+            line = recette_serialized_data
+            # Return the original table row HTML
+            context = {
+                'base_template': base_template,
+                'line': line,
+                'list': list
+            }
+            return render(request,
+                'dashboard/tableau_generique_ligne_read.html',
+                context=context)
+
+        return render(request, 'edit_line/recette_row_edit.html',
+                      {'recette_serialized_data': recette_serialized_data})
+
 
 
     def create(self, request):
-        pass
+        given_data = request.POST.copy()
+        recettes_serializer = PrestationsVentsRecettesIntSerializer(data=given_data)
+
+        base_template = "dashboard/partial.html" if request.htmx else\
+            "dashboard/base.html"
+
+        if recettes_serializer.is_valid():
+            recettes_serializer.save()
+            line = recettes_serializer.data
+            list = ['groupe_name', 'amount']
+
+            context = {'base_template': base_template, 'line': line,
+                       'list': list}
+
+            return render(request,
+                'dashboard/tableau_generique_ligne_read.html',
+                      context=context)
+        context = {'base_template': base_template,'message': f"Saisie incorrecte"}
+
+        return render(request,
+        'dashboard/tableau_generique_ligne_read.html',context=context)
+
 
 
     def update(self, request, pk=None):
-        pass
+        queryset = PrestationsVentsRecettesInt.objects.all()
+        recette = get_object_or_404(queryset, pk=pk)
+        given_data = request.POST.copy()
+        serializer = PrestationsVentsRecettesIntSerializer(recette, data=given_data, partial=True)
+
+        list = ['groupe_name', 'amount']
+
+        if serializer.is_valid():
+            serializer.save()
+
+            line = serializer.data
+
+            base_template = "dashboard/partial.html" if request.htmx else\
+                "dashboard/base.html"
+            context = { 'base_template': base_template, 'line': line,
+                        'list':list}
+
+        return render(request,
+            'dashboard/tableau_generique_ligne_read.html',
+                      context=context)
 
 
     def destroy(self, request, pk):
@@ -810,7 +873,7 @@ Sending data to the forms of nwe line in Prevision Cost tables
 We'll send all to one template but with different url and the variable
 will be called the same with different values depended on the cases
 '''
-# ------------ Start
+# ------------ Start -------------------- #
 # send data to Caring (bienveillance) form
 def caring_data_form(request):
     cost_type = Cost.objects.get(type='CAR')
@@ -844,6 +907,16 @@ def intern_spend_prev_form(request):
     return render(request, 'new_lines/new_budget_cost_prev.html',
                   {'cost_type': cost_type,'tab_name': tab_name})
 
+
+#---------------- FIN FORM NEW LINE PREV COST --------
+
+
+'''
+Sending data to the forms of nwe line in Real Cost tables
+We'll send all to one template but with different url and the variable
+will be called the same with different values depended on the cases
+'''
+# ------------ Start -------------------- #
 
 # send data to Caring (bienveillance) real form
 def real_caring_form(request):
@@ -891,25 +964,92 @@ def intern_spending_form(request):
     {'cost_type': cost_type, 'tab_name': tab_name, 'poles': poles})
 
 
-#---------------- FIN FORM NEW LINE PREV COST --------
+#---------------- FIN FORM NEW LINE PREV REAL COST --------
 
 '''
-Sending data to the forms of nwe line in RECETTES tables
+Sending data to the forms of nwe line in Recettes real and prev tables
 We'll send all to one template but with different url and the variable
 will be called the same with different values depended on the cases
 '''
-# ------------ Start
 
+# ------------ Start ----------------- #
+
+# ___ Previstion
 # form for Prestation prevision
-def recette_form_prev_1(request):
-    recette = Recette.objects.get(type='P') # SUB   v   RIN
+def recette_prev_presta_form(request):
+    recette = Recette.objects.get(type='P') # SUB   v   R_IN
+    groupes = Groupe.objects.all()
     prev_ou_reel = 'P'
-    return render(request, 'new_lines/new_line_recettes.html', {'recette': recette, 'prev_ou_reel': prev_ou_reel })
+    tab_name = "recette_tabPP"
+
+    return render(request, 'new_lines/new_recette.html',
+    {'recette': recette, 'prev_ou_reel': prev_ou_reel,
+        'tab_name': tab_name, 'groupes': groupes })
 
 
+# form for Vents prevision
+def recette_prev_ventes_form(request):
+    recette = Recette.objects.get(type='V')
+    groupes = Groupe.objects.all()
+    prev_ou_reel = 'P'
+    tab_name = "recette_tabPV"
 
+    return render(request, 'new_lines/new_recette.html',
+    {'recette': recette, 'prev_ou_reel': prev_ou_reel,
+             'tab_name': tab_name, 'groupes': groupes })
+
+
+# form for Vents prevision
+def recette_internes_form(request):
+    recette = Recette.objects.get(type='R_IN')
+    groupes = Groupe.objects.all()
+    prev_ou_reel = 'P'
+    tab_name = "recette_tabPR_IN"
+
+    return render(request, 'new_lines/new_recette.html',
+    {'recette': recette, 'prev_ou_reel': prev_ou_reel,
+        'tab_name': tab_name, 'groupes': groupes })
+
+
+# ___ Real
+# form for Prestation prevision
+def recette_real_presta_form(request):
+    recette = Recette.objects.get(type='P')
+    groupes = Groupe.objects.all()
+    prev_ou_reel = 'R'
+    tab_name = "recette_tabRP"
+
+    return render(request, 'new_lines/new_recette.html',
+    {'recette': recette, 'prev_ou_reel': prev_ou_reel,
+        'tab_name': tab_name, 'groupes': groupes })
+
+
+# form for Vents prevision
+def recette_real_ventes_form(request):
+    recette = Recette.objects.get(type='V')
+    groupes = Groupe.objects.all()
+    prev_ou_reel = 'R'
+    tab_name = "recette_tabRV"
+
+    return render(request, 'new_lines/new_recette.html',
+    {'recette': recette, 'prev_ou_reel': prev_ou_reel,
+             'tab_name': tab_name, 'groupes': groupes })
+
+
+# form for Vents prevision
+def recette_internes_form_real(request):
+    recette = Recette.objects.get(type='R_IN')
+    groupes = Groupe.objects.all()
+    prev_ou_reel = 'R'
+    tab_name = "recette_tabRR_IN"
+
+    return render(request, 'new_lines/new_recette.html',
+    {'recette': recette, 'prev_ou_reel': prev_ou_reel,
+        'tab_name': tab_name, 'groupes': groupes })
 
 #---------------- FIN FORM NEW LINE RECETTES --------
+
+
 
 
 

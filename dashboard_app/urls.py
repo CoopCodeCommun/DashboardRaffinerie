@@ -68,8 +68,16 @@ urlpatterns = [
     path('real_costEX_S/', views.real_purchase_form, name='real_costEX_S'),
     path('real_costSP_I/', views.intern_spending_form, name='real_costSP_I'),
 
-    # url for the new line Recettes
-    path('new_recette_1_prev/', views.recette_form_prev_1, name='new_recette_1_prev'),
+    # url for the new line Recettes Prevision et Reel
+    # Prevision
+    path('recettePP/', views.recette_prev_presta_form, name='recette_tabPP'),
+    path('recettePV/', views.recette_prev_ventes_form, name='recette_tabPV'),
+    path('recettePR_IN/', views.recette_internes_form, name='recette_tabPR_IN'),
+    # Real
+    path('recetteRP/', views.recette_real_presta_form, name='recette_tabRP'),
+    path('recetteRV/', views.recette_real_ventes_form, name='recette_tabRV'),
+    path('recetteRR_IN/', views.recette_internes_form_real, name='recette_tabRR_IN'),
+
 
     path('contacts/', contacts, name="odoo_contacts"),
     path('odoo_account/', odoo_account, name="odoo_account"),
