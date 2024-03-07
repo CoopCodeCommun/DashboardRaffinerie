@@ -4,7 +4,8 @@ from . import views
 from dashboard_app.views import (contacts, lazy_loading_profil_image, \
         reload_contact_from_odoo, odoo_account, reload_account_from_odoo, AccountAnalyticGroupAPI,
         OdooContactsAPI, julienjs_suivi_budgetaire, OrganizationalChartViewSet, edit_tableau_generique,
-        PrevisionBudgetCaringViewset, RealCostCaringInternServiceViewSet, CombinedView)
+        PrevisionBudgetCaringViewset, RealCostCaringInternServiceViewSet, CombinedView,
+        RealCostPurchaseViewSet, RealInternSpendViewSet, PrestationsVentsRecettesIntViewset)
 from .views import index, send_subventions, suivi_budgetaire, repertoire, objectifs_indicateurs, api_exemple, tableau_de_bord_perso
 from rest_framework import routers
 
@@ -40,7 +41,12 @@ router.register(r'odoo_contacts', OdooContactsAPI, basename='odoo_contacts_api')
 router.register(r'organizationalchart', OrganizationalChartViewSet, basename='organizationalchart')
 # Trying automus way:
 # router.register(r'prevision', PrevisionBudgetCaringViewset, basename='budget_prevision')
-router.register(r'prevision', RealCostCaringInternServiceViewSet, basename='budget_prevision')
+# router.register(r'prevision', RealCostCaringInternServiceViewSet, basename='budget_prevision')
+# router.register(r'prevision', RealCostPurchaseViewSet, basename='budget_prevision')
+# router.register(r'prevision', RealInternSpendViewSet, basename='budget_prevision')
+router.register(r'prevision', PrestationsVentsRecettesIntViewset, basename='budget_prevision')
+
+# Combining the viewset in purpose to have same url
 # router.register(r'prevision2', CombinedView.as_view(), basename='prevision')
 
 urlpatterns = [
@@ -59,6 +65,8 @@ urlpatterns = [
     # real
     path('real_costCAR/', views.real_caring_form, name='real_costCAR'),
     path('real_costIN_S/', views.real_in_s_form, name='real_costIN_S'),
+    path('real_costEX_S/', views.real_purchase_form, name='real_costEX_S'),
+    path('real_costSP_I/', views.intern_spending_form, name='real_costSP_I'),
 
     # url for the new line Recettes
     path('new_recette_1_prev/', views.recette_form_prev_1, name='new_recette_1_prev'),

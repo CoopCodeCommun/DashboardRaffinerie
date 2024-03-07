@@ -1,0 +1,28 @@
+{% load my_filters %}
+
+<tr class="case_petite ligne_table" id="edit_{{ purchase_serialized_data.pk }}">
+
+    <td class="case_petite case_clair"> {{ purchase_serialized_data.contact_name }} </td>
+    <td><input style="width: 40px" type="text" name="titled" value="{{ purchase_serialized_data.titled }}"/></td>
+    <td><input style="width: 45px" type="date" name="date" value="{{ purchase_serialized_data.date }}"/></td>
+    <td class="case_petite case_fonce" style="text-align: center;"><input type="checkbox" name="validated"
+               value="{{ purchase_serialized_data.validated }}"
+               {% if purchase_serialized_data.validated %} checked {% endif %}
+               style="width: 15px" /></td>
+
+    <td class="case_petite case_fonce" style="text-align: center;"><input type="checkbox" name="paid"
+               value="{{ purchase_serialized_data.paid }}"
+               {% if purchase_serialized_data.paid %} checked {% endif %}
+               style="width: 15px"/></td>
+
+    <td>
+        {% include 'buttons/valid.html' with pk=purchase_serialized_data.pk %}
+    </td>
+    <td>
+        <i type="submit" class="fa fa-window-close-o" style="font-size:22px;color:red"
+        hx-get="/suivi_budg/prevision/{{ purchase_serialized_data.pk }}/?cancel=true"
+        hx-target="closest tr"
+        hx-swap="innerHTML"
+        ></i>
+    </td>
+</tr>

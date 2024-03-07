@@ -1,0 +1,47 @@
+{% load static %}
+
+<head>
+    <script src='https://kit.fontawesome.com/a076d05399.js' crossorigin='anonymous'></script>
+</head>
+
+<div id="button_reappearing1" style="display: none">
+    {% include 'buttons/ajouter_ligne.html' %}
+</div>
+
+<div class="container text-left" id="new_line_{{ tab_name }}">
+
+    <tr class="case_petite ligne_table">
+        <select name="user" style="width: 65px">
+            {% for user in users %}
+        <td>
+            <option value="{{ user.pk }}">{{ user.name }}</option>
+        </td>
+            {% endfor %}
+        </select>
+
+        <td><input type="text" name="proposition" style="width: 20px"></td>
+        <td><input type="date" name="date" style="width: 50px"></td>
+        <td><input type="checkbox" name="validated" style="width: 20px"></td>
+        <td><input type="checkbox" name="invoiced" style="width: 20px"></td>
+        <td><input type="checkbox" name="payed" style="width: 20px"></td>
+
+        <input type="hidden" name="type" value='{{ cost_type.pk }}'>
+        <td>
+            <button type="submit"
+                    hx-post="/suivi_budg/prevision/"
+                    hx-include="closest tr"
+                    hx-target="#{{ tab_name }}"
+                    hx-swap="afterend"
+            >
+                Ajouter
+            </button>
+        </td>
+
+        <i type="button" class="fa fa-close"
+           _="on click hide #new_line_budget then show #button_reappearing1"
+           style="font-size:20px;color:red">
+        </i>
+
+    </tr>
+
+</div>

@@ -160,7 +160,7 @@ class data():
         "titre": "",
         "colonnes": [
             {'nom':''},  #le nom des facture de tout les articles sauf co-rem et presta int
-            {'nom':'intitulé'}, #l'intitulé des facture
+            {'nom':' '}, #l'intitulé des facture
             {'nom':'date', 'total': False}, #date des factures
             {'nom':'validé',},#si la facture est "validé" dans odoo, la checkbox est True, c'est une checkbox non modifiable par l'utilisateur
             {'nom':'payé',}, #si la facture est "payé" dans odoo, la checkbox est True, c'est une checkbox non modifiable par l'utilisateur

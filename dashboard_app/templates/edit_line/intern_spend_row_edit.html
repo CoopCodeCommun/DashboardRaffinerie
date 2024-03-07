@@ -1,0 +1,19 @@
+{% load my_filters %}
+
+<tr class="case_petite ligne_table" id="edit_{{ intern_spending_data.pk }}">
+
+    <td class="case_petite case_clair"> {{ intern_spending_data.pole_name }} </td>
+    <td><input style="width: 40px" type="date" name="date_cost" value="{{ intern_spending_data.date_cost }}"/></td>
+    <td><input style="width: 45px" type="text" name="amount" value="{{ intern_spending_data.amount }}"/></td>
+
+    <td>
+        {% include 'buttons/valid.html' with pk=intern_spending_data.pk %}
+    </td>
+    <td>
+        <i type="submit" class="fa fa-window-close-o" style="font-size:22px;color:red"
+        hx-get="/suivi_budg/prevision/{{ intern_spending_data.pk }}/?cancel=true"
+        hx-target="closest tr"
+        hx-swap="innerHTML"
+        ></i>
+    </td>
+</tr>

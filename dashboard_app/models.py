@@ -393,7 +393,7 @@ class RealCost(models.Model):
     date = models.DateField(auto_now=True)
     validated = models.BooleanField(default=False, verbose_name='validé')
     invoiced = models.BooleanField(default=False, verbose_name='facturé')
-    paid = models.BooleanField(default=False, verbose_name='payé')
+    payed = models.BooleanField(default=False, verbose_name='payé')
     proposition = models.DecimalField(max_digits=8, decimal_places=2, default=0, verbose_name='proposition')
 
     class Meta:

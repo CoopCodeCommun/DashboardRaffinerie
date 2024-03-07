@@ -115,7 +115,7 @@ admin.site.register(PrevisionCost, PrevisionCostAdmin)
 # Creating an admin for the real costs of bienveillance or intern service (prestation)
 class RealCostAdmin(admin.ModelAdmin):
     #creating the list of fields
-    list_display = ('type_depense', 'user', 'date', 'proposition', 'validated', 'invoiced', 'paid')
+    list_display = ('type_depense', 'user', 'date', 'proposition', 'validated', 'invoiced', 'payed')
 
     #filtering by type or user
     list_filter = ('type__type', 'user')
