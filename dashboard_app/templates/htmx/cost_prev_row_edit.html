@@ -6,11 +6,11 @@
     <input type="hidden" name="pk" value="{{ prev_cost_ser_data.pk }}"\>
 
     <td>
-        {% include 'buttons/valid.html' with pk=prev_cost_ser_data.pk %}
+        {% include 'buttons/valid.html' with pk=prev_cost_ser_data.pk url2='depenses_recettes' %}
     </td>
     <td>
         <i type="submit" class="fa fa-window-close-o" style="font-size:22px;color:red"
-        hx-get="/suivi_budg/prevision/{{ prev_cost_ser_data.pk }}/?cancel=true"
+        hx-get="/suivi_budg/depenses_recettes/{{ prev_cost_ser_data.pk }}/?cancel=true"
         hx-target="closest tr"
         hx-swap="innerHTML"
         ></i>

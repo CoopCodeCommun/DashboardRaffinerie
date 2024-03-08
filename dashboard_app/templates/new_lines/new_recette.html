@@ -22,13 +22,12 @@
         </select>
 
         <td><input type="text" name="amount" style="width: 40px"></td>
-    <td>{{ recette.type }}</td>
 
         <td><input type="hidden" name="recette" value='{{ recette.pk }}'></td>
         <td><input type="hidden" name="prev_ou_reel" value='{{ prev_ou_reel }}'></td>
         <td>
             <button type="submit"
-                    hx-post="/suivi_budg/prevision/"
+                    hx-post="/suivi_budg/depenses_recettes/"
                     hx-include="closest tr"
                     hx-target="closest tr"
                     hx-swap="beforebegin"

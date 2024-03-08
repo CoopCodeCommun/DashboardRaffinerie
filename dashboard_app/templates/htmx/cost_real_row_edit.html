@@ -22,11 +22,11 @@
     <input type="hidden" name="pk" value="{{ real_cost_serialized_data.pk }}"/>
 
     <td>
-        {% include 'buttons/valid.html' with pk=real_cost_serialized_data.pk %}
+        {% include 'buttons/valid.html' with pk=real_cost_serialized_data.pk url2='depenses_recettes' %}
     </td>
     <td>
         <i type="submit" class="fa fa-window-close-o" style="font-size:22px;color:red"
-        hx-get="/suivi_budg/prevision/{{ real_cost_serialized_data.pk }}/?cancel=true"
+        hx-get="/suivi_budg/depenses_recettes/{{ real_cost_serialized_data.pk }}/?cancel=true"
         hx-target="closest tr"
         hx-swap="innerHTML"
         ></i>

@@ -40,11 +40,11 @@ router.register(r'odoo_contacts', OdooContactsAPI, basename='odoo_contacts_api')
 # sending url url with new organigramme
 router.register(r'organizationalchart', OrganizationalChartViewSet, basename='organizationalchart')
 # Trying automus way:
-# router.register(r'prevision', PrevisionBudgetCaringViewset, basename='budget_prevision')
-# router.register(r'prevision', RealCostCaringInternServiceViewSet, basename='budget_prevision')
-# router.register(r'prevision', RealCostPurchaseViewSet, basename='budget_prevision')
-# router.register(r'prevision', RealInternSpendViewSet, basename='budget_prevision')
-router.register(r'prevision', PrestationsVentsRecettesIntViewset, basename='budget_prevision')
+# router.register(r'depenses_recettes', PrevisionBudgetCaringViewset, basename='budget_prevision')
+# router.register(r'depenses_recettes', RealCostCaringInternServiceViewSet, basename='budget_prevision')
+# router.register(r'depenses_recettes', RealCostPurchaseViewSet, basename='budget_prevision')
+# router.register(r'depenses_recettes', RealInternSpendViewSet, basename='budget_prevision')
+router.register(r'depenses_recettes', PrestationsVentsRecettesIntViewset, basename='budget_prevision')
 
 # Combining the viewset in purpose to have same url
 # router.register(r'prevision2', CombinedView.as_view(), basename='prevision')

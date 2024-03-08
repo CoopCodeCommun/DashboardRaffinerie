@@ -18,7 +18,7 @@
         <td><input type="hidden" name="type" value='{{ cost_type.pk }}'></td>
         <td>
             <button type="submit"
-                    hx-post="/suivi_budg/prevision/"
+                    hx-post="/suivi_budg/depenses_recettes/"
                     hx-include="#new_line_budget"
                     hx-target="#{{ tab_name }}"
                     hx-swap="afterend"

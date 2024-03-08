@@ -20,7 +20,7 @@ from dashboard_app.odoo_api import OdooApi
 from dashboard_app.serializers import UserSerializer
 from dashboard_app.serializers import (AccountAnalyticGroupSerializer, OrganizationalChartValidator, RealcostSerializer,
         PrestationsVentsRecettesIntValidator, PrevisionCostSerializer, RealCostExternServiceSerializer,
-        RealCostIntSpendSerializer, PrestationsVentsRecettesIntSerializer)
+        RealCostIntSpendSerializer, PrestationsVentsRecettesIntSerializer,OrganizationalChartSerializer)
 from dashboard_app.models import AccountAccount
 from rest_framework.viewsets import ViewSet
 
@@ -81,6 +81,7 @@ def refactor_cost_prev(model,data_type,type,name_table,serializer, total):
     data_type['columns'] = [{'nom':''}, {'nom':'amount'},{'nom':'editer'},{'nom':'effacer'}]
     data_type['list_include'] = ['titled', 'amount']
     data_type['new_line_name'] = 'prevision'+type
+    data_type['url2'] = 'depenses_recettes'
 
 
 # Refacotr for retrive method in viewsets:
@@ -172,16 +173,16 @@ class PrevisionBudgetCaringViewset(viewsets.ModelViewSet): #PrevisionBudgetCarin
         queryset = PrevisionCost.objects.all()
         car = get_object_or_404(queryset, pk=pk)
         serializer = PrevisionCostSerializer(car, data=request.data, partial=True)
+        base_template = "dashboard/partial.html" if request.htmx else\
+                "dashboard/base.html"
 
         if serializer.is_valid():
             serializer.save()
-
             line = serializer.data
-
-            base_template = "dashboard/partial.html" if request.htmx else\
-                "dashboard/base.html"
             context = { 'base_template': base_template, 'line': line,
                         'list':['titled','amount']}
+        else:
+            context = {'base_template': base_template,'message': f"Saisie incorrecte"}
 
         return render(request,
             'dashboard/tableau_generique_ligne_read.html',
@@ -304,17 +305,16 @@ class RealCostCaringInternServiceViewSet(viewsets.ModelViewSet):
         serializer = RealcostSerializer(cost_reel, data=given_data, partial=True)
 
         list = ['username','date','proposition','validated', 'invoiced','payed']
-
+        base_template = "dashboard/partial.html" if request.htmx else\
+                "dashboard/base.html"
 
         if serializer.is_valid():
             serializer.save()
-
             line = serializer.data
-
-            base_template = "dashboard/partial.html" if request.htmx else\
-                "dashboard/base.html"
             context = { 'base_template': base_template, 'line': line,
                         'list':list}
+        else:
+            context = {'base_template': base_template,'message': f"Saisie incorrecte"}
 
         return render(request,
             'dashboard/tableau_generique_ligne_read.html',
@@ -428,17 +428,15 @@ class RealCostPurchaseViewSet(viewsets.ModelViewSet):
         serializer = RealCostExternServiceSerializer(purchase_cost, data=given_data, partial=True)
 
         list = ['contact_name', 'titled', 'date', 'validated', 'invoiced', 'payed']
-
-
+        base_template = "dashboard/partial.html" if request.htmx else\
+                "dashboard/base.html"
         if serializer.is_valid():
             serializer.save()
-
             line = serializer.data
-
-            base_template = "dashboard/partial.html" if request.htmx else\
-                "dashboard/base.html"
             context = { 'base_template': base_template, 'line': line,
                         'list':list}
+        else:
+            context = {'base_template': base_template,'message': f"Saisie incorrecte"}
 
         return render(request,
             'dashboard/tableau_generique_ligne_read.html',
@@ -541,16 +539,16 @@ class RealInternSpendViewSet(viewsets.ModelViewSet):
         serializer = RealCostIntSpendSerializer(intern_spending, data=given_data, partial=True)
 
         list = ['pole_name', 'date_cost', 'amount']
-
+        base_template = "dashboard/partial.html" if request.htmx else\
+                "dashboard/base.html"
         if serializer.is_valid():
             serializer.save()
-
             line = serializer.data
-
-            base_template = "dashboard/partial.html" if request.htmx else\
-                "dashboard/base.html"
             context = { 'base_template': base_template, 'line': line,
                         'list':list}
+
+        else:
+            context = {'base_template': base_template,'message': f"Saisie incorrecte"}
 
         return render(request,
             'dashboard/tableau_generique_ligne_read.html',
@@ -583,6 +581,7 @@ def refactor_recette(model,p_or_r,data_type,type,name_table,serializer, total):
     data_type['columns'] = [{'nom':''}, {'nom':'amount'},{'nom':'editer'},{'nom':'effacer'}]
     data_type['list_include'] = ['groupe_name', 'amount']
     data_type['new_line_name'] = 'recette'+p_or_r+type
+    data_type['url2'] = 'depenses_recettes'
 
 
 # creating viewset class for recettes
@@ -638,7 +637,7 @@ class PrestationsVentsRecettesIntViewset(viewsets.ModelViewSet):
                 context=context)
 
         return render(request, 'edit_line/recette_row_edit.html',
-                      {'recette_serialized_data': recette_serialized_data})
+        {'recette_serialized_data': recette_serialized_data})
 
 
 
@@ -674,16 +673,16 @@ class PrestationsVentsRecettesIntViewset(viewsets.ModelViewSet):
         serializer = PrestationsVentsRecettesIntSerializer(recette, data=given_data, partial=True)
 
         list = ['groupe_name', 'amount']
+        base_template = "dashboard/partial.html" if request.htmx else\
+                "dashboard/base.html"
 
         if serializer.is_valid():
             serializer.save()
-
             line = serializer.data
-
-            base_template = "dashboard/partial.html" if request.htmx else\
-                "dashboard/base.html"
             context = { 'base_template': base_template, 'line': line,
                         'list':list}
+        else:
+            context = {'base_template': base_template,'message': f"Saisie incorrecte"}
 
         return render(request,
             'dashboard/tableau_generique_ligne_read.html',
@@ -713,36 +712,41 @@ class CombinedView(APIView):
     #                 'int_serv_viewset':int_serv_viewset}
     #     # Render the template with the combined data
     #     return render(request, 'general.html',context=context)
-
+#-------------------------------------------------------------------
 
 
 # class viewset for organigramme
 class OrganizationalChartViewSet(viewsets.ViewSet):
-
     # method for listing organigramme
     def list(self, request):
-        data1 = {}
-        # creating colones
-        col_org = [
-            {'nom': '', 'list': True},
-            {'nom': 'presta interne', 'input': True},
-            {'nom': 'garant du cadre', 'input': True},
-            {'nom': 'référent budgt / subvention', 'input': True},
-            {'nom': 'référent tâche planning', 'input': True},
-            {'nom': '', 'input': False},
-            {'nom':'', 'input': False}
-        ]
-        # Creer la liste avec les données de l'organigrame
-        organigramme_list = [[{'pk':x.pk},{'user_name':x.user.name}, {'intern_services': x.intern_services}, {'settlement_agent': x.settlement_agent}, {'budget_referee': x.budget_referee}, {'task_planning_referee': x.task_planning_referee}] for x in OrganizationalChart.objects.all()]
+        organizational_chart_dt = {}
+        queryset = OrganizationalChart.objects.all()
 
-        data1['organigramme'] = create_dict_with_data('organigramme_new', col_org, organigramme_list, False, True,new_line_name='organigramme_new')
-        # adding the url that will be used to add, create or edit OragnizationalChart objects
-        data1['organigramme']['crud_url'] = '/suivi_budg/organizationalchart/'
+        organizational_chart_dt['lines'] = OrganizationalChartSerializer(queryset, many=True).data
+        organizational_chart_dt['total'] = True
+        organizational_chart_dt['name_table'] = 'organizational_tab'
+        organizational_chart_dt['columns'] = [{'nom':''},
+                                              {'nom':'presta interne'},
+                                              {'nom':'garant du cadre'},
+                                              {'nom':'référent budgt / subvention'},
+                                              {'nom':'référent tâche planning'},
+                                              {'nom':'editer'},
+                                              {'nom':'effacer'}]
+
+        organizational_chart_dt['list_include'] = ['username',
+                                                   'intern_services',
+                                                   'settlement_agent',
+                                                   'budget_referee',
+                                                   'task_planning_referee']
+
+        organizational_chart_dt['new_line_name'] = 'organigramme_new'
+        organizational_chart_dt['url2'] = 'organizationalchart'
+
 
         base_template = "dashboard/partial.html" if request.htmx else "dashboard/base.html"
         context = {
             'base_template': base_template,
-            'data1': data1,
+            'organizational_chart_dt': organizational_chart_dt,
         }
 
         return render(request, 'dashboard/pages_html/organigramme.html', context=context)
@@ -752,24 +756,103 @@ class OrganizationalChartViewSet(viewsets.ViewSet):
     def create(self, request):
         "Controleur pour POST"
         # Reciving data from new line and creating a new personne on organigramme
-        serializer = OrganizationalChartValidator(data=request.data)
+        org_chart_serializer = OrganizationalChartSerializer(data=request.data)
 
+        base_template = "dashboard/partial.html" if request.htmx else\
+            "dashboard/base.html"
+
+        if org_chart_serializer.is_valid():
+            org_chart_serializer.save()
+            line = org_chart_serializer.data
+            list = ['username',
+                    'intern_services',
+                    'settlement_agent',
+                    'budget_referee',
+                    'task_planning_referee']
+
+
+            context = {'base_template': base_template, 'line': line,
+                       'list': list}
+
+            return render(request,
+                'dashboard/tableau_generique_ligne_read.html',
+                      context=context)
+        context = {'base_template': base_template,'message': f"Saisie incorrecte"}
+
+        return render(request,
+        'dashboard/tableau_generique_ligne_read.html',context=context)
+
+
+
+    def retrieve(self, request, pk=None):
+        org_chart_serializet_dt = refactor_retrive(OrganizationalChart,pk, OrganizationalChartSerializer)
+
+        base_template = "dashboard/partial.html" if request.htmx else\
+            "dashboard/base.html"
+
+        list = ['username',
+                'intern_services',
+                'settlement_agent',
+                'budget_referee',
+                'task_planning_referee']
+
+        # import ipdb; ipdb.set_trace()
+        if 'cancel' in request.GET:
+
+            line = org_chart_serializet_dt
+            # Return the original table row HTML
+            context = {
+                'base_template': base_template,
+                'line': line,
+                'list': list
+            }
+            return render(request,
+                'dashboard/tableau_generique_ligne_read.html',
+                context=context)
+
+        return render(request, 'edit_line/org_chart_row.html',
+                      {'org_chart_serializet_dt': org_chart_serializet_dt})
+
+
+    def update(self, request, pk=None):
+        queryset = OrganizationalChart.objects.all()
+        orga_chart = get_object_or_404(queryset, pk=pk)
+        given_data = request.POST.copy()
+        serializer = OrganizationalChartSerializer(orga_chart, data=given_data, partial=True)
+
+        list = ['username',
+                'intern_services',
+                'settlement_agent',
+                'budget_referee',
+                'task_planning_referee']
+
+        base_template = "dashboard/partial.html" if request.htmx else\
+                "dashboard/base.html"
         if serializer.is_valid():
             serializer.save()
+            line = serializer.data
+            context = { 'base_template': base_template, 'line': line,
+                        'list':list}
+        else:
+            context = {'base_template': base_template,'message': f"Saisie incorrecte"}
 
-        return redirect('/suivi_budg/organizationalchart/')
+        return render(request,
+            'dashboard/tableau_generique_ligne_read.html',
+                      context=context)
+
 
 
     # Delete organizationalchart object
     def destroy(self, request, pk=None):
-        "Controleur pour DELETE"
-        if request.method == 'DELETE':# and request.POST.get('_method') == 'DELETE':
-            #calling the destroy refactor method to delete selected object
-            destroy_refactor(pk, OrganizationalChart)
+        destroy_refactor(pk, OrganizationalChart)
 
-            return redirect('/suivi_budg/organizationalchart/')
+        base_template = "dashboard/partial.html" if request.htmx else\
+            "dashboard/base.html"
+        context = { 'base_template': base_template}
 
-        # return redirect('/suivi_budg/organizationalchart/')
+        return render(request,
+            'dashboard/tableau_generique_ligne_read.html',
+                      context=context)
 
 
 def tableau_de_bord_perso(request):
@@ -1050,14 +1133,12 @@ def recette_internes_form_real(request):
 #---------------- FIN FORM NEW LINE RECETTES --------
 
 
-
-
-
 # send user to organigrame creating new line
 def send_user_to_organigrame(request):
-    all_users = CustomUser.objects.all()
+    users = CustomUser.objects.all()
 
-    return render(request, 'htmx/new_organigramme.html', {'user':all_users})
+    return render(request,
+    'new_lines/new_organigramme.html',{'users': users})
 
 
 ################################

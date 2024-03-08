@@ -2,7 +2,7 @@
 <script src='{% static "js/main.js" %}' type="application/javascript"></script>
 
 <i type="button" class="fa fa-pencil-square-o" style="font-size:20px;color:green"
-   hx-get="/suivi_budg/prevision/{{ id }}/"
+   hx-get="/suivi_budg/{{ url2 }}/{{ id }}/"
    hx-trigger="click"
    hx-include="closest tr"
    hx-target="closest tr"

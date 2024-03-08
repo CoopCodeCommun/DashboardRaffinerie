@@ -19,7 +19,7 @@
 {% for k, v in line.items %}
     {% if k == 'pk' %}
         <td>
-            {% include 'buttons/editer.html' with id=v %}
+            {% include 'buttons/editer.html' with id=v url2=url2 %}
         </td>
         <td id="efface{{ v }}">
             {% include 'buttons/effacer.html' with pk=v url_viewset=table.url_viewset %}

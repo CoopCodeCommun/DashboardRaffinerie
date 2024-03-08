@@ -1,0 +1,46 @@
+{% load my_filters %}
+
+<tr class="case_petite ligne_table" id="edit_{{ org_chart_serializet_dt.pk }}">
+
+    <td class="case_petite case_clair"> {{ org_chart_serializet_dt.username }} </td>
+
+    <td class="case_petite case_fonce" style="text-align: center;">
+        <input type="checkbox" name="intern_services"
+               value="{{ org_chart_serializet_dt.intern_services }}"
+               {% if org_chart_serializet_dt.intern_services %} checked {% endif %}
+               style="width: 15px"/>
+    </td>
+
+    <td class="case_petite case_fonce" style="text-align: center;">
+        <input type="checkbox" name="settlement_agent"
+               value="{{ org_chart_serializet_dt.settlement_agent }}"
+               {% if org_chart_serializet_dt.settlement_agent %} checked {% endif %}
+               style="width: 15px"/>
+    </td>
+
+    <td class="case_petite case_fonce" style="text-align: center;">
+        <input type="checkbox" name="budget_referee"
+               value="{{ org_chart_serializet_dt.budget_referee }}"
+               {% if org_chart_serializet_dt.budget_referee %} checked {% endif %}
+               style="width: 15px"/>
+    </td>
+
+    <td class="case_petite case_fonce" style="text-align: center;">
+        <input type="checkbox" name="task_planning_referee"
+               value="{{ org_chart_serializet_dt.task_planning_referee }}"
+               {% if org_chart_serializet_dt.task_planning_referee %} checked {% endif %}
+               style="width: 15px"/>
+    </td>
+
+    <input type="hidden" name="pk" value="{{ org_chart_serializet_dt.pk }}"/>
+    <td>
+        {% include 'buttons/valid.html' with pk=org_chart_serializet_dt.pk url2='organizationalchart' %}
+    </td>
+    <td>
+        <i type="submit" class="fa fa-window-close-o" style="font-size:22px;color:red"
+        hx-get="/suivi_budg/organizationalchart/{{ org_chart_serializet_dt.pk }}/?cancel=true"
+        hx-target="closest tr"
+        hx-swap="innerHTML"
+        ></i>
+    </td>
+</tr>

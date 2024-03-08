@@ -96,6 +96,17 @@ class PrestationsVentsRecettesIntSerializer(serializers.ModelSerializer):
         return obj.group.name
 
 
+# serialize OrganizationalChart
+class OrganizationalChartSerializer(serializers.ModelSerializer):
+    username = serializers.SerializerMethodField()
+    class Meta:
+        model = OrganizationalChart
+        fields = ['user','username','intern_services','settlement_agent','budget_referee','task_planning_referee', 'pk']
+
+    def get_username(self, obj):
+        return obj.user.username
+
+
 class AccountAnalyticGroupSerializer(serializers.ModelSerializer):
     class Meta:
         model = AccountAnalyticGroup
