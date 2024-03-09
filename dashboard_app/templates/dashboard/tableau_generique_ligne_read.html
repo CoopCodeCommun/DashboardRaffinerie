@@ -23,7 +23,7 @@
             {% include 'buttons/editer.html' with id=v url2=url2 %}
         </td>
         <td id="efface{{ v }}">
-            {% include 'buttons/effacer.html' with pk=v url_viewset=table.url_viewset %}
+            {% include 'buttons/effacer.html' with pk=v url1=table.url1 url2=url2 %}
         </td>
 
     {% endif %}

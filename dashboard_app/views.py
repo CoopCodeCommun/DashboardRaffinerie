@@ -81,8 +81,8 @@ def refactor_cost_prev(model,data_type,type,name_table,serializer, total):
     data_type['columns'] = [{'nom':''}, {'nom':'amount'},{'nom':'editer'},{'nom':'effacer'}]
     data_type['list_include'] = ['titled', 'amount']
     data_type['new_line_name'] = 'prevision'+type
+    data_type['url1'] ='suivi_budg'
     data_type['url2'] = 'depenses_recettes'
-
 
 # Refacotr the method that will create the real cost table caring
 # and intern service
@@ -104,6 +104,7 @@ def refactor_cost_reel(model,data_type,type,name_table,serializer, total):
                                   {'nom':'effacer'}]
     data_type['list_include'] = ['username','date','proposition','validated', 'invoiced','payed']
     data_type['new_line_name'] = 'real_cost'+type
+    data_type['url1'] ='suivi_budg'
     # unifying the type is CAR and IN_S. the value of the url will be used to select the
     # serializer in the reterive method so CAR and IN_S have the same serializer
     if type in ['CAR','IN_S']:
@@ -125,6 +126,7 @@ def refactor_recette(model,p_or_r,data_type,type,name_table,serializer, total):
     data_type['columns'] = [{'nom':''}, {'nom':'amount'},{'nom':'editer'},{'nom':'effacer'}]
     data_type['list_include'] = ['groupe_name', 'amount']
     data_type['new_line_name'] = 'recette'+p_or_r+type
+    data_type['url1'] ='suivi_budg'
     data_type['url2'] = 'depenses_recettes5'
 
 

@@ -19,8 +19,8 @@
             {% endfor %}
         </select>
 
-        <td><input type="text" name="proposition" style="width: 20px"></td>
         <td><input type="date" name="date" style="width: 50px"></td>
+        <td><input type="text" name="proposition" style="width: 35px"></td>
         <td><input type="checkbox" name="validated" style="width: 20px"></td>
         <td><input type="checkbox" name="invoiced" style="width: 20px"></td>
         <td><input type="checkbox" name="payed" style="width: 20px"></td>
@@ -28,7 +28,7 @@
         <input type="hidden" name="type" value='{{ cost_type.pk }}'>
         <td>
             <button type="submit"
-                    hx-post="/suivi_budg/depenses_recettes/"
+                    hx-post="/suivi_budg/depenses_recettes2/"
                     hx-include="closest tr"
                     hx-target="#{{ tab_name }}"
                     hx-swap="afterend"
