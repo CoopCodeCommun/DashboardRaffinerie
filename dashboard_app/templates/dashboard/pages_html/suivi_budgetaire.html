@@ -63,10 +63,10 @@
                                                 <div class="row">
                                                     <div class="col-md-4 p-2 width: 100%; overflow-x: auto;">
 {#                                                        {% include 'dashboard/tableau_generique.html' with table=data1.prev_cost_caring %}#}
-                                                        {% include 'dashboard/tableau_generique.html' with table=prevision_cost %}
+                                                        {% include 'dashboard/tableau_generique.html' with table=data_cost.CAR %}
                                                     </div>
                                                     <div class="col-md-8 p-2 width: 100%; overflow-x: auto;">
-                                                        {% include 'dashboard/tableau_generique.html' with table=caring_real %}
+                                                        {% include 'dashboard/tableau_generique.html' with table=data_cost2.CAR %}
                                                     </div>
                                                 </div>
                                             </div>
@@ -79,10 +79,10 @@
                                         <div class="contentToShowHide">
                                             <div class="row">
                                                 <div class="col-md-4 p-2">
-                                                    {% include 'dashboard/tableau_generique.html' with table=prevision_intern_service %}
+                                                    {% include 'dashboard/tableau_generique.html' with table=data_cost.IN_S %}
                                                 </div>
                                                 <div class="col-md-8 p-2">
-                                                    {% include 'dashboard/tableau_generique.html' with table=int_service_real %}
+                                                    {% include 'dashboard/tableau_generique.html' with table=data_cost2.IN_S %}
                                                 </div>
                                             </div>
                                         </div>
@@ -94,10 +94,10 @@
                                         <div class="contentToShowHide">
                                             <div class="row">
                                                 <div class="col-md-4 p-2">
-                                                    {% include 'dashboard/tableau_generique.html' with table=prevision_extern_service %}
+                                                    {% include 'dashboard/tableau_generique.html' with table=data_cost.EX_S %}
                                                 </div>
                                                 <div class="col-md-8 p-2">
-                                                    {% include 'dashboard/tableau_generique.html' with table=purchase_real_cost %}
+                                                    {% include 'dashboard/tableau_generique.html' with table=data_cost2.EX_S %}
                                                 </div>
                                             </div>
                                         </div>
@@ -109,10 +109,10 @@
                                         <div class="contentToShowHide">
                                             <div class="row">
                                                 <div class="col-md-4 p-2">
-                                                    {% include 'dashboard/tableau_generique.html' with table=intern_spends %}
+                                                    {% include 'dashboard/tableau_generique.html' with table=data_cost.SP_I %}
                                                 </div>
                                                 <div class="col-md-8 p-2">
-                                                    {% include 'dashboard/tableau_generique.html' with table=intern_spend %}
+                                                    {% include 'dashboard/tableau_generique.html' with table=data_cost2.SP_I %}
                                                 </div>
                                             </div>
                                         </div>
@@ -160,10 +160,10 @@
                                         <div class="contentToShowHide">
                                             <div class="row">
                                                 <div class="col-md-6 p-2">
-                                                    {% include 'dashboard/tableau_generique.html' with table=recettest_presta_prev %}
+                                                    {% include 'dashboard/tableau_generique.html' with table=data_recette.PP %}
                                                 </div>
                                                 <div class="col-md-6 p-2">
-                                                    {% include 'dashboard/tableau_generique.html' with table=recettest_presta_real %}
+                                                    {% include 'dashboard/tableau_generique.html' with table=data_recette.RP %}
                                                 </div>
                                             </div>
                                         </div>
@@ -175,10 +175,10 @@
                                         <div class="contentToShowHide">
                                             <div class="row">
                                                 <div class="col-md-6 p-2">
-                                                    {% include 'dashboard/tableau_generique.html' with table=recette_sells_prev %}
+                                                    {% include 'dashboard/tableau_generique.html' with table=data_recette.PV %}
                                                 </div>
                                                 <div class="col-md-6 p-2">
-                                                    {% include 'dashboard/tableau_generique.html' with table=recette_sells_real %}
+                                                    {% include 'dashboard/tableau_generique.html' with table=data_recette.RV %}
                                                 </div>
                                             </div>
                                         </div>
@@ -190,10 +190,10 @@
                                         <div class="contentToShowHide">
                                             <div class="row">
                                                 <div class="col-md-6 p-2">
-                                                    {% include 'dashboard/tableau_generique.html' with table=recette_intern_prev %}
+                                                    {% include 'dashboard/tableau_generique.html' with table=data_recette.PR_IN %}
                                                 </div>
                                                 <div class="col-md-6 p-2">
-                                                    {% include 'dashboard/tableau_generique.html' with table=recette_intern_real %}
+                                                    {% include 'dashboard/tableau_generique.html' with table=data_recette.RR_IN %}
                                                 </div>
                                             </div>
                                       </div>

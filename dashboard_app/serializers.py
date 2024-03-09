@@ -15,13 +15,13 @@ class UserSerializer(serializers.ModelSerializer):
         read_only_fields = ('uuid', 'email',)
 
 
-# Validator for OrganizationalChart
-class OrganizationalChartValidator(serializers.ModelSerializer):
-    class Meta:
-        model = OrganizationalChart
-
-        fields = ['user', 'intern_services', 'settlement_agent', 'budget_referee', 'task_planning_referee']
-
+# # Validator for OrganizationalChart
+# class OrganizationalChartValidator(serializers.ModelSerializer):
+#     class Meta:
+#         model = OrganizationalChart
+#
+#         fields = ['user', 'intern_services', 'settlement_agent', 'budget_referee', 'task_planning_referee']
+#
 
 
 # Validator for previzion budget
@@ -105,6 +105,15 @@ class OrganizationalChartSerializer(serializers.ModelSerializer):
 
     def get_username(self, obj):
         return obj.user.username
+
+
+    def to_internal_value(self, data):
+        # Provide default values for unchecked checkboxes
+        data.setdefault('intern_services', False)
+        data.setdefault('settlement_agent', False)
+        data.setdefault('budget_referee', False)
+        data.setdefault('task_planning_referee', False)
+        return super().to_internal_value(data)
 
 
 class AccountAnalyticGroupSerializer(serializers.ModelSerializer):

@@ -40,17 +40,16 @@ router.register(r'odoo_contacts', OdooContactsAPI, basename='odoo_contacts_api')
 # sending url url with new organigramme
 router.register(r'organizationalchart', OrganizationalChartViewSet, basename='organizationalchart')
 # Trying automus way:
-# router.register(r'depenses_recettes', PrevisionBudgetCaringViewset, basename='budget_prevision')
-# router.register(r'depenses_recettes', RealCostCaringInternServiceViewSet, basename='budget_prevision')
+router.register(r'depenses_recettes', PrevisionBudgetCaringViewset, basename='budget_prevision')
+router.register(r'depenses_recettes2', RealCostCaringInternServiceViewSet, basename='budget_prevision')
 # router.register(r'depenses_recettes', RealCostPurchaseViewSet, basename='budget_prevision')
 # router.register(r'depenses_recettes', RealInternSpendViewSet, basename='budget_prevision')
-router.register(r'depenses_recettes', PrestationsVentsRecettesIntViewset, basename='budget_prevision')
+# router.register(r'depenses_recettes', PrestationsVentsRecettesIntViewset, basename='budget_prevision')
 
 # Combining the viewset in purpose to have same url
 # router.register(r'prevision2', CombinedView.as_view(), basename='prevision')
 
 urlpatterns = [
-
     # sending url with Viewset class
     path('suivi_budg/', include(router.urls)),
     # Pages d'exemple HTMX:
@@ -95,7 +94,6 @@ urlpatterns = [
     path('edit_tableau_generique/<str:table>/<int:index>/', edit_tableau_generique, name='edit_tableau_generique'),
 
     # A bosser :)
-    #path('organigramme/', organigramme, name='organigramme'),
     path('tableau_de_bord_perso/', tableau_de_bord_perso, name='tableau_de_bord_perso'),
     path('subventions/', send_subventions, name='subventions'),
     path('repertoire/', repertoire, name='repertoire'),

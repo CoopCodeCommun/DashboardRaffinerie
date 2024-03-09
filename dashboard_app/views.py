@@ -18,7 +18,7 @@ from dashboard_app.models import (Contact, AccountAccount, AccountJournal, Accou
     OrganizationalChart, Badge, DepensesBienveillance, Pole)
 from dashboard_app.odoo_api import OdooApi
 from dashboard_app.serializers import UserSerializer
-from dashboard_app.serializers import (AccountAnalyticGroupSerializer, OrganizationalChartValidator, RealcostSerializer,
+from dashboard_app.serializers import (AccountAnalyticGroupSerializer, RealcostSerializer,
         PrestationsVentsRecettesIntValidator, PrevisionCostSerializer, RealCostExternServiceSerializer,
         RealCostIntSpendSerializer, PrestationsVentsRecettesIntSerializer,OrganizationalChartSerializer)
 from dashboard_app.models import AccountAccount
@@ -84,6 +84,46 @@ def refactor_cost_prev(model,data_type,type,name_table,serializer, total):
     data_type['url2'] = 'depenses_recettes'
 
 
+# Refacotr the method that will create the real cost table caring
+# and intern service
+def refactor_cost_reel(model,data_type,type,name_table,serializer, total):
+    # passing datas through the serializer by selecting the type of Cost Prevision
+    queryset = model.filter(type__type=type)
+    cost_serializer = serializer(queryset, many=True)
+    # creating the dictionary that will send thee datas through context
+    data_type['lines'] = cost_serializer.data
+    data_type['total'] = total
+    data_type['name_table'] = name_table+type
+    data_type['columns'] = [{'nom': ''},
+                                  {'nom': 'date'},
+                                  {'nom': 'proposition'},
+                                  {'nom': 'validé'},
+                                  {'nom': 'facturé'},
+                                  {'nom': 'payé'},
+                                  {'nom': 'editer'},
+                                  {'nom':'effacer'}]
+    data_type['list_include'] = ['username','date','proposition','validated', 'invoiced','payed']
+    data_type['new_line_name'] = 'real_cost'+type
+    data_type['url2'] = 'depenses_recettes'
+
+
+# in this method we will factorize the method of filtering the data for Recettes,
+# serializing and thant creating the data dictionary taht will send to the template
+def refactor_recette(model,p_or_r,data_type,type,name_table,serializer, total):
+    # passing datas through the serializer by selecting the type of Cost Prevision
+    queryset = model.filter(prev_ou_reel=p_or_r,recette__type=type)
+    cost_serializer = serializer(queryset, many=True)
+    # creating the dictionary that will send thee datas through context
+    data_type['lines'] = cost_serializer.data
+    data_type['total'] = total
+    data_type['name_table'] = name_table+p_or_r+type
+    data_type['columns'] = [{'nom':''}, {'nom':'amount'},{'nom':'editer'},{'nom':'effacer'}]
+    data_type['list_include'] = ['groupe_name', 'amount']
+    data_type['new_line_name'] = 'recette'+p_or_r+type
+    data_type['url2'] = 'depenses_recettes'
+
+
+
 # Refacotr for retrive method in viewsets:
 def refactor_retrive(model,given_pk, model_serializer):
     model_obj = model.objects.get(pk=given_pk)
@@ -102,22 +142,54 @@ def destroy_refactor(given_pk, model):
 # creating a viewset class for Caring (bienveillance) prevision cost table
 class PrevisionBudgetCaringViewset(viewsets.ModelViewSet): #PrevisionBudgetCaringViewset
     def list(self, request):
-        prevision_cost, prevision_intern_service = {}, {}
-        prevision_extern_service, intern_spends = {},{}
-        model = PrevisionCost.objects.all()
-        refactor_cost_prev(model,prevision_cost, 'CAR','prev_cost_tab', PrevisionCostSerializer, True)
-        refactor_cost_prev(model, prevision_intern_service, 'IN_S', 'prev_cost_tab',PrevisionCostSerializer, True)
-        refactor_cost_prev(model,prevision_extern_service, 'EX_S', 'prev_cost_tab', PrevisionCostSerializer, True)
-        refactor_cost_prev(model, intern_spends, 'SP_I', 'prev_cost_tab',PrevisionCostSerializer, True)
+        data_cost = {'CAR':{}, 'IN_S':{},'EX_S':{},'SP_I':{}}
+        data_cost2 = {'CAR':{}, 'IN_S':{},'EX_S':{},'SP_I':{}}
+        data_recette =  {'PP':{},'PV':{},'PR_IN':{},
+                         'RP':{},'RV':{},'RR_IN':{}}
+
+        for key, value in data_cost.items():
+            refactor_cost_prev(PrevisionCost.objects.all(),
+                               value, key, 'prev_cost_tab',
+                               PrevisionCostSerializer, True)
+
+            # creating the dictionary for real cost caring and intern service
+            if key == 'CAR' or key == 'IN_S':
+                refactor_cost_reel(RealCost.objects.all(),
+                                   data_cost2[key], key, 'real_cost_tab',
+                                   RealcostSerializer, True)
+
+            elif key == 'EX_S':
+                refactor_cost_reel(RealCostExternService.objects.all(),
+                                   data_cost2[key], key, 'real_cost_tab',
+                                   RealCostExternServiceSerializer, True)
+
+            elif key == 'SP_I':
+                refactor_cost_reel(RealCostInternSpending.objects.all(),
+                                   data_cost2[key], key, 'real_cost_tab',
+                                   RealCostIntSpendSerializer, True)
+
+        # Adapting the columns on purchase and spending with
+        # the given ones
+        del data_cost2['EX_S']['columns'][4]
+        data_cost2['EX_S']['list_include'] = ['contact_name', 'titled', 'date', 'validated', 'payed']
+
+        data_cost2['SP_I']['columns'] = [{'nom': ''},{'nom': 'date'}, {'nom': 'montant'}, {'nom': 'editer'}, {'nom': 'effacer'}]
+        data_cost2['SP_I']['list_include'] = ['pole_name', 'date_cost', 'amount']
+
+        # creating the tables for recettes cases:
+        model = PrestationsVentsRecettesInt.objects.all()
+        for pr in ['P','R']:
+            for v in ['P','V','R_IN']:
+                refactor_recette(model,pr,
+                                 data_recette[pr+v],v,'recette_prev_tab',PrestationsVentsRecettesIntSerializer,True)
 
         base_template = "dashboard/partial.html" if request.htmx else\
             "dashboard/base.html"
         context = { 'base_template': base_template,
-                    'prevision_cost': prevision_cost,
-                    'prevision_intern_service': prevision_intern_service,
-                    'prevision_extern_service': prevision_extern_service,
-                    'intern_spends': intern_spends
-                    }
+                    'data_cost': data_cost,
+                    'data_cost2': data_cost2,
+                    'data_recette': data_recette
+                 }
 
         return render(request, 'dashboard/pages_html/suivi_budgetaire.html',
                       context=context)
@@ -144,7 +216,7 @@ class PrevisionBudgetCaringViewset(viewsets.ModelViewSet): #PrevisionBudgetCarin
                     'dashboard/tableau_generique_ligne_read.html',
                           context=context)
 
-        return render(request, 'htmx/cost_prev_row_edit.html',
+        return render(request, 'edit_line/cost_prev_row_edit.html',
                       {'prev_cost_ser_data': prev_cost_ser_data})
 
     def create(self, request):
@@ -245,8 +317,6 @@ class RealCostCaringInternServiceViewSet(viewsets.ModelViewSet):
 
 
     def retrieve(self, request, pk=None):
-        # real_cost_car = RealCost.objects.get(pk=pk)
-        # real_cost_car_serializer = RealcostSerializer(real_cost_car, many=False)
         real_cost_serialized_data = refactor_retrive(RealCost,pk, RealcostSerializer)
 
         list = ['username','date','proposition','validated', 'invoiced','payed']
@@ -267,12 +337,15 @@ class RealCostCaringInternServiceViewSet(viewsets.ModelViewSet):
                     'dashboard/tableau_generique_ligne_read.html',
                           context=context)
 
-        return render(request, 'htmx/cost_real_row_edit.html',
+        return render(request, 'edit_line/cost_real_row_edit.html',
                       {'real_cost_serialized_data': real_cost_serialized_data})
 
 
     def create(self, request):
         # Verify why we can't pass imediatly request.data in Serializer...
+        # answer: It seams that we interniens in the serializr by adding default data
+        # like 'validated' = False we have to pass by a copy of request.POST -by modifying
+        # the serializer we have to divert the non mutable condition.
         given_data = request.POST.copy()
         real_cost_serializer = RealcostSerializer(data=given_data)
 
@@ -510,8 +583,8 @@ class RealInternSpendViewSet(viewsets.ModelViewSet):
                       {'intern_spending_data': intern_spending_data})
 
     def create(self,request):
-        given_data = request.POST.copy()
-        intern_spending_serializer = RealCostIntSpendSerializer(data=given_data)
+        # given_data = request.POST.copy()
+        intern_spending_serializer = RealCostIntSpendSerializer(data=request.data)
 
         base_template = "dashboard/partial.html" if request.htmx else\
             "dashboard/base.html"
@@ -535,8 +608,7 @@ class RealInternSpendViewSet(viewsets.ModelViewSet):
     def update(self, request, pk=None):
         queryset = RealCostInternSpending.objects.all()
         intern_spending = get_object_or_404(queryset, pk=pk)
-        given_data = request.POST.copy()
-        serializer = RealCostIntSpendSerializer(intern_spending, data=given_data, partial=True)
+        serializer = RealCostIntSpendSerializer(intern_spending, data=request.data, partial=True)
 
         list = ['pole_name', 'date_cost', 'amount']
         base_template = "dashboard/partial.html" if request.htmx else\
@@ -559,8 +631,7 @@ class RealInternSpendViewSet(viewsets.ModelViewSet):
         #calling the destroy refactor method to delete selected object
         destroy_refactor(pk, RealCostInternSpending)
 
-        base_template = "dashboard/partial.html" if request.htmx else\
-            "dashboard/base.html"
+        base_template = "dashboard/partial.html" if request.htmx else "dashboard/base.html"
         context = { 'base_template': base_template}
 
         return render(request,
@@ -568,20 +639,7 @@ class RealInternSpendViewSet(viewsets.ModelViewSet):
                       context=context)
 
 
-# in this method we will factorize the method of filtering the data for Recettes,
-# serializing and thant creating the data dictionary taht will send to the template
-def refactor_recette(model,p_or_r,data_type,type,name_table,serializer, total):
-    # passing datas through the serializer by selecting the type of Cost Prevision
-    queryset = model.filter(prev_ou_reel=p_or_r,recette__type=type)
-    cost_serializer = serializer(queryset, many=True)
-    # creating the dictionary that will send thee datas through context
-    data_type['lines'] = cost_serializer.data
-    data_type['total'] = total
-    data_type['name_table'] = name_table+p_or_r+type
-    data_type['columns'] = [{'nom':''}, {'nom':'amount'},{'nom':'editer'},{'nom':'effacer'}]
-    data_type['list_include'] = ['groupe_name', 'amount']
-    data_type['new_line_name'] = 'recette'+p_or_r+type
-    data_type['url2'] = 'depenses_recettes'
+
 
 
 # creating viewset class for recettes
@@ -640,10 +698,8 @@ class PrestationsVentsRecettesIntViewset(viewsets.ModelViewSet):
         {'recette_serialized_data': recette_serialized_data})
 
 
-
     def create(self, request):
-        given_data = request.POST.copy()
-        recettes_serializer = PrestationsVentsRecettesIntSerializer(data=given_data)
+        recettes_serializer = PrestationsVentsRecettesIntSerializer(data=request.data)
 
         base_template = "dashboard/partial.html" if request.htmx else\
             "dashboard/base.html"
@@ -665,12 +721,10 @@ class PrestationsVentsRecettesIntViewset(viewsets.ModelViewSet):
         'dashboard/tableau_generique_ligne_read.html',context=context)
 
 
-
     def update(self, request, pk=None):
         queryset = PrestationsVentsRecettesInt.objects.all()
         recette = get_object_or_404(queryset, pk=pk)
-        given_data = request.POST.copy()
-        serializer = PrestationsVentsRecettesIntSerializer(recette, data=given_data, partial=True)
+        serializer = PrestationsVentsRecettesIntSerializer(recette, data=request.data, partial=True)
 
         list = ['groupe_name', 'amount']
         base_template = "dashboard/partial.html" if request.htmx else\
@@ -756,7 +810,8 @@ class OrganizationalChartViewSet(viewsets.ViewSet):
     def create(self, request):
         "Controleur pour POST"
         # Reciving data from new line and creating a new personne on organigramme
-        org_chart_serializer = OrganizationalChartSerializer(data=request.data)
+        given_data = request.POST.copy()
+        org_chart_serializer = OrganizationalChartSerializer(data=given_data)
 
         base_template = "dashboard/partial.html" if request.htmx else\
             "dashboard/base.html"
@@ -781,7 +836,6 @@ class OrganizationalChartViewSet(viewsets.ViewSet):
 
         return render(request,
         'dashboard/tableau_generique_ligne_read.html',context=context)
-
 
 
     def retrieve(self, request, pk=None):
@@ -831,6 +885,7 @@ class OrganizationalChartViewSet(viewsets.ViewSet):
         if serializer.is_valid():
             serializer.save()
             line = serializer.data
+            # import ipdb; ipdb.set_trace()
             context = { 'base_template': base_template, 'line': line,
                         'list':list}
         else:
@@ -887,68 +942,6 @@ def send_subventions(request):
         'data': data
     }
     return render(request, 'dashboard/pages_html/subventions.html', context=context)
-
-
-
-def organigramme(request):
-    dataO = {}
-    # creating colones
-    col_org = [
-        {'nom':'', 'list': True},
-                    {'nom':'presta interne', 'input': True},
-                    {'nom':'garant du cadre', 'input': True},
-                    {'nom':'référent budgt / subvention', 'input': True},
-                    {'nom':'référent tâche planning', 'input': True}
-    ]
-    # Creer la liste avec les données de l'organigrame
-    organigramme_list = [[x.user.name, x.intern_services, x.settlement_agent, x.budget_referee, x.task_planning_referee] for x in OrganizationalChart.objects.all()]
-    dataO['organigramme'] = create_dict_with_data('organigramme_new', col_org, organigramme_list, False, True,new_line_name='organigramme_new')
-
-    #Reciving data from new line and creating a new personne on organigramme
-    if request.method == 'POST':
-
-        # serch the validated data from serializer for the new line
-        new_organigramme_validator = OrganizationalChartValidator(data=request.POST)
-
-        if not new_organigramme_validator.is_valid():
-            base_template = "dashboard/partial.html" if request.htmx else "dashboard/base.html"
-            return render(request, 'dashboard/pages_html/organigramme.html', {'message_org_new': "Le nom choisit il existe déjà dans l'organigramme", 'base_template': base_template})
-
-        validated_data_org = new_organigramme_validator.validated_data
-
-        user_pk = validated_data_org.get('users').pk
-        user = CustomUser.objects.get(pk=user_pk)
-        # Attention if you do validated_data_org['intern_services'] it will search
-        # a key that doesn't exist and will return error in case the checkbox isn't
-        # 'on' if you do var_validated.get('name') it will search vor the name and
-        # won't return an error.
-        def refacto_check_var(var):
-            return True if validated_data_org.get(var) == 'check' else False
-
-        intern_services= refacto_check_var('intern_services')
-        settlement_agent= refacto_check_var('settlement_agent')
-        budget_referee= refacto_check_var('budget_referee')
-        task_planning_referee = refacto_check_var('task_planning_referee')
-
-        user_choice = CustomUser.objects.get(username=user)
-
-        OrganizationalChart.objects.create(user=user_choice,
-                                           intern_services=intern_services,
-                                           settlement_agent=settlement_agent,
-                                           budget_referee=budget_referee,
-                                           task_planning_referee=task_planning_referee
-                                           )
-        return redirect('organigramme')
-
-
-    base_template = "dashboard/partial.html" if request.htmx else "dashboard/base.html"
-    context = {
-        'base_template': base_template,
-        'data': data,
-        'dataO': dataO,
-    }
-
-    return render(request, 'dashboard/pages_html/organigramme.html', context=context)
 
 
 '''

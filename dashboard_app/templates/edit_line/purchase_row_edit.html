@@ -5,14 +5,14 @@
     <td class="case_petite case_clair"> {{ purchase_serialized_data.contact_name }} </td>
     <td><input style="width: 40px" type="text" name="titled" value="{{ purchase_serialized_data.titled }}"/></td>
     <td><input style="width: 45px" type="date" name="date" value="{{ purchase_serialized_data.date }}"/></td>
-    <td class="case_petite case_fonce" style="text-align: center;"><input type="checkbox" name="validated"
-               value="{{ purchase_serialized_data.validated }}"
+    <td class="case_petite case_fonce" style="text-align: center;">
+        <input type="checkbox" name="validated" value="on"
                {% if purchase_serialized_data.validated %} checked {% endif %}
                style="width: 15px" /></td>
 
-    <td class="case_petite case_fonce" style="text-align: center;"><input type="checkbox" name="paid"
-               value="{{ purchase_serialized_data.paid }}"
-               {% if purchase_serialized_data.paid %} checked {% endif %}
+    <td class="case_petite case_fonce" style="text-align: center;">
+        <input type="checkbox" name="payed" value="on"
+               {% if purchase_serialized_data.payed %} checked {% endif %}
                style="width: 15px"/></td>
 
     <td>

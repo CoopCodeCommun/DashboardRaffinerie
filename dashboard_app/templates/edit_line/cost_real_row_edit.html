@@ -6,17 +6,17 @@
     <td><input style="width: 45px" type="date" name="date" value="{{ real_cost_serialized_data.date }}"/></td>
     <td><input style="width: 40px" type="text" name="proposition" value="{{ real_cost_serialized_data.proposition }}"/></td>
     <td class="case_petite case_fonce" style="text-align: center;"><input type="checkbox" name="validated"
-               value="{{ real_cost_serialized_data.validated }}"
+               value="on"
                {% if real_cost_serialized_data.validated %} checked {% endif %}
                style="width: 15px" /></td>
     <td class="case_petite case_fonce" style="text-align: center;"><input type="checkbox" name="invoiced"
-               value="{{ real_cost_serialized_data.invoiced }}"
+               value="on"
                {% if real_cost_serialized_data.invoiced %} checked {% endif %}
                style="width: 15px"/></td>
 
-    <td class="case_petite case_fonce" style="text-align: center;"><input type="checkbox" name="paid"
-               value="{{ real_cost_serialized_data.paid }}"
-               {% if real_cost_serialized_data.paid %} checked {% endif %}
+    <td class="case_petite case_fonce" style="text-align: center;"><input type="checkbox" name="payed"
+               value="on"
+               {% if real_cost_serialized_data.payed %} checked {% endif %}
                style="width: 15px"/></td>
 
     <input type="hidden" name="pk" value="{{ real_cost_serialized_data.pk }}"/>
