@@ -42,9 +42,9 @@ router.register(r'organizationalchart', OrganizationalChartViewSet, basename='or
 # Trying automus way:
 router.register(r'depenses_recettes', PrevisionBudgetCaringViewset, basename='budget_prevision')
 router.register(r'depenses_recettes2', RealCostCaringInternServiceViewSet, basename='budget_prevision')
-# router.register(r'depenses_recettes', RealCostPurchaseViewSet, basename='budget_prevision')
-# router.register(r'depenses_recettes', RealInternSpendViewSet, basename='budget_prevision')
-# router.register(r'depenses_recettes', PrestationsVentsRecettesIntViewset, basename='budget_prevision')
+router.register(r'depenses_recettesEX_S', RealCostPurchaseViewSet, basename='budget_prevision')
+router.register(r'depenses_recettesSP_I', RealInternSpendViewSet, basename='budget_prevision')
+router.register(r'depenses_recettes5', PrestationsVentsRecettesIntViewset, basename='budget_prevision')
 
 # Combining the viewset in purpose to have same url
 # router.register(r'prevision2', CombinedView.as_view(), basename='prevision')

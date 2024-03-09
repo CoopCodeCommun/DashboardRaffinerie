@@ -104,7 +104,12 @@ def refactor_cost_reel(model,data_type,type,name_table,serializer, total):
                                   {'nom':'effacer'}]
     data_type['list_include'] = ['username','date','proposition','validated', 'invoiced','payed']
     data_type['new_line_name'] = 'real_cost'+type
-    data_type['url2'] = 'depenses_recettes'
+    # unifying the type is CAR and IN_S. the value of the url will be used to select the
+    # serializer in the reterive method so CAR and IN_S have the same serializer
+    if type in ['CAR','IN_S']:
+        data_type['url2'] = 'depenses_recettes2'
+    else:
+        data_type['url2'] = 'depenses_recettes' + type
 
 
 # in this method we will factorize the method of filtering the data for Recettes,
@@ -120,7 +125,7 @@ def refactor_recette(model,p_or_r,data_type,type,name_table,serializer, total):
     data_type['columns'] = [{'nom':''}, {'nom':'amount'},{'nom':'editer'},{'nom':'effacer'}]
     data_type['list_include'] = ['groupe_name', 'amount']
     data_type['new_line_name'] = 'recette'+p_or_r+type
-    data_type['url2'] = 'depenses_recettes'
+    data_type['url2'] = 'depenses_recettes5'
 
 
 
@@ -128,7 +133,8 @@ def refactor_recette(model,p_or_r,data_type,type,name_table,serializer, total):
 def refactor_retrive(model,given_pk, model_serializer):
     model_obj = model.objects.get(pk=given_pk)
     serialized_obj = model_serializer(model_obj, many=False)
-    return serialized_obj.data
+    if serialized_obj.is_valid:
+        return serialized_obj.data
 
 
 
@@ -172,6 +178,7 @@ class PrevisionBudgetCaringViewset(viewsets.ModelViewSet): #PrevisionBudgetCarin
         # the given ones
         del data_cost2['EX_S']['columns'][4]
         data_cost2['EX_S']['list_include'] = ['contact_name', 'titled', 'date', 'validated', 'payed']
+
 
         data_cost2['SP_I']['columns'] = [{'nom': ''},{'nom': 'date'}, {'nom': 'montant'}, {'nom': 'editer'}, {'nom': 'effacer'}]
         data_cost2['SP_I']['list_include'] = ['pole_name', 'date_cost', 'amount']
@@ -276,44 +283,44 @@ class PrevisionBudgetCaringViewset(viewsets.ModelViewSet): #PrevisionBudgetCarin
 
 # create viewset class for Real cost of caring and intern service
 class RealCostCaringInternServiceViewSet(viewsets.ModelViewSet):
-    def list(self, request):
-        caring_real, int_service_real = {}, {}
-        model = RealCost.objects.all()
-
-        refactor_cost_prev(model,caring_real, 'CAR', 'real_cost_tab',RealcostSerializer, True)
-        refactor_cost_prev(model,int_service_real, 'IN_S', 'real_cost_tab', RealcostSerializer, True)
-
-        caring_real['columns'] = [{'nom': ''},
-                                  {'nom': 'date'},
-                                  {'nom': 'proposition'},
-                                  {'nom': 'validé'},
-                                  {'nom': 'facturé'},
-                                  {'nom': 'payé'},
-                                  {'nom': 'editer'},
-                                  {'nom':'effacer'}]
-        caring_real['list_include'] = ['username','date','proposition','validated', 'invoiced','payed']
-        caring_real['new_line_name'] = 'real_cost'+'CAR'
-
-        int_service_real['columns'] = [{'nom':''},
-                                       {'nom':'date'},
-                                       {'nom':'proposition'},
-                                       {'nom':'validé'},
-                                       {'nom':'facturé'},
-                                       {'nom':'payé'},
-                                       {'nom': 'editer'},
-                                       {'nom':'effacer'}]
-        int_service_real['list_include'] = ['username','date','proposition','validated', 'invoiced','payed']
-        int_service_real['new_line_name'] = 'real_cost'+'IN_S'
-
-        base_template = "dashboard/partial.html" if request.htmx else\
-            "dashboard/base.html"
-        context = { 'base_template': base_template,
-                    'caring_real': caring_real,
-                    'int_service_real':int_service_real
-                    }
-
-        return render(request, 'dashboard/pages_html/suivi_budgetaire.html',
-                      context=context)
+    # def list(self, request):
+    #     caring_real, int_service_real = {}, {}
+    #     model = RealCost.objects.all()
+    #
+    #     refactor_cost_prev(model,caring_real, 'CAR', 'real_cost_tab',RealcostSerializer, True)
+    #     refactor_cost_prev(model,int_service_real, 'IN_S', 'real_cost_tab', RealcostSerializer, True)
+    #
+    #     caring_real['columns'] = [{'nom': ''},
+    #                               {'nom': 'date'},
+    #                               {'nom': 'proposition'},
+    #                               {'nom': 'validé'},
+    #                               {'nom': 'facturé'},
+    #                               {'nom': 'payé'},
+    #                               {'nom': 'editer'},
+    #                               {'nom':'effacer'}]
+    #     caring_real['list_include'] = ['username','date','proposition','validated', 'invoiced','payed']
+    #     caring_real['new_line_name'] = 'real_cost'+'CAR'
+    #
+    #     int_service_real['columns'] = [{'nom':''},
+    #                                    {'nom':'date'},
+    #                                    {'nom':'proposition'},
+    #                                    {'nom':'validé'},
+    #                                    {'nom':'facturé'},
+    #                                    {'nom':'payé'},
+    #                                    {'nom': 'editer'},
+    #                                    {'nom':'effacer'}]
+    #     int_service_real['list_include'] = ['username','date','proposition','validated', 'invoiced','payed']
+    #     int_service_real['new_line_name'] = 'real_cost'+'IN_S'
+    #
+    #     base_template = "dashboard/partial.html" if request.htmx else\
+    #         "dashboard/base.html"
+    #     context = { 'base_template': base_template,
+    #                 'caring_real': caring_real,
+    #                 'int_service_real':int_service_real
+    #                 }
+    #
+    #     return render(request, 'dashboard/pages_html/suivi_budgetaire.html',
+    #                   context=context)
 
 
     def retrieve(self, request, pk=None):
@@ -411,38 +418,38 @@ class RealCostCaringInternServiceViewSet(viewsets.ModelViewSet):
 # create viewset class for Real cost of caring and intern service
 class RealCostPurchaseViewSet(viewsets.ModelViewSet):
 
-    def list(self, request):
-        purchase_real_cost = {}
-
-        model = RealCostExternService.objects.all()
-        refactor_cost_prev(model, purchase_real_cost,
-                           'EX_S',
-                           'real_cost_tab',
-                           RealCostExternServiceSerializer, True)
-
-        purchase_real_cost['columns'] = [{'nom': ''},
-                                         {'nom': 'intitulé'},
-                                         {'nom': 'date'},
-                                         {'nom': 'validé'},
-                                         {'nom': 'payé'},
-                                         {'nom': 'editer'},
-                                         {'nom':'effacer'}
-                                         ]
-        purchase_real_cost['list_include'] = ['contact_name',
-                                              'titled', 'date',
-                                              'validated',
-                                              'invoiced',
-                                              'payed']
-        purchase_real_cost['new_line_name'] = 'real_cost' + 'EX_S'
-
-        base_template = "dashboard/partial.html" if request.htmx else \
-            "dashboard/base.html"
-
-        context = {'base_template': base_template,
-                   'purchase_real_cost':purchase_real_cost}
-
-        return render(request, 'dashboard/pages_html/suivi_budgetaire.html',
-                   context=context)
+    # def list(self, request):
+    #     purchase_real_cost = {}
+    #
+    #     model = RealCostExternService.objects.all()
+    #     refactor_cost_prev(model, purchase_real_cost,
+    #                        'EX_S',
+    #                        'real_cost_tab',
+    #                        RealCostExternServiceSerializer, True)
+    #
+    #     purchase_real_cost['columns'] = [{'nom': ''},
+    #                                      {'nom': 'intitulé'},
+    #                                      {'nom': 'date'},
+    #                                      {'nom': 'validé'},
+    #                                      {'nom': 'payé'},
+    #                                      {'nom': 'editer'},
+    #                                      {'nom':'effacer'}
+    #                                      ]
+    #     purchase_real_cost['list_include'] = ['contact_name',
+    #                                           'titled', 'date',
+    #                                           'validated',
+    #                                           'invoiced',
+    #                                           'payed']
+    #     purchase_real_cost['new_line_name'] = 'real_cost' + 'EX_S'
+    #
+    #     base_template = "dashboard/partial.html" if request.htmx else \
+    #         "dashboard/base.html"
+    #
+    #     context = {'base_template': base_template,
+    #                'purchase_real_cost':purchase_real_cost}
+    #
+    #     return render(request, 'dashboard/pages_html/suivi_budgetaire.html',
+    #                context=context)
 
 
     def retrieve(self, request, pk=None):
@@ -531,31 +538,31 @@ class RealCostPurchaseViewSet(viewsets.ModelViewSet):
 
 # creating viewset class for intern real depenses
 class RealInternSpendViewSet(viewsets.ModelViewSet):
-    def list(self,request):
-        intern_spend = {}
-        model = RealCostInternSpending.objects.all()
-        refactor_cost_prev(model,intern_spend,
-                           'SP_I',
-                           'real_cost_tab',
-                           RealCostIntSpendSerializer,
-                           True)
-
-        intern_spend['columns'] = [{'nom': ''},
-                                   {'nom': 'date'},
-                                   {'nom': 'montant'},
-                                   {'nom': 'editer'},
-                                   {'nom': 'effacer'}]
-        intern_spend['list_include'] = ['pole_name', 'date_cost', 'amount']
-        intern_spend['new_line_name'] = 'real_cost' + 'SP_I'
-
-        base_template = "dashboard/partial.html" if request.htmx else \
-            "dashboard/base.html"
-
-        context = {'base_template': base_template,
-                   'intern_spend':intern_spend}
-
-        return render(request, 'dashboard/pages_html/suivi_budgetaire.html',
-                   context=context)
+    # def list(self,request):
+    #     intern_spend = {}
+    #     model = RealCostInternSpending.objects.all()
+    #     refactor_cost_prev(model,intern_spend,
+    #                        'SP_I',
+    #                        'real_cost_tab',
+    #                        RealCostIntSpendSerializer,
+    #                        True)
+    #
+    #     intern_spend['columns'] = [{'nom': ''},
+    #                                {'nom': 'date'},
+    #                                {'nom': 'montant'},
+    #                                {'nom': 'editer'},
+    #                                {'nom': 'effacer'}]
+    #     intern_spend['list_include'] = ['pole_name', 'date_cost', 'amount']
+    #     intern_spend['new_line_name'] = 'real_cost' + 'SP_I'
+    #
+    #     base_template = "dashboard/partial.html" if request.htmx else \
+    #         "dashboard/base.html"
+    #
+    #     context = {'base_template': base_template,
+    #                'intern_spend':intern_spend}
+    #
+    #     return render(request, 'dashboard/pages_html/suivi_budgetaire.html',
+    #                context=context)
 
 
     def retrieve(self, request, pk=None):
@@ -644,33 +651,33 @@ class RealInternSpendViewSet(viewsets.ModelViewSet):
 
 # creating viewset class for recettes
 class PrestationsVentsRecettesIntViewset(viewsets.ModelViewSet):
-    def list(self, request):
-        recettest_presta_prev, recettest_presta_real = {}, {}
-        recette_sells_prev, recette_sells_real = {}, {}
-        recette_intern_prev, recette_intern_real = {}, {}
-
-        model = PrestationsVentsRecettesInt.objects.all()
-        refactor_recette(model,'P',recettest_presta_prev,'P','recette_prev_tab',PrestationsVentsRecettesIntSerializer,True)
-        refactor_recette(model,'R',recettest_presta_real,'P','recette_real_tab',PrestationsVentsRecettesIntSerializer,True)
-        refactor_recette(model,'P',recette_sells_prev,'V','recette_prev_tab',PrestationsVentsRecettesIntSerializer,True)
-        refactor_recette(model,'R',recette_sells_real,'V','recette_real_tab',PrestationsVentsRecettesIntSerializer,True)
-        refactor_recette(model,'P',recette_intern_prev,'R_IN','recette_prev_tab',PrestationsVentsRecettesIntSerializer,True)
-        refactor_recette(model,'R',recette_intern_real,'R_IN','recette_real_tab',PrestationsVentsRecettesIntSerializer,True)
-
-        base_template = "dashboard/partial.html" if request.htmx else \
-            "dashboard/base.html"
-
-        context = {'base_template': base_template,
-                   'recettest_presta_prev':recettest_presta_prev,
-                   'recettest_presta_real':recettest_presta_real,
-                   'recette_sells_prev':recette_sells_prev,
-                   'recette_sells_real':recette_sells_real,
-                   'recette_intern_prev':recette_intern_prev,
-                   'recette_intern_real':recette_intern_real
-                   }
-
-        return render(request, 'dashboard/pages_html/suivi_budgetaire.html',
-                   context=context)
+    # def list(self, request):
+    #     recettest_presta_prev, recettest_presta_real = {}, {}
+    #     recette_sells_prev, recette_sells_real = {}, {}
+    #     recette_intern_prev, recette_intern_real = {}, {}
+    #
+    #     model = PrestationsVentsRecettesInt.objects.all()
+    #     refactor_recette(model,'P',recettest_presta_prev,'P','recette_prev_tab',PrestationsVentsRecettesIntSerializer,True)
+    #     refactor_recette(model,'R',recettest_presta_real,'P','recette_real_tab',PrestationsVentsRecettesIntSerializer,True)
+    #     refactor_recette(model,'P',recette_sells_prev,'V','recette_prev_tab',PrestationsVentsRecettesIntSerializer,True)
+    #     refactor_recette(model,'R',recette_sells_real,'V','recette_real_tab',PrestationsVentsRecettesIntSerializer,True)
+    #     refactor_recette(model,'P',recette_intern_prev,'R_IN','recette_prev_tab',PrestationsVentsRecettesIntSerializer,True)
+    #     refactor_recette(model,'R',recette_intern_real,'R_IN','recette_real_tab',PrestationsVentsRecettesIntSerializer,True)
+    #
+    #     base_template = "dashboard/partial.html" if request.htmx else \
+    #         "dashboard/base.html"
+    #
+    #     context = {'base_template': base_template,
+    #                'recettest_presta_prev':recettest_presta_prev,
+    #                'recettest_presta_real':recettest_presta_real,
+    #                'recette_sells_prev':recette_sells_prev,
+    #                'recette_sells_real':recette_sells_real,
+    #                'recette_intern_prev':recette_intern_prev,
+    #                'recette_intern_real':recette_intern_real
+    #                }
+    #
+    #     return render(request, 'dashboard/pages_html/suivi_budgetaire.html',
+    #                context=context)
 
     def retrieve(self, request, pk=None):
         recette_serialized_data = refactor_retrive(PrestationsVentsRecettesInt,pk, PrestationsVentsRecettesIntSerializer)
