@@ -6,32 +6,9 @@ from dashboard_app.views import (contacts, lazy_loading_profil_image, \
         OdooContactsAPI, julienjs_suivi_budgetaire, OrganizationalChartViewSet, edit_tableau_generique,
         PrevisionBudgetCaringViewset, RealCostCaringInternServiceViewSet, CombinedView,
         RealCostPurchaseViewSet, RealInternSpendViewSet, PrestationsVentsRecettesIntViewset)
-from .views import index, send_subventions, suivi_budgetaire, repertoire, objectifs_indicateurs, api_exemple, tableau_de_bord_perso
+from dashboard_app.views import index, send_subventions, suivi_budgetaire, repertoire, objectifs_indicateurs, api_exemple, tableau_de_bord_perso
 from rest_framework import routers
 
-'''
-from rest_framework.routers import SimpleRouter
-
-class CustomRouter(SimpleRouter):
-    def register(self, prefix, viewset, basename=None):
-        if basename is None:
-            basename = self.get_default_basename(viewset)
-        self.registry.append((prefix, viewset, basename))
-
-    def get_default_basename(self, viewset):
-        return viewset.__name__.lower()
-
-    def get_routes(self, viewset):
-        # Custom logic to generate URL patterns
-        # This is a simplified example; you might need to adjust it based on your requirements
-        routes = super().get_routes(viewset)
-        # Modify routes as needed
-        return routes
-
-# creating a custume router for the viewsets
-router_1 = CustomRouter()
-router_1.register(r'prevision', CombinedPrevisionBudgetViewset, basename='budget_prevision')
-'''
 
 router = routers.DefaultRouter()
 router.register(r'account_analytic_group', AccountAnalyticGroupAPI, basename='account_analytic_group_api')

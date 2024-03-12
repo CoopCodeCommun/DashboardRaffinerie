@@ -803,6 +803,7 @@ class OrganizationalChartViewSet(viewsets.ViewSet):
                                                    'task_planning_referee']
 
         organizational_chart_dt['new_line_name'] = 'organigramme_new'
+        organizational_chart_dt['url1'] = 'suivi_budg'
         organizational_chart_dt['url2'] = 'organizationalchart'
 
 
