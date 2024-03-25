@@ -6,8 +6,8 @@ import requests
 import pathlib, os, json
 from django.template.defaultfilters import slugify
 
-from tiqo_parser.models import Configuration, Label, Iban, Transaction, Category, QontoContact, Attachment
-from tiqo_parser.serializers import LabelsSerializer
+from dashboard_app.models import Configuration, Label, Iban, Transaction, Category, QontoContact, Attachment
+from dashboard_app.serializers import LabelsSerializer
 
 
 class QontoApi():

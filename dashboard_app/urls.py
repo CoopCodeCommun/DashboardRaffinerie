@@ -11,17 +11,18 @@ from rest_framework import routers
 
 
 router = routers.DefaultRouter()
+
 router.register(r'account_analytic_group', AccountAnalyticGroupAPI, basename='account_analytic_group_api')
 router.register(r'odoo_contacts', OdooContactsAPI, basename='odoo_contacts_api')
 # creating router register for Budget Viewset
 # sending url url with new organigramme
 router.register(r'organizationalchart', OrganizationalChartViewSet, basename='organizationalchart')
 # Trying automus way:
-router.register(r'depenses_recettes', PrevisionBudgetCaringViewset, basename='budget_prevision')
-router.register(r'depenses_recettes2', RealCostCaringInternServiceViewSet, basename='budget_prevision')
-router.register(r'depenses_recettesEX_S', RealCostPurchaseViewSet, basename='budget_prevision')
-router.register(r'depenses_recettesSP_I', RealInternSpendViewSet, basename='budget_prevision')
-router.register(r'depenses_recettes5', PrestationsVentsRecettesIntViewset, basename='budget_prevision')
+router.register(r'depenses_recettes', PrevisionBudgetCaringViewset, basename='depenses_recettes')
+router.register(r'depenses_recettes2', RealCostCaringInternServiceViewSet, basename='depenses_recettes2')
+router.register(r'depenses_recettesEX_S', RealCostPurchaseViewSet, basename='depenses_recettesEX_S')
+router.register(r'depenses_recettesSP_I', RealInternSpendViewSet, basename='depenses_recettesSP_I')
+router.register(r'depenses_recettes5', PrestationsVentsRecettesIntViewset, basename='depenses_recettes5')
 
 # Combining the viewset in purpose to have same url
 # router.register(r'prevision2', CombinedView.as_view(), basename='prevision')
@@ -53,6 +54,10 @@ urlpatterns = [
     path('recetteRP/', views.recette_real_presta_form, name='recette_tabRP'),
     path('recetteRV/', views.recette_real_ventes_form, name='recette_tabRV'),
     path('recetteRR_IN/', views.recette_internes_form_real, name='recette_tabRR_IN'),
+
+    # tEst API
+    path('test_api/', views.tes_api, name='test_api'),
+    path('test_api/<uuid:trans_id>', views.form_test_api, name='test_api_form'),
 
 
     path('contacts/', contacts, name="odoo_contacts"),

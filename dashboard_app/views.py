@@ -1,4 +1,4 @@
-import time
+import time, requests, os
 
 from django.contrib.auth import get_user_model
 from django.http import HttpResponseBadRequest
@@ -15,13 +15,14 @@ from dashboard_user.models import CustomUser, ContactProvisional
 from dashboard_app.models import PrevisionCost, Recette, Groupe
 from dashboard_app.models import (Contact, AccountAccount, AccountJournal, AccountAnalyticGroup, AccountAnalyticAccount, \
     RealCostInternSpending, RealCost, RealCostExternService, PrestationsVentsRecettesInt, Grant, Cost,
-    OrganizationalChart, Badge, DepensesBienveillance, Pole)
+    OrganizationalChart, Badge, DepensesBienveillance, Pole, Configuration, ProvisoirConfig)
 from dashboard_app.odoo_api import OdooApi
 from dashboard_app.serializers import UserSerializer
 from dashboard_app.serializers import (AccountAnalyticGroupSerializer, RealcostSerializer,
         PrestationsVentsRecettesIntValidator, PrevisionCostSerializer, RealCostExternServiceSerializer,
         RealCostIntSpendSerializer, PrestationsVentsRecettesIntSerializer,OrganizationalChartSerializer)
 from dashboard_app.models import AccountAccount
+from cryptography.fernet import Fernet
 from rest_framework.viewsets import ViewSet
 
 # We'll create a fonction that will return a dictionary in the form adapted to
@@ -38,6 +39,97 @@ def create_dict_with_data(slug_name, colonnes,lignes, total,new_ligne,new_line_n
         'new_line_name': new_line_name,
         'url_viewset': url_viewset
     }
+
+
+#__________________ Test API __________
+
+
+def get_api(url_endpoint, params=None):
+
+    # searching for the encripted key from .env
+    key=os.environ.get('FERNET_KEY').encode()
+    f = Fernet(key)
+
+    configuration = Configuration.get_solo()
+    # apply the decryption based on the encrypted key from env:
+    # remember this key was used to encrypte the id codes
+
+    qonto_key_decripted = f.decrypt(configuration.qonto_apikey).decode()
+    login_qonto = configuration.qonto_login
+
+    url = f"https://thirdparty.qonto.com/v2/{url_endpoint}"
+
+    headers = {
+        "Content-Type": "application/json",
+        "Authorization": f"{login_qonto}:{qonto_key_decripted}"
+    }
+
+    response = requests.request("GET", url, headers=headers, params=params)
+
+    if response.status_code == 200:
+        return response.json()
+
+
+def tes_api(request):
+
+    ibans, transactions, attach_ids, attachments, attach_0 = [],[],[],[],[]
+    organization = get_api("organization")
+    organization = organization.get('organization')
+    bank_accounts = organization.get('bank_accounts')
+    for bank_account in bank_accounts:
+        ibans.append(bank_account.get('iban'))
+
+
+    memberships = get_api('memberships', )
+    members = memberships.get('memberships')
+
+    # # beneficiaries = get_api('beneficiaries')
+    # # beneficiaries = beneficiaries.get('beneficiaries')
+    # #
+    # # external_transfers = get_api('external_transfers', params={'page': 1})
+    # # external_transfers = external_transfers.get('external_transfers')
+
+    # # labels = get_api('labels')
+    # # labels = labels.get('labels')
+
+
+    for iban in ibans:
+        x = get_api('transactions', params={'iban': iban,'page':1})
+
+        for int in x["transactions"]:
+            if int != []:
+                transactions.append(int)
+                intermedian_attach = get_api(f"transactions/{int.get('id')}/attachments")
+                if intermedian_attach.get('attachments') != []:
+                    if int.get('attachment_ids') != []:
+                        attach_intermedian = get_api(f"attachments/{int.get('attachment_ids')[0]}")
+                        attachments.append(attach_intermedian.get('attachment'))
+
+
+
+    base_template = "dashboard/partial.html" if request.htmx else\
+            "dashboard/base.html"
+
+    return render(request,
+    "dashboard/pages_html/test_api.html",
+        {'transactions':transactions,
+               'attachments':attachments}
+                  )
+
+
+def form_test_api(request, trans_id):
+    transaction = get_api(f"transactions/{trans_id}")
+
+    # if request.method == "POST":
+    #     id = request.POST.get("id")
+
+
+    return render(request,
+        'dashboard/pages_html/test_show_transaction.html',
+        {'transaction':transaction.get('transaction')})
+
+
+#________________End Test ________________
 
 
 def index(request):
@@ -212,14 +304,17 @@ class PrevisionBudgetCaringViewset(viewsets.ModelViewSet): #PrevisionBudgetCarin
         base_template = "dashboard/partial.html" if request.htmx else\
             "dashboard/base.html"
 
+
         if 'cancel' in request.GET:
 
             line = prev_cost_ser_data
+            url1 ='suivi_budg'
+            url2 = 'depenses_recettes'
             # Return the original table row HTML
             context = {
                 'base_template': base_template, 'line': line,
-                'list': ['titled', 'amount']
-            }
+                'url1': url1, 'url2': url2,
+                'list': ['titled', 'amount']}
 
             return render(request,
                     'dashboard/tableau_generique_ligne_read.html',
@@ -236,8 +331,12 @@ class PrevisionBudgetCaringViewset(viewsets.ModelViewSet): #PrevisionBudgetCarin
         if serializer.is_valid():
             serializer.save()
             line = serializer.data
+            url1 ='suivi_budg'
+            url2 = 'depenses_recettes'
+
 
             context = {'base_template': base_template, 'line': line,
+                       'url1': url1, 'url2': url2,
                        'list': ['titled', 'amount']}
 
             return render(request,
@@ -260,8 +359,13 @@ class PrevisionBudgetCaringViewset(viewsets.ModelViewSet): #PrevisionBudgetCarin
         if serializer.is_valid():
             serializer.save()
             line = serializer.data
+            url1 ='suivi_budg'
+            url2 = 'depenses_recettes'
+
+
             context = { 'base_template': base_template, 'line': line,
-                        'list':['titled','amount']}
+                        'url1': url1, 'url2': url2,
+                       'list':['titled','amount']}
         else:
             context = {'base_template': base_template,'message': f"Saisie incorrecte"}
 

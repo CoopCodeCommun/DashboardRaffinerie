@@ -26,10 +26,20 @@ class UserSerializer(serializers.ModelSerializer):
 
 # Validator for previzion budget
 class PrevisionCostSerializer(serializers.ModelSerializer):
+    #adding fields that aren't in the data of our model
+    # like for exemple url1 and url2
+    # url1 = serializers.SerializerMethodField()
+    # url2 = serializers.SerializerMethodField()
+
     class Meta:
         model = PrevisionCost
-        fields = ['titled', 'amount','type', 'pk']
+        fields = ['titled', 'amount','type', 'pk']#, 'url1','url2']
 
+    # def get_url1(self, obj):
+    #     return 'suivi_budg'
+    #
+    # def get_url2(self, obj):
+    #     return 'depenses_recettes'
 
 # VAlidator for PrestationsVentsRecettesInt
 class PrestationsVentsRecettesIntValidator(serializers.ModelSerializer):

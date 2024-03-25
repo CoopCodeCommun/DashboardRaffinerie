@@ -9,10 +9,10 @@
                 <!-- Création d'une case à cocher éditable -->
                 <td class="case_petite case_fonce" style="text-align: center;">
                     <input type="checkbox" {% if value %} checked {% endif %}
-                         style="pointer-events: none" />
+                         style="width: 15px; pointer-events: none" />
                 </td>
             {% else %}
-            <td class="case_petite case_clair"> {{ value }} </td>
+            <td class="case_petite case_clair" style="width: 40px"> {{ value }} </td>
                 {% endif %}
         {% endif %}
 

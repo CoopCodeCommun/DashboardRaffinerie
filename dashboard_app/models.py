@@ -130,6 +130,11 @@ class AccountAnalyticAccount(models.Model):
 
 ### DONNEE DE CONFIGURATION ###
 
+class ProvisoirConfig(SingletonModel):
+    qonto_login = models.CharField(max_length=100)
+    qonto_apikey = models.CharField(max_length=200)
+
+
 class Configuration(SingletonModel):
     # Table de configuration.
     # SigletonModel veut dire qu'il ne peut y avoir qu'une seule ligne (un seul enregistrement)
@@ -145,21 +150,19 @@ class Configuration(SingletonModel):
     # Les clés sont stockées chiffrées sur la base de donnée
     # Pour renseigner ces champs, il faut passer par le shell Django
     # les deux fonctions servent à réaliser le chiffrement
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-        self.__original_qonto_apikey = self.qonto_apikey
-        self.__original_odoo_apikey = self.odoo_apikey
 
-    def save(self, *args, **kwargs):
-        if self.__original_qonto_apikey != self.qonto_apikey:
-            self.qonto_apikey = fernet_encrypt(self.qonto_apikey)
+    def set_qonto_apikey(self, api):
+        self.qonto_apikey = fernet_encrypt(api)
 
-        if self.__original_odoo_apikey != self.odoo_apikey:
-            self.odoo_apikey = fernet_encrypt(self.odoo_apikey)
+        self.save()
+        return True
 
-        super().save(*args, **kwargs)
+    def set_odoo_apikey(self, key):
+        self.odoo_apikey = fernet_encrypt(key)
+        return True
 
-    def get_qonto_apikey(self):
+
+    def decript_qonto_apikey(self):
         return fernet_decrypt(self.qonto_apikey)
 
     def get_odoo_apikey(self):
@@ -469,6 +472,33 @@ class PrestationsVentsRecettesInt(models.Model):
         verbose_name_plural = _('Prestations Vents Recettes Internes')
 
 
+# Creating a recette object in paralel with the spending
+from django.db.models.signals import post_save
+from django.dispatch import receiver
+@receiver(post_save, sender=PrevisionCost)
+def create_recette(sender, instance, created, **kwargs):
+    if created:
+        if instance.type.type == 'SP_I':
+            gr = Groupe.objects.get(name=instance.titled)
+            recette = Recette.objects.get(type='R_IN')
+            PrestationsVentsRecettesInt.objects.create(group=gr,
+                                                       amount=-instance.amount,
+                                                       prev_ou_reel='P',
+                                                       recette=recette)
+
+# @receiver(post_save, sender=RealCostInternSpending)
+# def create_recette_reel(sender, instance, created, **kwargs):
+#     if created:
+#         if instance.type.type == 'SP_I':
+#             gr = Groupe.objects.get(name=instance.titled)
+#             recette = Recette.objects.get(type='R_IN')
+#             PrestationsVentsRecettesInt.objects.create(group=gr,
+#                                                        amount=-instance.amount,
+#                                                        prev_ou_reel='R',
+#                                                        recette=recette)
+
+
+
 # Creating the grant model
 class Grant(models.Model):
     uuid = models.UUIDField(primary_key=True, default=uuid4, editable=False, unique=True)
@@ -515,3 +545,26 @@ class DepensesBienveillance(models.Model):
     account_analytic_group = models.ForeignKey(AccountAnalyticGroup, on_delete=models.PROTECT)
 
     commentaire = models.TextField(blank=True, null=True)
+
+
+# create an Iban model where we'll stock all the ibans from the API
+class Iban(models.Model):
+    uuid = models.UUIDField(primary_key=True, default=uuid4, editable=False, unique=True)
+    iban = models.CharField(max_length=250, unique=True)
+    name = models.CharField(max_length=50, null=True, blank=True)
+
+
+# create a QontoContact that we'll use to stock all the Qonto Contacts
+class QontoContact(models.Model):
+    uuid = models.UUIDField(primary_key=True, default=uuid4, editable=False, unique=True)
+    last_name=models.CharField(max_length=50, verbose_name='Nom')
+    iban = models.ForeignKey(Iban, on_delete=models.PROTECT,
+                             related_name='qonto_contact',
+                             verbose_name='Le numéro Iban',
+                             null=True)
+    MEMBRRSHIP, BENEFICIAIRE = 'M','B'
+    TYPE = (
+        (MEMBRRSHIP, 'Memberships'),
+        (BENEFICIAIRE, 'Beneficiaires')
+    )
+    type = models.CharField(max_length=1, choices=TYPE, default=MEMBRRSHIP, verbose_name='type')
