@@ -1,7 +1,8 @@
 from django.conf import settings
 from django.urls import path, include
 from . import views
-from dashboard_app.views import (contacts, lazy_loading_profil_image, \
+from dashboard_app.views import (contacts, lazy_loading_profil_image,qonto_transactions,
+        qonto_transaction_all,\
         reload_contact_from_odoo, odoo_account, reload_account_from_odoo, AccountAnalyticGroupAPI,
         OdooContactsAPI, julienjs_suivi_budgetaire, OrganizationalChartViewSet, edit_tableau_generique,
         PrevisionBudgetCaringViewset, RealCostCaringInternServiceViewSet, CombinedView,
@@ -55,12 +56,10 @@ urlpatterns = [
     path('recetteRV/', views.recette_real_ventes_form, name='recette_tabRV'),
     path('recetteRR_IN/', views.recette_internes_form_real, name='recette_tabRR_IN'),
 
-    # tEst API
-    path('test_api/', views.tes_api, name='test_api'),
-    path('test_api/<uuid:trans_id>', views.form_test_api, name='test_api_form'),
-
-
     path('contacts/', contacts, name="odoo_contacts"),
+    # refreshing qonto transactions
+    path('qonto_transactions_all/', qonto_transaction_all, name="qonto_transactions_all"),
+    path('action/qonto_transactions/', qonto_transactions.as_view(), name="qonto_transactions"),
     path('odoo_account/', odoo_account, name="odoo_account"),
 
     path('lazy_loading_profil_image/<uuid:uuid>/', lazy_loading_profil_image.as_view(),

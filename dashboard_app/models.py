@@ -130,11 +130,6 @@ class AccountAnalyticAccount(models.Model):
 
 ### DONNEE DE CONFIGURATION ###
 
-class ProvisoirConfig(SingletonModel):
-    qonto_login = models.CharField(max_length=100)
-    qonto_apikey = models.CharField(max_length=200)
-
-
 class Configuration(SingletonModel):
     # Table de configuration.
     # SigletonModel veut dire qu'il ne peut y avoir qu'une seule ligne (un seul enregistrement)
@@ -251,6 +246,20 @@ class Project(models.Model):
 
     def __str__(self):
         return self.name
+
+
+# Label from Qonto and Odoo
+class Label(models.Model):
+    uuid = models.UUIDField(primary_key=True, default=uuid4, editable=False, unique=True, db_index=True)
+    name = models.CharField(max_length=100)
+    parent = models.ForeignKey('self', on_delete=models.CASCADE, blank=True, null=True)
+
+    # Liaison avec Odoo :
+    odoo_analytic_account = models.ForeignKey(AccountAnalyticAccount, on_delete=models.CASCADE, blank=True, null=True)
+    odoo_journal_account = models.ForeignKey(AccountJournal, on_delete=models.CASCADE, blank=True, null=True)
+    odoo_account_account = models.ForeignKey(AccountAccount, on_delete=models.CASCADE, blank=True, null=True)
+#    odoo_article = models.ForeignKey(OdooArticles, on_delete=models.CASCADE, blank=True, null=True)
+
 
 
 # Creating the action models of  groups and poles
@@ -486,18 +495,6 @@ def create_recette(sender, instance, created, **kwargs):
                                                        prev_ou_reel='P',
                                                        recette=recette)
 
-# @receiver(post_save, sender=RealCostInternSpending)
-# def create_recette_reel(sender, instance, created, **kwargs):
-#     if created:
-#         if instance.type.type == 'SP_I':
-#             gr = Groupe.objects.get(name=instance.titled)
-#             recette = Recette.objects.get(type='R_IN')
-#             PrestationsVentsRecettesInt.objects.create(group=gr,
-#                                                        amount=-instance.amount,
-#                                                        prev_ou_reel='R',
-#                                                        recette=recette)
-
-
 
 # Creating the grant model
 class Grant(models.Model):
@@ -505,7 +502,7 @@ class Grant(models.Model):
     account_date_automatic = models.DateField(auto_now_add=True,verbose_name="Date comptable (automatique)")
     label = models.CharField(max_length=150, verbose_name="Libéllé")
     referee = models.CharField(max_length=70, verbose_name="Référent")
-    amount = models.DecimalField(max_digits=8, decimal_places=2, default=0, verbose_name='amount')
+    amount = models.DecimalField(max_digits=8, decimal_places=2, default=0, verbose_name='montant')
     account_date = models.DateField(verbose_name="Date comptable")
     partnaire = models.CharField(max_length=60, verbose_name='Partenaire')
     reference = models.CharField(max_length=60, verbose_name='Référence')
@@ -550,6 +547,7 @@ class DepensesBienveillance(models.Model):
 # create an Iban model where we'll stock all the ibans from the API
 class Iban(models.Model):
     uuid = models.UUIDField(primary_key=True, default=uuid4, editable=False, unique=True)
+    iban_uuid = models.UUIDField(null=True, blank=True)
     iban = models.CharField(max_length=250, unique=True)
     name = models.CharField(max_length=50, null=True, blank=True)
 
@@ -568,3 +566,63 @@ class QontoContact(models.Model):
         (BENEFICIAIRE, 'Beneficiaires')
     )
     type = models.CharField(max_length=1, choices=TYPE, default=MEMBRRSHIP, verbose_name='type')
+
+
+# creating a analtic account class from qonto
+class QontoCodeAlanytique(models.Model):
+    uuid = models.UUIDField(primary_key=True, default=uuid4, editable=False, unique=True)
+    label_id = models.CharField(max_length=150, verbose_name='id code analytique qonto')
+    code = models.CharField(max_length=25, verbose_name='code analytique qonto')
+    parent = models.CharField(max_length=150, null=True, blank=True, verbose_name='id parent')
+
+    class Meta:
+        verbose_name = 'Code Analytique de Qonto'
+        verbose_name_plural = 'Codes Analytiques de Qonto'
+
+
+# Category will be used to the categories of the transactions
+class Category(models.Model):
+    uuid = models.UUIDField(primary_key=True, default=uuid4, editable=False, unique=True, db_index=True)
+    name = models.CharField(max_length=100)
+
+    def __str__(self):
+        return self.name
+
+
+# Create Transaction model
+class Transaction(models.Model):
+    uuid = models.UUIDField(primary_key=True, default=uuid4, editable=False, unique=True)
+    transaction_id = models.CharField(max_length=150)
+    iban = models.ForeignKey(Iban, on_delete=models.CASCADE, verbose_name="iban",
+                             related_name='iban_transaction')
+    emitted_at = models.DateTimeField(verbose_name="Emission")
+    amount_cents = models.IntegerField(verbose_name="Montant (cts)")
+    currency = models.CharField(max_length=3)
+    amount = models.DecimalField(max_digits=11, decimal_places=2, verbose_name="montant")
+    reference = models.CharField(max_length=50, null=True, blank=True, verbose_name='Numeré de facture')
+    label_fournisseur = models.CharField(max_length=70, null=True, blank=True, verbose_name='fournisseur')
+    status = models.CharField(max_length=25, null=True, blank=True, verbose_name="status")
+    note = models.TextField(null=True, blank=True, verbose_name='Description')
+    initiator = models.ForeignKey(QontoContact, on_delete=models.CASCADE,
+                                  null=True, blank=True, related_name='initiator_transactions',
+                                  verbose_name="Initiateur")
+    category = models.ForeignKey(Category, on_delete=models.CASCADE, blank=True, null=True,
+                                 related_name='category_transactions', verbose_name="categorie")
+    uuid_external_transfer = models.UUIDField(null=True, blank=True)
+    beneficiary = models.ForeignKey(QontoContact, on_delete=models.CASCADE,
+                                    null=True, blank=True,
+                                    related_name='beneficiary_transactions',
+                                    verbose_name="Bénéficiaire")
+    side = models.CharField(choices=(('D', 'debit'), ('C', 'credit')), max_length=1, verbose_name="Sens")
+    odoo_sended = models.BooleanField(default=False, verbose_name="Envoyé à Odoo")
+    odoo_invoice_id = models.IntegerField(null=True, blank=True)
+    category = models.CharField(max_length=25, null=True, blank=True, verbose_name="catégorie")
+
+
+class Attachment(models.Model):
+    uuid = models.UUIDField(primary_key=True, default=uuid4, editable=False, unique=True)
+    attachment_uuid = models.UUIDField(null=True, blank=True)
+    transactions = models.ManyToManyField(Transaction, related_name='attachments')
+    url_qonto = models.URLField()
+    name = models.CharField(max_length=100)
+    created_at = models.DateTimeField()

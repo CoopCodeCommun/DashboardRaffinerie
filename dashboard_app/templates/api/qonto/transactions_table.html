@@ -1,0 +1,46 @@
+{% load static %}
+<div id="body_table_contact">
+    <div class="table-responsive">
+        <table class="table align-items-center mb-0" hx-target="closest tr" hx-swap="outerHTML">
+            <thead>
+            <tr>
+                <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">
+                    N° Facture
+                </th>
+                <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">
+                    Date
+                </th>
+                <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">
+                    Montant
+                </th>
+                <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">
+                    Nom Fournisseur
+                </th>
+                <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">
+                    Code Analytique
+                </th>
+                <th class="text-secondary opacity-7"></th>
+                <th class="text-secondary opacity-7"></th>
+            </tr>
+            </thead>
+            <tbody>
+            {% for transaction in transactions %}
+                {% include 'api/qonto/transactions_row.html' %}
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+
+
+<div id="modals-here"
+     class="modal modal-blur fade"
+     style="display: none"
+     aria-hidden="false"
+     tabindex="-1">
+    <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
+        <div class="modal-content"></div>
+    </div>
+</div>
+
+

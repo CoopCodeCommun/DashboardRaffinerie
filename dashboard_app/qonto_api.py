@@ -1,13 +1,14 @@
 import uuid
 
+from cryptography.fernet import Fernet
 from django.conf import settings
 from django.contrib.sites import requests
 import requests
 import pathlib, os, json
 from django.template.defaultfilters import slugify
 
-from dashboard_app.models import Configuration, Label, Iban, Transaction, Category, QontoContact, Attachment
-from dashboard_app.serializers import LabelsSerializer
+from dashboard_app.models import Configuration, Iban, Transaction, Category, QontoContact, Attachment, Label
+#from dashboard_app.serializers import LabelsSerializer
 
 
 class QontoApi():
@@ -19,12 +20,20 @@ class QontoApi():
         if not any([self.login, self.api_key]):
             raise Exception("No Qonto credentials. Set its in the admin panel.")
 
+    def decript_key(self, given_api_key):
+        key=os.environ.get('FERNET_KEY').encode()
+        f = Fernet(key)
+
+        # apply the decryption based on the encrypted key from env:
+        # remember this key was used to encrypte the id codes
+        return f.decrypt(given_api_key).decode()
+
     def _get_request_api(self, url, params=None):
         url = f"https://thirdparty.qonto.com/v2/{url}"
 
         headers = {
             "Content-Type": "application/json",
-            "Authorization": f"{self.login}:{self.api_key}"
+            "Authorization": f"{self.login}:{self.decript_key(self.api_key)}"
         }
 
         response = requests.request("GET", url, headers=headers, params=params)
@@ -110,7 +119,6 @@ class QontoApi():
                 if response_dict:
                     transactions[iban] += response_dict.get('transactions')
                     current_page = response_dict.get('meta').get('next_page')
-                    print(f"fetch_all_transaction next page : {current_page}")
 
         return transactions
 
@@ -167,11 +175,13 @@ class QontoApi():
                 return db_attachement
 
     def get_all_transactions(self):
-        contacts = self.get_all_contacts()
+        #contacts = self.get_all_contacts()
         transactions = self.fetch_all_transaction()
+        fournisseur = 'Vide'
 
         for iban, transactions in transactions.items():
             for transaction in transactions:
+
                 try:
                     tr_db = Transaction.objects.get(
                         uuid=transaction.get('id'),
@@ -179,13 +189,20 @@ class QontoApi():
                         iban=iban
                     )
                     # TODO: Update ?
-                except Transaction.DoesNotExist:
-                    category = Category.objects.get_or_create(name=transaction.get('type'))[0]
-                    side = 'C' if transaction.get('side') == 'credit' else 'D'
 
-                    initiator = transaction.get('initiator_id')
-                    if initiator:
-                        initiator = contacts.get(uuid=initiator)
+                except Transaction.DoesNotExist:
+
+                    category = Category.objects.get_or_create(name=transaction.get('category'))
+                    side = 'C' if transaction.get('side') == 'credit' else 'D'
+                    if transaction.get('label'):
+                        fournisseur = transaction.get('label')
+                    #initiator = transaction.get('initiator_id')
+                    # This part will be provisoir and replaced with contacts.get(uuid=initiator)
+                    initiator = None
+                    # end of provisoir part.
+
+                    # if initiator:
+                    #     initiator = contacts.get(uuid=initiator)
 
                     tr_db = Transaction.objects.create(
                         uuid=transaction.get('id'),
@@ -195,24 +212,23 @@ class QontoApi():
                         emitted_at=transaction.get('emitted_at'),
                         status=transaction.get('status'),
                         amount_cents=transaction.get('amount_cents', 0),
+                        amount=transaction.get('amount', 0),
+                        reference=transaction.get('reference', 0),
                         currency=transaction.get('currency', 'EUR'),
                         note=transaction.get('note'),
-                        label=transaction.get('label'),
-                        vat_amount_cents=transaction.get('vat_amount_cents', 0),
-                        vat_amount=transaction.get('vat_amount', 0),
+                        label_fournisseur=fournisseur,
                         initiator=initiator,
-                        card_last_digits=transaction.get('card_last_digits'),
                         category=category,
                     )
 
-                    for label_qonto in transaction.get('label_ids', []):
-                        label_db = Label.objects.get(uuid=label_qonto)
-                        tr_db.label_ids.add(label_db)
+                    # for label_qonto in transaction.get('label_ids', []):
+                    #     label_db = Label.objects.get(uuid=label_qonto)
+                    #     tr_db.label_ids.add(label_db)
 
                     # On valide et raffraichi depuis la db, paske sinon les valeurs plus haut sont toujours des strings...
                     tr_db.refresh_from_db()
-                    for attachment_id in transaction.get('attachment_ids', []):
-                        self.download_or_update_attachment(attachment_id, tr_db)
+                    # for attachment_id in transaction.get('attachment_ids', []):
+                    #     self.download_or_update_attachment(attachment_id, tr_db)
 
         # On va chercher les external transfers liés aux transactions
         external_transferts = self.get_all_external_transfers()

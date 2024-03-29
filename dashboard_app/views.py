@@ -1,8 +1,13 @@
 import time, requests, os
 
 from django.contrib.auth import get_user_model
-from django.http import HttpResponseBadRequest
+from django.contrib.auth.decorators import login_required
+from django.utils.decorators import method_decorator
+
+from dashboard_app.qonto_api import QontoApi
+from django.contrib import messages
 from django.shortcuts import render, redirect, get_object_or_404
+from django.views import View
 from django.db.models import F
 from django.utils.html import format_html
 from rest_framework import status, viewsets
@@ -15,9 +20,8 @@ from dashboard_user.models import CustomUser, ContactProvisional
 from dashboard_app.models import PrevisionCost, Recette, Groupe
 from dashboard_app.models import (Contact, AccountAccount, AccountJournal, AccountAnalyticGroup, AccountAnalyticAccount, \
     RealCostInternSpending, RealCost, RealCostExternService, PrestationsVentsRecettesInt, Grant, Cost,
-    OrganizationalChart, Badge, DepensesBienveillance, Pole, Configuration, ProvisoirConfig)
+    OrganizationalChart, Badge, DepensesBienveillance, Pole, Configuration, Transaction)
 from dashboard_app.odoo_api import OdooApi
-from dashboard_app.serializers import UserSerializer
 from dashboard_app.serializers import (AccountAnalyticGroupSerializer, RealcostSerializer,
         PrestationsVentsRecettesIntValidator, PrevisionCostSerializer, RealCostExternServiceSerializer,
         RealCostIntSpendSerializer, PrestationsVentsRecettesIntSerializer,OrganizationalChartSerializer)
@@ -39,97 +43,6 @@ def create_dict_with_data(slug_name, colonnes,lignes, total,new_ligne,new_line_n
         'new_line_name': new_line_name,
         'url_viewset': url_viewset
     }
-
-
-#__________________ Test API __________
-
-
-def get_api(url_endpoint, params=None):
-
-    # searching for the encripted key from .env
-    key=os.environ.get('FERNET_KEY').encode()
-    f = Fernet(key)
-
-    configuration = Configuration.get_solo()
-    # apply the decryption based on the encrypted key from env:
-    # remember this key was used to encrypte the id codes
-
-    qonto_key_decripted = f.decrypt(configuration.qonto_apikey).decode()
-    login_qonto = configuration.qonto_login
-
-    url = f"https://thirdparty.qonto.com/v2/{url_endpoint}"
-
-    headers = {
-        "Content-Type": "application/json",
-        "Authorization": f"{login_qonto}:{qonto_key_decripted}"
-    }
-
-    response = requests.request("GET", url, headers=headers, params=params)
-
-    if response.status_code == 200:
-        return response.json()
-
-
-def tes_api(request):
-
-    ibans, transactions, attach_ids, attachments, attach_0 = [],[],[],[],[]
-    organization = get_api("organization")
-    organization = organization.get('organization')
-    bank_accounts = organization.get('bank_accounts')
-    for bank_account in bank_accounts:
-        ibans.append(bank_account.get('iban'))
-
-
-    memberships = get_api('memberships', )
-    members = memberships.get('memberships')
-
-    # # beneficiaries = get_api('beneficiaries')
-    # # beneficiaries = beneficiaries.get('beneficiaries')
-    # #
-    # # external_transfers = get_api('external_transfers', params={'page': 1})
-    # # external_transfers = external_transfers.get('external_transfers')
-
-    # # labels = get_api('labels')
-    # # labels = labels.get('labels')
-
-
-    for iban in ibans:
-        x = get_api('transactions', params={'iban': iban,'page':1})
-
-        for int in x["transactions"]:
-            if int != []:
-                transactions.append(int)
-                intermedian_attach = get_api(f"transactions/{int.get('id')}/attachments")
-                if intermedian_attach.get('attachments') != []:
-                    if int.get('attachment_ids') != []:
-                        attach_intermedian = get_api(f"attachments/{int.get('attachment_ids')[0]}")
-                        attachments.append(attach_intermedian.get('attachment'))
-
-
-
-    base_template = "dashboard/partial.html" if request.htmx else\
-            "dashboard/base.html"
-
-    return render(request,
-    "dashboard/pages_html/test_api.html",
-        {'transactions':transactions,
-               'attachments':attachments}
-                  )
-
-
-def form_test_api(request, trans_id):
-    transaction = get_api(f"transactions/{trans_id}")
-
-    # if request.method == "POST":
-    #     id = request.POST.get("id")
-
-
-    return render(request,
-        'dashboard/pages_html/test_show_transaction.html',
-        {'transaction':transaction.get('transaction')})
-
-
-#________________End Test ________________
 
 
 def index(request):
@@ -1397,6 +1310,31 @@ def contacts(request):
         'contacts': contacts[:5]
     }
     return render(request, 'htmx/odoo_contacts.html', context=context)
+
+
+#methode that will send the list of transactions from qonto api
+# to the qonto_transactions template
+def qonto_transaction_all(request):
+    transactions = Transaction.objects.order_by('-emitted_at')
+    # transactions = [{'transaction_id':123, 'date': '21/05/2019', 'amount': 100, 'label':'Céline','reference':401},
+    #                 {'transaction_id':456, 'date': '01/09/2022', 'amount': 30, 'label':'Claire','reference':402},
+    #                 {'transaction_id':888, 'date': '21/05/2024', 'amount': 99, 'label':'Tim','reference':403}]
+    context ={'transactions': transactions}
+
+    return render(request, 'api/qonto/qonto_transactions.html', context=context)
+
+
+# Create a method that will update Qonto transactions data
+class qonto_transactions(View):
+
+    @method_decorator(login_required)
+    def get(self, request):
+        qonto_api = QontoApi()
+        qonto_api.get_all_transactions()
+        messages.success(request, f"Transactions mises à jour. Total : {len(Transaction.objects.all())}")
+
+        redirect('/admin/dashboard_app/transaction')
+
 
 
 @permission_classes([AllowAny])

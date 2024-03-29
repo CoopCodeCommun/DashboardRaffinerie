@@ -2,8 +2,8 @@ from django.contrib import admin
 from django.db.models import Count
 
 from dashboard_app.models import (Contact, Badge, Configuration, AccountAnalyticGroup,
-        Groupe, Pole, Project, Action, PrevisionCost, RealCost, RealCostExternService,
-        RealCostInternSpending, PrestationsVentsRecettesInt, Grant)
+                                  Groupe, Pole, Project, Action, PrevisionCost, RealCost, RealCostExternService,
+                                  RealCostInternSpending, PrestationsVentsRecettesInt, Grant, Transaction)
 from solo.admin import SingletonModelAdmin
 
 
@@ -250,6 +250,20 @@ class GrantAdmin(admin.ModelAdmin):
         return True
 
 admin.site.register(Grant, GrantAdmin)
+
+# button ???
+def action_create_draft_invoice(modeladmin, request, queryset):
+    pass
+
+
+# Creating a transaction page on admin so we can update the transactions
+class TransactionAdmin(admin.ModelAdmin):
+    change_list_template = 'api/qonto/charge_transations.html'
+    list_display = ['transaction_id','iban','emitted_at','amount','label_fournisseur']
+
+    actions = [action_create_draft_invoice, ]
+
+admin.site.register(Transaction, TransactionAdmin)
 
 
 admin.site.register(Contact)
