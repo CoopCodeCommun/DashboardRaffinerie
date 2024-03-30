@@ -24,9 +24,11 @@
             </tr>
             </thead>
             <tbody>
+
             {% for transaction in transactions %}
                 {% include 'api/qonto/transactions_row.html' %}
             {% endfor %}
+
             </tbody>
         </table>
     </div>

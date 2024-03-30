@@ -24,7 +24,8 @@ from dashboard_app.models import (Contact, AccountAccount, AccountJournal, Accou
 from dashboard_app.odoo_api import OdooApi
 from dashboard_app.serializers import (AccountAnalyticGroupSerializer, RealcostSerializer,
         PrestationsVentsRecettesIntValidator, PrevisionCostSerializer, RealCostExternServiceSerializer,
-        RealCostIntSpendSerializer, PrestationsVentsRecettesIntSerializer,OrganizationalChartSerializer)
+        RealCostIntSpendSerializer, PrestationsVentsRecettesIntSerializer,OrganizationalChartSerializer,
+        TransactionSerializer)
 from dashboard_app.models import AccountAccount
 from cryptography.fernet import Fernet
 from rest_framework.viewsets import ViewSet
@@ -1312,19 +1313,22 @@ def contacts(request):
     return render(request, 'htmx/odoo_contacts.html', context=context)
 
 
-#methode that will send the list of transactions from qonto api
-# to the qonto_transactions template
+# methode that will send the list of transactions from the datas
+# that where saved on Transaction model
 def qonto_transaction_all(request):
-    transactions = Transaction.objects.order_by('-emitted_at')
-    # transactions = [{'transaction_id':123, 'date': '21/05/2019', 'amount': 100, 'label':'Céline','reference':401},
-    #                 {'transaction_id':456, 'date': '01/09/2022', 'amount': 30, 'label':'Claire','reference':402},
-    #                 {'transaction_id':888, 'date': '21/05/2024', 'amount': 99, 'label':'Tim','reference':403}]
+    #get the tansactions from the serializer
+    queryset = Transaction.objects.order_by('-emitted_at')
+    transactions = TransactionSerializer(queryset, many=True).data
+    for tr in transactions:
+        if tr.get('code_analytique') != 'Pas de code analytique':
+            print(tr.get('code_analytique'))
+
     context ={'transactions': transactions}
 
     return render(request, 'api/qonto/qonto_transactions.html', context=context)
 
 
-# Create a method that will update Qonto transactions data
+# Create a method that will update Qonto transactions data from the Qonto api
 class qonto_transactions(View):
 
     @method_decorator(login_required)

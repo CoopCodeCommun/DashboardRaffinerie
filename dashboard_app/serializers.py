@@ -2,7 +2,8 @@ from rest_framework import serializers
 
 from dashboard_user.models import CustomUser
 from .models import (AccountAccount, AccountAnalyticGroup, PrevisionCost, OrganizationalChart,
-                     PrestationsVentsRecettesInt, RealCost, RealCostExternService, RealCostInternSpending)
+                     PrestationsVentsRecettesInt, RealCost, RealCostExternService,
+                     Transaction,RealCostInternSpending)
 
 
 class UserSerializer(serializers.ModelSerializer):
@@ -124,6 +125,19 @@ class OrganizationalChartSerializer(serializers.ModelSerializer):
         data.setdefault('budget_referee', False)
         data.setdefault('task_planning_referee', False)
         return super().to_internal_value(data)
+
+
+class TransactionSerializer(serializers.ModelSerializer):
+    code_analytique = serializers.SerializerMethodField()
+    class Meta:
+        model = Transaction
+        fields = ['transaction_id','emitted_at','amount','label_fournisseur','code_analytique', 'pk']
+    def get_code_analytique(self, obj):
+        if obj.reference:
+            # Sending just the code analytique if it's start with a number else send the string
+            # return obj.reference[:6] if obj.reference[0] in '123456789' else obj.reference
+            return obj.reference
+        return 'Pas de code analytique'
 
 
 class AccountAnalyticGroupSerializer(serializers.ModelSerializer):
