@@ -58,7 +58,9 @@ urlpatterns = [
 
     path('contacts/', contacts, name="odoo_contacts"),
     # refreshing qonto transactions
-    path('qonto_transactions_all/', qonto_transaction_all, name="qonto_transactions_all"),
+    path('qonto_transactions/', qonto_transaction_all, name="qonto_transactions_all"),
+    path('qonto_transactions/<uuid:transaction_id>/', views.qonto_transaction_show, name="qonto_transactions_show" ),
+
     path('action/qonto_transactions/', qonto_transactions.as_view(), name="qonto_transactions"),
     path('odoo_account/', odoo_account, name="odoo_account"),
 

@@ -1319,14 +1319,42 @@ def qonto_transaction_all(request):
     #get the tansactions from the serializer
     queryset = Transaction.objects.order_by('-emitted_at')
     transactions = TransactionSerializer(queryset, many=True).data
+
     for tr in transactions:
-        if tr.get('code_analytique') != 'Pas de code analytique':
+        if tr.get('emitted_at') == '2024-02-06T15:41:44.376000+04:00':
             print(tr.get('code_analytique'))
+            print(type(tr.get('emitted_at')))
 
     context ={'transactions': transactions}
 
-    return render(request, 'api/qonto/qonto_transactions.html', context=context)
+    return render(request, 'api/qonto/qonto_transactions.html',
+                  context=context)
 
+
+# this method will send the particular transaction iformation to the modal
+# or just the api iformation
+def qonto_transaction_show(request, transaction_id):
+    transaction, transaction_pk = None, ""
+    obj_transac = Transaction.objects.get(pk=transaction_id)
+
+    serialized_obj = TransactionSerializer(obj_transac, many=False)
+    if serialized_obj.is_valid:
+        transaction = serialized_obj.data
+        transaction_pk = transaction.get('api_uuid')
+
+
+    # Sending the url of the attachment
+    qonto_api = QontoApi().get_attachment(transaction_pk)
+    attach_yes = qonto_api['attach_yes']
+    message = qonto_api['status']
+    attachments = qonto_api['attachments']
+
+
+
+    context = {'transaction': transaction, 'message': message,
+               'attachments': attachments, 'attach_yes': attach_yes}
+    return render(request, 'api/qonto/transaction_modal.html',
+                  context=context)
 
 # Create a method that will update Qonto transactions data from the Qonto api
 class qonto_transactions(View):

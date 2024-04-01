@@ -592,7 +592,8 @@ class Category(models.Model):
 # Create Transaction model
 class Transaction(models.Model):
     uuid = models.UUIDField(primary_key=True, default=uuid4, editable=False, unique=True)
-    transaction_id = models.CharField(max_length=150)
+    api_uuid = models.UUIDField(max_length=150, null=True, blank=True, verbose_name='api pk ')
+    transaction_id = models.CharField(max_length=150, verbose_name='Numéro de facture')
     iban = models.ForeignKey(Iban, on_delete=models.CASCADE, verbose_name="iban",
                              related_name='iban_transaction')
     emitted_at = models.DateTimeField(verbose_name="Emission")
@@ -603,6 +604,8 @@ class Transaction(models.Model):
     label_fournisseur = models.CharField(max_length=70, null=True, blank=True, verbose_name='fournisseur')
     status = models.CharField(max_length=25, null=True, blank=True, verbose_name="status")
     note = models.TextField(null=True, blank=True, verbose_name='Description')
+    attachment_ids = models.TextField(null=True, blank=True, default=[], verbose_name="Pièce joint")
+
     initiator = models.ForeignKey(QontoContact, on_delete=models.CASCADE,
                                   null=True, blank=True, related_name='initiator_transactions',
                                   verbose_name="Initiateur")

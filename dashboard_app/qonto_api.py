@@ -206,6 +206,7 @@ class QontoApi():
 
                     tr_db = Transaction.objects.create(
                         uuid=transaction.get('id'),
+                        api_uuid=transaction.get('id'),
                         transaction_id=transaction.get('transaction_id'),
                         side=side,
                         iban=iban,
@@ -216,6 +217,7 @@ class QontoApi():
                         reference=transaction.get('reference', 0),
                         currency=transaction.get('currency', 'EUR'),
                         note=transaction.get('note'),
+                        attachment_ids =transaction.get('attachments'),
                         label_fournisseur=fournisseur,
                         initiator=initiator,
                         category=category,
@@ -234,6 +236,27 @@ class QontoApi():
         external_transferts = self.get_all_external_transfers()
 
         return Transaction.objects.all()
+
+    def get_attachment(self, transaction_pk):
+        attach_hash, attachment_list = {},[]
+        transaction = self._get_request_api(f"transactions/{transaction_pk}")
+        # geting the attachment id from the transaction
+        attachment = transaction.get('transaction')['attachment_ids']
+        # Checking if there is an attachment to transaction
+        if len(attachment) == 0:
+            attach_hash['attach_yes'] = False
+            attach_hash['status'] = f"Il n'a pas de pièce joint pour cette transaction"
+            return attach_hash
+        # If there is a attachment it will be in a list
+        # so we'll extract all attachments from the list attachment id
+        attach_hash['attach_yes'] = True
+        for i in range(len(attachment)):
+            attach_hash['status'] = f"Il a {i+1} pièce joint pour cette transaction"
+            attachment_list.append(
+            self._get_request_api(f"attachments/{attachment[i]}").get('attachment')
+            )
+        attach_hash['attachments'] = attachment_list
+        return attach_hash
 
     def get_all_labels(self):
 

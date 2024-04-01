@@ -131,13 +131,23 @@ class TransactionSerializer(serializers.ModelSerializer):
     code_analytique = serializers.SerializerMethodField()
     class Meta:
         model = Transaction
-        fields = ['transaction_id','emitted_at','amount','label_fournisseur','code_analytique', 'pk']
+        fields = ['transaction_id',
+                  'emitted_at',
+                  'amount', 'iban',
+                  'label_fournisseur',
+                  'code_analytique',
+                  'attachment_ids',
+                  'api_uuid', 'pk']
     def get_code_analytique(self, obj):
         if obj.reference:
+            if len(obj.reference) < 4:
+                return obj.reference
             # Sending just the code analytique if it's start with a number else send the string
             # return obj.reference[:6] if obj.reference[0] in '123456789' else obj.reference
-            return obj.reference
-        return 'Pas de code analytique'
+            return ''.join([x for x in obj.reference[:6] if x in '0123456789'])\
+                if obj.reference[1] and obj.reference[2]  in '123456789' else obj.reference
+
+        return 'Donnée manquante'
 
 
 class AccountAnalyticGroupSerializer(serializers.ModelSerializer):

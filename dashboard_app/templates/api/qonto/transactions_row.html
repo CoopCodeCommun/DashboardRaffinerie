@@ -24,45 +24,20 @@
     <td>
         <p class="text-xs text-secondary mb-0">{{ transaction.code_analytique }}</p>
     </td>
-    <td class="align-middle text-center text-sm">
-        {% for badge in contact.badge.all %}
-            <span class="badge badge-sm" style="background: {{ badge.color }}">{{ badge.reference }}</span>
-        {% endfor %}
-    </td>
-    <td class="align-middle text-center">
-        <span class="text-secondary text-xs font-weight-normal">{{ contact.adresse | default:"" }}</span>
-    </td>
+
     <td class="align-middle">
         <a href="" class="text-secondary font-weight-normal text-xs"
-           hx-get="/api/odoo_contacts/{{ contact.uuid }}/?modal=true"
-           hx-target="#modals-here"
+           hx-get="/qonto_transactions/{{ transaction.pk }}/?modal=true"
+           hx-target="#modals-transaction"
            hx-swap="innerHTML"
            hx-trigger="click"
            data-bs-toggle="modal"
-           data-bs-target="#modals-here"
+           data-bs-target="#modals-transaction"
            hx-ext="loading-states"
            _="on click remove #modal_from_django"
         >
             <img src="{% static 'img/view-grid-detail.svg' %}" width="20">
         </a>
     </td>
-    <td class="align-middle text-center">
-        <img src="{% static 'img/edit.svg' %}" width="20" type="button"
-             hx-trigger="edit"
-             hx-get="/api/odoo_contacts/{{ contact.uuid }}/"
-             hx-swap="outerHTML"
-{#             hx-ext="loading-states"#}
-             _="on click
-                             if .editing is not empty
-                               Swal.fire({title: 'Edition active',
-                                          showCancelButton: true,
-                                          confirmButtonText: 'Yep, Je continue!',
-                                          text:'Hey! Vous êtes déja en édition, voulez vous continuer sur une nouvelle entrée?'})
-                               if the result's isConfirmed is false
-                                 halt
-                               end
-                               send cancel to .editing
-                             end
-                             trigger edit"/>
-    </td>
+
 </tr>
