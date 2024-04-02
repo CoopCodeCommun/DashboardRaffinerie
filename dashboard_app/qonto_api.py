@@ -245,13 +245,13 @@ class QontoApi():
         # Checking if there is an attachment to transaction
         if len(attachment) == 0:
             attach_hash['attach_yes'] = False
-            attach_hash['status'] = f"Il n'a pas de pièce joint pour cette transaction"
+            attach_hash['status'] = f"Il n'a pas de pièce jointe pour cette transaction"
             return attach_hash
         # If there is a attachment it will be in a list
         # so we'll extract all attachments from the list attachment id
         attach_hash['attach_yes'] = True
         for i in range(len(attachment)):
-            attach_hash['status'] = f"Il a {i+1} pièce joint pour cette transaction"
+            attach_hash['status'] = f"Il a {i+1} pièce jointe pour cette transaction"
             attachment_list.append(
             self._get_request_api(f"attachments/{attachment[i]}").get('attachment')
             )

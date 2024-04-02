@@ -1,0 +1,27 @@
+<!-- Modal -->
+<div id="modal_from_django" class="modal-dialog modal-dialog-centered" role="document">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h5 class="modal-title font-weight-normal" id="exampleModalLabel">{{ contact.nom }}</h5>
+            <button type="button" class="btn-close text-dark" data-bs-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+        <div class="modal-body">
+            <ul>
+                <li>Numero de Facture : {{ transaction.transaction_id }} </li>
+                <li>{{ message}} </li>
+                <li>Montant : {{ transaction.amount }} </li>
+                <li> Nom Fournisseur : {{ transaction.label }} </li>
+                {% if attach_yes == True %}
+                    <li> Téléchargez</li>
+                    {% for attachment in attachments %}
+                        <button type="button">
+                            <a href="{{ attachment.url }}">{{ attachment.file_name }} </a>
+                        </button>
+                    {% endfor %}
+                {% endif %}
+            </ul>
+        </div>
+    </div>
+</div>

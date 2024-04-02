@@ -1344,15 +1344,15 @@ def qonto_transaction_show(request, transaction_id):
 
 
     # Sending the url of the attachment
-    qonto_api = QontoApi().get_attachment(transaction_pk)
-    attach_yes = qonto_api['attach_yes']
-    message = qonto_api['status']
-    attachments = qonto_api['attachments']
-
-
+    attachment_hash = QontoApi().get_attachment(transaction_pk)
+    message = attachment_hash['status']
+    attach_yes = attachment_hash['attach_yes']
+    attachments = None
+    if attach_yes:
+        attachments = attachment_hash['attachments']
 
     context = {'transaction': transaction, 'message': message,
-               'attachments': attachments, 'attach_yes': attach_yes}
+               'attach_yes': attach_yes,'attachments': attachments}
     return render(request, 'api/qonto/transaction_modal.html',
                   context=context)
 
