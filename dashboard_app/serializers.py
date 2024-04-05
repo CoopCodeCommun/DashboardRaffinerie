@@ -129,15 +129,29 @@ class OrganizationalChartSerializer(serializers.ModelSerializer):
 
 class TransactionSerializer(serializers.ModelSerializer):
     code_analytique = serializers.SerializerMethodField()
+    emitted_at = serializers.SerializerMethodField()
+    description = serializers.SerializerMethodField()
     class Meta:
         model = Transaction
         fields = ['transaction_id',
                   'emitted_at',
+                  'description',
                   'amount', 'iban',
                   'label_fournisseur',
                   'code_analytique',
                   'attachment_ids',
                   'api_uuid', 'pk']
+
+    # Sending the date and the hour (cleanded data
+    def get_emitted_at(self, obj):
+        return obj.emitted_at.strftime('%Y-%m-%d %H:%M')
+
+    # Method to send "donnée manquant" or the data note (description) if there is
+    # not missed data
+    def get_description(self,obj):
+        return obj.note if obj.note else 'Donnée manquante'
+
+    # sending the analytic code in fonction of the type of the data
     def get_code_analytique(self, obj):
         if obj.reference:
             if len(obj.reference) < 4:
@@ -148,6 +162,7 @@ class TransactionSerializer(serializers.ModelSerializer):
                 if obj.reference[1] and obj.reference[2]  in '123456789' else obj.reference
 
         return 'Donnée manquante'
+
 
 
 class AccountAnalyticGroupSerializer(serializers.ModelSerializer):

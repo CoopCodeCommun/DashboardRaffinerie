@@ -144,7 +144,8 @@ def cost_base():
 
 
 # Creating prevision cost db
-def prevision_cost():
+def prevision_cost(gr_dict):
+    # import ipdb; ipdb.set_trace()
     previsions = [
         {'type': Cost.objects.get(type=Cost.CARING), 'titled': 'garant du cadre'},
         {'type': Cost.objects.get(type=Cost.CARING),'titled': 'ref budget'},
@@ -153,9 +154,9 @@ def prevision_cost():
         {'type': Cost.objects.get(type=Cost.INTERN_SERVICE), 'titled': 'entretien matérie'},
         {'type': Cost.objects.get(type=Cost.EXTERN_SERVICE), 'titled': 'matériel'},
         {'type': Cost.objects.get(type=Cost.EXTERN_SERVICE), 'titled': 'consomable'},
-        {'type': Cost.objects.get(type=Cost.INTERN_SPENDS), 'titled': 'micro-recylerie'},
-        {'type': Cost.objects.get(type=Cost.INTERN_SPENDS), 'titled': 'culture'},
-        {'type': Cost.objects.get(type=Cost.INTERN_SPENDS), 'titled': 'commun'}
+        # {'type': Cost.objects.get(type=Cost.INTERN_SPENDS), 'titled': gr_dict['Alimentation'].pk},
+        # {'type': Cost.objects.get(type=Cost.INTERN_SPENDS), 'titled': gr_dict['Jardin'].pk},
+        # {'type': Cost.objects.get(type=Cost.INTERN_SPENDS), 'titled': gr_dict['Culture'].pk}
     ]
     for prevision in previsions:
         prev, created = PrevisionCost.objects.get_or_create(**prevision)
@@ -249,7 +250,7 @@ class Command(BaseCommand):
         # creating Cost basic elements
         cost_base()
         # creating prevision cost
-        prevision_cost()
+        prevision_cost(group_dict)
         #import ipdb; ipdb.set_trace()
         # create organizational_chart
         create_organization_chart(dict_user)

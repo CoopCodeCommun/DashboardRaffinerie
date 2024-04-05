@@ -12,7 +12,9 @@
                 <li>Numero de Facture : {{ transaction.transaction_id }} </li>
                 <li>{{ message}} </li>
                 <li>Montant : {{ transaction.amount }} </li>
-                <li> Nom Fournisseur : {{ transaction.label }} </li>
+                <li> Nom Fournisseur : {{ transaction.label_fournisseur }} </li>
+                <li> Déscription : {{ transaction.description }} </li>
+
                 {% if attach_yes == True %}
                     <li> Téléchargez</li>
                     {% for attachment in attachments %}
