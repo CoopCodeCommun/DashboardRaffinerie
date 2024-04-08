@@ -12,6 +12,12 @@
         <div class="contentToShowHide">
             <div id="tableau_content" class="h-100" style="margin: 0px;">
                 <table class="no-border table-spacing" id="{{ nom_table }}">
+                    <div id="show" style="text-align: left; vertical-align: middle; font-weight: bold; cursor: pointer; min-width: 50px; white-space: nowrap; overflow: visible;"
+                            class="header-text"
+                    _="on click toggle .d-none on the previous #{{ table.name_table }}"
+                    >
+                        Afficher
+                    </div>
                     <thead>
                         <tr>
                             {% for colonne in table.columns %}
@@ -35,13 +41,15 @@
                         </td>
                     </tr>
 
-                    {% if table.total %}
+{#                    {% if table.total %}#}
                     <tr class="case_petite total-row">
-                        <td style="text-align: right; vertical-align: middle; font-weight: bold; cursor: pointer; min-width: 50px; white-space: nowrap; overflow: visible;"
+                        <td style="text-align: right; vertical-align: middle; font-weight: bold; min-width: 50px; white-space: nowrap; overflow: visible;"
                             class="header-text"
-                            _="on click toggle .d-none on the previous <tbody/>">
-                            + Total
+{#                            _="on click toggle .d-none on the previous <tbody/>"#}
+                        >Total
+                        <td class="case_petite case_clair" style="width: 240px"> 2222222</td>
                         </td>
+
                         {% for colonne in table.colonnes %}
                             {% if not forloop.first %}
                                 <td class="total-cell case_fonce header-text"
@@ -49,13 +57,13 @@
                             {% endif %}
                         {% endfor %}
                     </tr>
-                    {% else %}
+{#                    {% else %}#}
                     <tr class="case_petite total-row">
                         <td class="header-text" style="text-align: right; vertical-align: middle; font-weight: bold; cursor: pointer; min-width: 50px; white-space: nowrap; overflow: visible;">
                         </td>
                         <!-- Plus de cellules si nécessaire -->
                     </tr>
-                    {% endif %}
+{#                    {% endif %}#}
                 </tfoot>
                 </table>
             </div>
