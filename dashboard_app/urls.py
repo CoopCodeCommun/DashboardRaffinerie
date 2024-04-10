@@ -56,8 +56,6 @@ urlpatterns = [
     path('recetteRV/', views.recette_real_ventes_form, name='recette_tabRV'),
     path('recetteRR_IN/', views.recette_internes_form_real, name='recette_tabRR_IN'),
 
-    path('subtotals/', views.send_sub_total, name='send_sub_total'),
-
     path('contacts/', contacts, name="odoo_contacts"),
     # refreshing qonto transactions
     path('qonto_transactions/', qonto_transaction_all, name="qonto_transactions_all"),

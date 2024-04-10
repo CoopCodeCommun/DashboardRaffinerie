@@ -50,11 +50,8 @@
                                 Total
                             </td>
                             <td style="text-align: right; vertical-align: middle; font-weight: bold; min-width: 50px;
-                             white-space: nowrap; overflow: visible;" class="case_petite case_clair"
-                                hx-get="/subtotals"
-                                hx-trigger="load"
-                            >
-                            {% include 'htmx/subtotals/budget.html' %}
+                             white-space: nowrap; overflow: visible;" class="case_petite case_clair">
+                                {{ subtotal }}
                             </td>
                         </tr>
                     {% endif %}
