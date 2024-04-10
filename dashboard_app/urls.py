@@ -5,7 +5,7 @@ from dashboard_app.views import (contacts, lazy_loading_profil_image,qonto_trans
         qonto_transaction_all,\
         reload_contact_from_odoo, odoo_account, reload_account_from_odoo, AccountAnalyticGroupAPI,
         OdooContactsAPI, julienjs_suivi_budgetaire, OrganizationalChartViewSet, edit_tableau_generique,
-        PrevisionBudgetCaringViewset, RealCostCaringInternServiceViewSet, CombinedView,
+        PrevisionBudgetCaringViewset, RealCostCaringInternServiceViewSet,
         RealCostPurchaseViewSet, RealInternSpendViewSet, PrestationsVentsRecettesIntViewset)
 from dashboard_app.views import index, send_subventions, suivi_budgetaire, repertoire, objectifs_indicateurs, api_exemple, tableau_de_bord_perso
 from rest_framework import routers
@@ -55,6 +55,8 @@ urlpatterns = [
     path('recetteRP/', views.recette_real_presta_form, name='recette_tabRP'),
     path('recetteRV/', views.recette_real_ventes_form, name='recette_tabRV'),
     path('recetteRR_IN/', views.recette_internes_form_real, name='recette_tabRR_IN'),
+
+    path('subtotals/', views.send_sub_total, name='send_sub_total'),
 
     path('contacts/', contacts, name="odoo_contacts"),
     # refreshing qonto transactions

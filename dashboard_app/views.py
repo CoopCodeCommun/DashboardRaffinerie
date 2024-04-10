@@ -128,6 +128,9 @@ def refactor_recette(model,p_or_r,data_type,type,name_table,serializer, total):
     # creating the dictionary that will send thee datas through context
     data_type['lines'] = cost_serializer.data
     data_type['total'] = total
+    # data_type['sub_total'] = [sum(prevision['amount'] for prevision in serializer.data if prevision['type'] == type)
+    #                           for type in set(prevision['type'] for prevision in serializer.data)]
+
     data_type['name_table'] = name_table+p_or_r+type
     data_type['columns'] = [{'nom':''}, {'nom':'amount'},{'nom':'editer'},{'nom':'effacer'}]
     data_type['list_include'] = ['groupe_name', 'amount']
@@ -181,6 +184,8 @@ class PrevisionBudgetCaringViewset(viewsets.ModelViewSet): #PrevisionBudgetCarin
                 refactor_cost_reel(RealCostInternSpending.objects.all(),
                                    data_cost2[key], key, 'real_cost_tab',
                                    RealCostIntSpendSerializer, True)
+
+        print(data_cost.get('CAR')['lines'][0]['amount'])
 
         # Adapting the columns on purchase and spending with
         # the given ones
@@ -781,20 +786,29 @@ class PrestationsVentsRecettesIntViewset(viewsets.ModelViewSet):
             'dashboard/tableau_generique_ligne_read.html',
                       context=context)
 
-# Refactory the Viesets method
-class CombinedView(APIView):
-    pass
-    # def get(self, request,*args,**kwargs):
-    #     # Instantiate the viewsets
-    #     caring_viewset = PrevisionBudgetCaringViewset()
-    #     int_serv_viewset = RealCostCaringInternServiceViewSet()
-    #
-    #     context = {'caring_viewset': caring_viewset,
-    #                 'int_serv_viewset':int_serv_viewset}
-    #     # Render the template with the combined data
-    #     return render(request, 'general.html',context=context)
-#-------------------------------------------------------------------
 
+# Creating a method that will send the total of amount or proposal of each table
+from django.db.models import Sum
+def send_sub_total(request):
+    # Calculate the sum of prices for each category of prevision cost real cost and Recette
+    #prevision_cost:
+    prevision_cost = PrevisionCost.objects.values('type__type').annotate(subtotal=Sum('amount'))
+    # real cost 1
+    real_cost = RealCost.objects.values('type__type').annotate(subtotal=Sum('proposition'))
+
+    # Convert the queryset of prevision, real_cost, recette to a dictionary
+    #prevision:
+    subtotal = {item['type__type']: item['subtotal'] for item in prevision_cost}
+    real_subtotal = {item['type__type']: item['subtotal'] for item in real_cost}
+
+    print(real_subtotal)
+    context = {
+        'subtotal': subtotal
+    }
+    print(subtotal)
+
+    return render(request,
+        'htmx/subtotals/budget.html', context=context)
 
 # class viewset for organigramme
 class OrganizationalChartViewSet(viewsets.ViewSet):
@@ -804,7 +818,7 @@ class OrganizationalChartViewSet(viewsets.ViewSet):
         queryset = OrganizationalChart.objects.all()
 
         organizational_chart_dt['lines'] = OrganizationalChartSerializer(queryset, many=True).data
-        organizational_chart_dt['total'] = True
+        organizational_chart_dt['total'] = False
         organizational_chart_dt['name_table'] = 'organizational_tab'
         organizational_chart_dt['columns'] = [{'nom':''},
                                               {'nom':'presta interne'},

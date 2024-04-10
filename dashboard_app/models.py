@@ -391,6 +391,8 @@ class PrevisionCost(models.Model):
     class Meta:
         verbose_name = _('Dépenses Prévisionnel')
 
+
+
 # Creating the RealCost Class for the tables Intern services
 # and Caring ( Presta intern et Beinveillence)
 class RealCost(models.Model):
