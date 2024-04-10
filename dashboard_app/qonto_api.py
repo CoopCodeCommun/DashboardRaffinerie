@@ -233,8 +233,7 @@ class QontoApi():
                     #     self.download_or_update_attachment(attachment_id, tr_db)
 
         # On va chercher les external transfers liés aux transactions
-        external_transferts = self.get_all_external_transfers()
-
+        #external_transferts = self.get_all_external_transfers()
         return Transaction.objects.all()
 
     def get_attachment(self, transaction_pk):
