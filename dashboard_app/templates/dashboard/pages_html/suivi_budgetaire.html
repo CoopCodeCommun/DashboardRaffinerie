@@ -63,10 +63,10 @@
                                                 <div class="row">
                                                     <div class="col-md-4 p-2 width: 100%; overflow-x: auto;">
 {#                                                        {% include 'dashboard/tableau_generique.html' with table=data1.prev_cost_caring %}#}
-                                                        {% include 'dashboard/tableau_generique.html' with table=data_cost.CAR %}
+                                                        {% include 'dashboard/tableau_generique.html' with table=data_cost.CAR subtotal=sub_tot_prev_cost.CAR %}
                                                     </div>
                                                     <div class="col-md-8 p-2 width: 100%; overflow-x: auto;">
-                                                        {% include 'dashboard/tableau_generique.html' with table=data_cost2.CAR %}
+                                                        {% include 'dashboard/tableau_generique.html' with table=data_cost2.CAR subtotal=sub_tot_real_cost_a.CAR %}
                                                     </div>
                                                 </div>
                                             </div>
@@ -79,10 +79,10 @@
                                         <div class="contentToShowHide">
                                             <div class="row">
                                                 <div class="col-md-4 p-2">
-                                                    {% include 'dashboard/tableau_generique.html' with table=data_cost.IN_S %}
+                                                    {% include 'dashboard/tableau_generique.html' with table=data_cost.IN_S subtotal=sub_tot_prev_cost.IN_S %}
                                                 </div>
                                                 <div class="col-md-8 p-2">
-                                                    {% include 'dashboard/tableau_generique.html' with table=data_cost2.IN_S %}
+                                                    {% include 'dashboard/tableau_generique.html' with table=data_cost2.IN_S subtotal=sub_tot_real_cost_a.IN_S %}
                                                 </div>
                                             </div>
                                         </div>
@@ -94,10 +94,10 @@
                                         <div class="contentToShowHide">
                                             <div class="row">
                                                 <div class="col-md-4 p-2">
-                                                    {% include 'dashboard/tableau_generique.html' with table=data_cost.EX_S %}
+                                                    {% include 'dashboard/tableau_generique.html' with table=data_cost.EX_S subtotal=sub_tot_prev_cost.EX_S %}
                                                 </div>
                                                 <div class="col-md-8 p-2">
-                                                    {% include 'dashboard/tableau_generique.html' with table=data_cost2.EX_S %}
+                                                    {% include 'dashboard/tableau_generique.html' with table=data_cost2.EX_S subtotal=sub_tot_real_cost_b%}
                                                 </div>
                                             </div>
                                         </div>
@@ -109,10 +109,10 @@
                                         <div class="contentToShowHide">
                                             <div class="row">
                                                 <div class="col-md-4 p-2">
-                                                    {% include 'dashboard/tableau_generique.html' with table=data_cost.SP_I %}
+                                                    {% include 'dashboard/tableau_generique.html' with table=data_cost.SP_I subtotal=sub_tot_prev_cost.SP_I%}
                                                 </div>
                                                 <div class="col-md-8 p-2">
-                                                    {% include 'dashboard/tableau_generique.html' with table=data_cost2.SP_I %}
+                                                    {% include 'dashboard/tableau_generique.html' with table=data_cost2.SP_I subtotal=sub_tot_real_cost_c%}
                                                 </div>
                                             </div>
                                         </div>
@@ -160,10 +160,10 @@
                                         <div class="contentToShowHide">
                                             <div class="row">
                                                 <div class="col-md-6 p-2">
-                                                    {% include 'dashboard/tableau_generique.html' with table=data_recette.PP %}
+                                                    {% include 'dashboard/tableau_generique.html' with table=data_recette.PP subtotal=sub_tot_recettes_a.P %}
                                                 </div>
                                                 <div class="col-md-6 p-2">
-                                                    {% include 'dashboard/tableau_generique.html' with table=data_recette.RP %}
+                                                    {% include 'dashboard/tableau_generique.html' with table=data_recette.RP subtotal=sub_tot_recettes_b.P%}
                                                 </div>
                                             </div>
                                         </div>
@@ -175,10 +175,10 @@
                                         <div class="contentToShowHide">
                                             <div class="row">
                                                 <div class="col-md-6 p-2">
-                                                    {% include 'dashboard/tableau_generique.html' with table=data_recette.PV %}
+                                                    {% include 'dashboard/tableau_generique.html' with table=data_recette.PV subtotal=sub_tot_recettes_a.V %}
                                                 </div>
                                                 <div class="col-md-6 p-2">
-                                                    {% include 'dashboard/tableau_generique.html' with table=data_recette.RV %}
+                                                    {% include 'dashboard/tableau_generique.html' with table=data_recette.RV subtotal=sub_tot_recettes_b.V%}
                                                 </div>
                                             </div>
                                         </div>
@@ -190,10 +190,10 @@
                                         <div class="contentToShowHide">
                                             <div class="row">
                                                 <div class="col-md-6 p-2">
-                                                    {% include 'dashboard/tableau_generique.html' with table=data_recette.PR_IN %}
+                                                    {% include 'dashboard/tableau_generique.html' with table=data_recette.PR_IN subtotal=sub_tot_recettes_a.R_IN%}
                                                 </div>
                                                 <div class="col-md-6 p-2">
-                                                    {% include 'dashboard/tableau_generique.html' with table=data_recette.RR_IN %}
+                                                    {% include 'dashboard/tableau_generique.html' with table=data_recette.RR_IN subtotal=sub_tot_recettes_b.R_IN %}
                                                 </div>
                                             </div>
                                       </div>

@@ -1,6 +1,7 @@
 import time, requests, os
 
 from django.contrib.auth import get_user_model
+from django.db.models import Sum
 from django.contrib.auth.decorators import login_required
 from django.utils.decorators import method_decorator
 
@@ -153,6 +154,22 @@ def destroy_refactor(given_pk, model):
     obj.delete()
 
 
+# Creating a method that will send the total of amount or proposal of each table
+def calculate_sub_total( model, calcul_object,recettes,prev_real=""):
+    if recettes == False:
+
+        # Calculate the sum of prices for each category of prevision cost real cost and Recette
+        cost = model.objects.values('type__type').annotate(subtotal=Sum(calcul_object))
+        # Convert the queryset of prevision, real_cost, recette to a dictionary
+        return {item['type__type']: item['subtotal'] for item in cost}
+
+    # The case of recettes is different because we've to specify if it is real or prevision cost
+    # Here we do the first select where we group all types of reccettes in the categories
+    # real or prevision cost
+    recette = model.objects.values('prev_ou_reel','recette__type').annotate(subtotal=Sum(calcul_object))
+    # here we construct two dictionaries with the subtotals for prevision and real cost
+    return {item['recette__type']: item['subtotal'] for item in recette if item['prev_ou_reel']==prev_real}
+
 # creating a viewset class for Caring (bienveillance) prevision cost table
 class PrevisionBudgetCaringViewset(viewsets.ModelViewSet): #PrevisionBudgetCaringViewset
     def list(self, request):
@@ -182,6 +199,7 @@ class PrevisionBudgetCaringViewset(viewsets.ModelViewSet): #PrevisionBudgetCarin
                                    data_cost2[key], key, 'real_cost_tab',
                                    RealCostIntSpendSerializer, True)
 
+
         # Adapting the columns on purchase and spending with
         # the given ones
         del data_cost2['EX_S']['columns'][4]
@@ -198,13 +216,31 @@ class PrevisionBudgetCaringViewset(viewsets.ModelViewSet): #PrevisionBudgetCarin
                 refactor_recette(model,pr,
                                  data_recette[pr+v],v,'recette_prev_tab',PrestationsVentsRecettesIntSerializer,True)
 
+        # Call the method that create the subtotals of amount or prevision
+        sub_tot_prev_cost = calculate_sub_total(PrevisionCost, 'amount', False)
+        sub_tot_real_cost_a = calculate_sub_total(RealCost, 'proposition', False)
+        # sub_tot_real_cost_b = calculate_sub_total(RealCostExternService, 'proposition', False)
+        sub_tot_real_cost_c = calculate_sub_total(RealCostInternSpending, 'amount', False)['SP_I']
+        # Recettes
+        sub_tot_recettes_a = calculate_sub_total(PrestationsVentsRecettesInt,
+                                'amount', True, 'P')
+        sub_tot_recettes_b = calculate_sub_total(PrestationsVentsRecettesInt,
+                                                 'amount',True, 'R')
+        print("Subtotal Recettes Reeles:   ",sub_tot_recettes_b['R_IN'])
+
         base_template = "dashboard/partial.html" if request.htmx else\
             "dashboard/base.html"
-        context = { 'base_template': base_template,
-                    'data_cost': data_cost,
-                    'data_cost2': data_cost2,
-                    'data_recette': data_recette
-                 }
+        context = {'base_template': base_template,
+                   'data_cost': data_cost,
+                   'data_cost2': data_cost2,
+                   'data_recette': data_recette,
+                   'sub_tot_prev_cost': sub_tot_prev_cost,
+                   'sub_tot_real_cost_a': sub_tot_real_cost_a,
+                   # 'sub_tot_real_cost_b': sub_tot_real_cost_b.EX_S,
+                   'sub_tot_real_cost_c': sub_tot_real_cost_c,
+                   'sub_tot_recettes_a': sub_tot_recettes_a,
+                   'sub_tot_recettes_b': sub_tot_recettes_b,
+                   }
 
         return render(request, 'dashboard/pages_html/suivi_budgetaire.html',
                       context=context)
@@ -781,20 +817,6 @@ class PrestationsVentsRecettesIntViewset(viewsets.ModelViewSet):
             'dashboard/tableau_generique_ligne_read.html',
                       context=context)
 
-# Refactory the Viesets method
-class CombinedView(APIView):
-    pass
-    # def get(self, request,*args,**kwargs):
-    #     # Instantiate the viewsets
-    #     caring_viewset = PrevisionBudgetCaringViewset()
-    #     int_serv_viewset = RealCostCaringInternServiceViewSet()
-    #
-    #     context = {'caring_viewset': caring_viewset,
-    #                 'int_serv_viewset':int_serv_viewset}
-    #     # Render the template with the combined data
-    #     return render(request, 'general.html',context=context)
-#-------------------------------------------------------------------
-
 
 # class viewset for organigramme
 class OrganizationalChartViewSet(viewsets.ViewSet):
@@ -804,7 +826,7 @@ class OrganizationalChartViewSet(viewsets.ViewSet):
         queryset = OrganizationalChart.objects.all()
 
         organizational_chart_dt['lines'] = OrganizationalChartSerializer(queryset, many=True).data
-        organizational_chart_dt['total'] = True
+        organizational_chart_dt['total'] = False
         organizational_chart_dt['name_table'] = 'organizational_tab'
         organizational_chart_dt['columns'] = [{'nom':''},
                                               {'nom':'presta interne'},
@@ -1319,11 +1341,6 @@ def qonto_transaction_all(request):
     #get the tansactions from the serializer
     queryset = Transaction.objects.order_by('-emitted_at')
     transactions = TransactionSerializer(queryset, many=True).data
-
-    for tr in transactions:
-        if tr.get('emitted_at') == '2024-02-06T15:41:44.376000+04:00':
-            print(tr.get('code_analytique'))
-            print(type(tr.get('emitted_at')))
 
     context ={'transactions': transactions}
 

@@ -24,7 +24,7 @@ class UserSerializer(serializers.ModelSerializer):
 #         fields = ['user', 'intern_services', 'settlement_agent', 'budget_referee', 'task_planning_referee']
 #
 
-
+from django.db.models import Sum
 # Validator for previzion budget
 class PrevisionCostSerializer(serializers.ModelSerializer):
     #adding fields that aren't in the data of our model
@@ -35,6 +35,24 @@ class PrevisionCostSerializer(serializers.ModelSerializer):
     class Meta:
         model = PrevisionCost
         fields = ['titled', 'amount','type', 'pk']#, 'url1','url2']
+
+
+    # Sending the total by category
+    def to_representation(self, instance):
+        # Call the parent class method to get the default serialized data
+        representation = super().to_representation(instance)
+
+
+        total_prices = PrevisionCost.objects.values('type__type').annotate(total_price=Sum('amount'))
+
+        # Convert the QuerySet to a dictionary for easier access
+        total_prices_dict = {item['type__type']: item['total_price'] for item in total_prices}
+
+        # Add the total price for the current book's category to the serialized data
+        representation['total_price_by_category'] = total_prices_dict.get(instance.type, 0)
+
+        return representation
+
 
     # def get_url1(self, obj):
     #     return 'suivi_budg'

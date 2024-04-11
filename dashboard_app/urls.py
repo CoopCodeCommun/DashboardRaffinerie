@@ -5,7 +5,7 @@ from dashboard_app.views import (contacts, lazy_loading_profil_image,qonto_trans
         qonto_transaction_all,\
         reload_contact_from_odoo, odoo_account, reload_account_from_odoo, AccountAnalyticGroupAPI,
         OdooContactsAPI, julienjs_suivi_budgetaire, OrganizationalChartViewSet, edit_tableau_generique,
-        PrevisionBudgetCaringViewset, RealCostCaringInternServiceViewSet, CombinedView,
+        PrevisionBudgetCaringViewset, RealCostCaringInternServiceViewSet,
         RealCostPurchaseViewSet, RealInternSpendViewSet, PrestationsVentsRecettesIntViewset)
 from dashboard_app.views import index, send_subventions, suivi_budgetaire, repertoire, objectifs_indicateurs, api_exemple, tableau_de_bord_perso
 from rest_framework import routers
