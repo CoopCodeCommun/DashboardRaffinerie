@@ -55,3 +55,35 @@ Work in progres ...
 | Jonas  | 03/10/23 | 1 jour    | Base de donnée Account et API Odoo                                                                 |      |
 | Jonas  | 04/10/23 | 1 jour    | Api CRUD, exemple Ajax & exemple tableau mode édition & page d'administration de la base de donnée |      |
 | Jonas  | 01/11/23 | 1.5 jours | Templates                                                                                          |      |
+
+
+___
+
+# Préparer le preprod du dashboard.
+
+- Après avoir téléchargé le repos, vérifier si les fichiers de migrations sont effacé, sinon effacer toutes les fichiers de migrations (sauf __init__.py)
+- Aussi dans l'application vérifier s'il n'y a pas une base de donnée `db.sqlite3` . si oui la supprimer.
+- Poetry:
+    - `poetry install`
+    - `poetry init` (si poetry est déjà installé)
+    - `poetry shell`
+- Création d'admin
+    - Dans la racine de l'app `./manage.py create superuser`
+    - username -> admin
+    - email -> admin@ad.fr
+    - password -> 1234exemple
+    - username -> 1234exemple
+- Création d'un BD pour mieux voir les fonctionnalités du programme
+    - Dans la racine de l'app
+        -  `./manage.py popdb`
+    -  Ajoutons les données des API dans la config
+        -  A récupérer le fichier .env par des réseaux chiffrées, exemple signal
+        -  Ajoutons le fichier .env dans la racine de l'app (dans le même niveau comme manage.py ou dasheboard_app)
+        -  Récuperons par les mêmes réseaux chiffrées la clé chiffrée de l'API Qonto et l'identification.
+        -  Ajoutons ces données dans la BD suivant les procédures suivantes:
+            -  Dans le terminale cliquez `./manage.py shell_plus`
+            -  On sera dans ipython qui ressemble à ça `In [1]:`
+            -  Créons l'objet Configuration avec la commande suivante:
+            -  id_qonto = 'idintifiant_donne_par_reseau_criptee'
+            -  qo_api_key = 'clef_api_donne_en_criptee'
+        -  `Configuration.objects.create(qonto_login=id_qonto, qonto_apikey=qo_api_key)`
