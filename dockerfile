@@ -9,15 +9,15 @@ RUN apt-get install -y --no-install-recommends postgresql-client
 
 RUN apt-get install -y nano iputils-ping curl borgbackup cron
 
-RUN useradd -ms /bin/bash user1
-USER user1
+RUN useradd -ms /bin/bash la-raffinerie
+USER la-raffinerie
 
 RUN curl -sSL https://install.python-poetry.org | python3 -
 
 #COPY poetry.lock pyproject.toml /alon/
-WORKDIR /DashboardRaffinerie
+WORKDIR ../DashboardRaffinerie
 
-RUN export PATH="/home/user1/.local/bin:$PATH"
+RUN export PATH="/home/la-raffinerie/.local/bin:$PATH"
 #RUN /home/alon/.local/bin/poetry install --no-root --no-ansi --without dev
 
 

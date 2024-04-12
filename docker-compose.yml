@@ -19,8 +19,8 @@ services:
   dbr_django3:
     hostname: dbr_django3
     container_name: dbr_django3
-    build: .
-    user: user1
+    build: docker
+    user: la-raffinerie
     restart: always
     volumes:
       - "../:/DashboardRaffinerie"
