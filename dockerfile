@@ -14,10 +14,15 @@ USER la-raffinerie
 
 RUN curl -sSL https://install.python-poetry.org | python3 -
 
-#COPY poetry.lock pyproject.toml /alon/
-WORKDIR ../DashboardRaffinerie
+COPY poetry.lock pyproject.toml /DashboardRaffinerie/
+WORKDIR /DashboardRaffinerie
+
+# start installing things with poetry
+RUN pip install poetry
+COPY poetry.lock pyproject.toml .
+
 
 RUN export PATH="/home/la-raffinerie/.local/bin:$PATH"
-#RUN /home/alon/.local/bin/poetry install --no-root --no-ansi --without dev
+#RUN /home/DashboardRaffinerie/.local/bin/poetry install --no-root --no-ansi --without dev
 
 
