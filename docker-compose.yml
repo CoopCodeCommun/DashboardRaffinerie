@@ -7,7 +7,9 @@ services:
     container_name: dbr_postgres
     restart: always
     volumes:
+# The previws line will be added at the docker-compose_preprod.yml file (non preprod)
 #      - DbDev:/var/lib/postgresql/data
+# the prevews line will be commentat at docker-compose_preprod.yml file
       - ./PostgresPREPROD/dbdata:/var/lib/postgresql/data
     environment:
       POSTGRES_USER: ${POSTGRES_USER}
@@ -15,41 +17,3 @@ services:
       POSTGRES_DB: ${POSTGRES_DB}
     networks:
       - backend-drf
-
-  dbr_django3:
-    hostname: dbr_django3
-    container_name: dbr_django3
-    build: docker
-    user: la-raffinerie
-    restart: always
-    volumes:
-      - "../:/DashboardRaffinerie"
-      - "./bashrc:/home/user1/.bashrc"
-#      - "./ssh:/home/user1/.ssh"
-    working_dir: /DashboardRaffinerie
-    env_file: .env
-    expose:
-      - 80
-    ports:
-      - 8012:80
-#    depends_on:
-#      - dbr_redis
-    networks:
-      - frontend
-#      - backend-drf
-    command: "bash ./launcher_preprod.sh"
-#    command: "sleep infinity"
-    labels:
-      - traefik.enable=true
-      - traefik.docker.network=frontend
-      - traefik.http.routers.dbr_nginx.tls.certresolver=myresolver
-      - traefik.http.routers.dbr_nginx.rule=Host(`$DOMAIN`)
-
-
-
-#networks:
-#  frontend:
-#    name: "frontend"
-#    external: true
-#  backend-drf:
-#    name: "backend-drf"
