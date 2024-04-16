@@ -1,20 +1,20 @@
 version: '3'
 services:
-#
-#  dbr_postgres:
-#    image: postgres:11.5-alpine
-#    hostname: dbr_postgres
-#    container_name: dbr_postgres
-#    restart: always
-#    volumes:
-##      - DbDev:/var/lib/postgresql/data
-#      - ./PostgresPREPROD/dbdata:/var/lib/postgresql/data
-#    environment:
-#      POSTGRES_USER: ${POSTGRES_USER}
-#      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
-#      POSTGRES_DB: ${POSTGRES_DB}
-#    networks:
-#      - backend-drf
+
+  dbr_postgres:
+    image: postgres:11.5-alpine
+    hostname: dbr_postgres
+    container_name: dbr_postgres
+    restart: always
+    volumes:
+#      - DbDev:/var/lib/postgresql/data
+      - ./PostgresPREPROD/dbdata:/var/lib/postgresql/data
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: ${POSTGRES_DB}
+    networks:
+      - backend-drf
 
   dbr_django3:
     hostname: dbr_django3
