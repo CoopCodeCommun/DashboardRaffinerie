@@ -47,9 +47,9 @@ services:
 
 
 
-networks:
-  frontend:
-    name: "frontend"
-    external: true
+#networks:
+#  frontend:
+#    name: "frontend"
+#    external: true
 #  backend-drf:
 #    name: "backend-drf"
