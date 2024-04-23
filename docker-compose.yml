@@ -1,19 +1,26 @@
-version: '3'
 services:
 
-  dbr_postgres:
-    image: postgres:11.5-alpine
-    hostname: dbr_postgres
-    container_name: dbr_postgres
+  outgi:
+    hostname: outgi
+    container_name: outgi
+    build: .
+    user: pilot
     restart: always
     volumes:
-# The previws line will be added at the docker-compose_preprod.yml file (non preprod)
-#      - DbDev:/var/lib/postgresql/data
-# the prevews line will be commentat at docker-compose_preprod.yml file
-      - ./PostgresPREPROD/dbdata:/var/lib/postgresql/data
-    environment:
-      POSTGRES_USER: ${POSTGRES_USER}
-      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
-      POSTGRES_DB: ${POSTGRES_DB}
+      - "./database:/DashboardRaffinerie/database"
+    working_dir: /DashboardRaffinerie
+    env_file: .env
     networks:
-      - backend-drf
+      - frontend
+#      - backend-drf
+    command: "bash ./launcher_prod.sh"
+    labels:
+      - traefik.enable=true
+      - traefik.docker.network=frontend
+      - traefik.http.routers.alon_nginx.tls.certresolver=myresolver
+      - traefik.http.routers.alon_nginx.rule=Host(`$DOMAIN`)
+
+  networks:
+    frontend:
+      name: 'frontend'
+      external: true
