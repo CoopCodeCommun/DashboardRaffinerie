@@ -3,36 +3,29 @@ FROM python:3.10-bullseye
 RUN apt update
 RUN apt upgrade -y
 
-RUN mkdir -p /usr/share/man/man1
-RUN mkdir -p /usr/share/man/man7
+# If you find that SQLite is not available, you can uncomment the following line to install it:
+# RUN apt-get install -y sqlite3
 
-RUN apt-get install -y --no-install-recommends postgresql-client
 RUN apt-get install -y nano iputils-ping curl borgbackup cron
 
 # Add a new user
-RUN useradd -ms /bin/bash laraffinerie
+RUN useradd -ms /bin/bash pilot
 # Switch to the new user
-USER laraffinerie
+USER pilot
 
-ENV POETRY_NO_INTERACTION=1
+#ENV POETRY_NO_INTERACTION=1
 
 ## PYTHON
 RUN curl -sSL https://install.python-poetry.org | python3 -
 # Update PATH to include Poetry
-ENV PATH="/home/laraffinerie/.local/bin:$PATH"
+ENV PATH="/home/pilot/.local/bin:$PATH"
 
+# Copy the project files into the container
+COPY ./ /DashboardRaffinerie
 # Set the working directory
 WORKDIR /DashboardRaffinerie
 
-# Copy the project files into the container
-COPY . /DashboardRaffinerie/
-
 # initialisation of poetry
-# Regenerate the poetry.lock file to match pyproject.toml
-USER root
-RUN poetry lock
-USER laraffinerie
-
 RUN poetry install
 
 # # Expose port 8080

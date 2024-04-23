@@ -1,46 +1,23 @@
-version: '3'
 services:
 
-  dbr_postgres:
-    image: postgres:11.5-alpine
-    hostname: dbr_postgres
-    container_name: dbr_postgres
-    restart: always
-    volumes:
-# the prevews line will be commentat ant docker-compose.yml file
-      - DbDev:/var/lib/postgresql/data
-# The prevews line will be added at the docker-compose.yml file (non preprod)
-#      - ./PostgresPREPROD/dbdata:/var/lib/postgresql/data
-    environment:
-      POSTGRES_USER: ${POSTGRES_USER}
-      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
-      POSTGRES_DB: ${POSTGRES_DB}
-    networks:
-      - backend-drf
-
-  dbr_django3:
-    hostname: dbr_django3
-    container_name: dbr_django3
-    build: docker
-    user: la-raffinerie
+  outgi:
+    hostname: outgi
+    container_name: outgi
+    build: .
+    user: pilot
     restart: always
 # Why Ports ???
     volumes:
-      - "../:/DashboardRaffinerie"
-      - "./bashrc:/home/user1/.bashrc"
-#      - "./ssh:/home/user1/.ssh"
+      - "./database:/DashboardRaffinerie/database"
     working_dir: /DashboardRaffinerie
     env_file: .env
-# expose ???
-    expose:
-      - 80
-# Ports ???
-    ports:
-      - 8012:80
-#    depends_on:
-#      - dbr_redis
-# networks ???
     networks:
       - frontend
 #      - backend-drf
+    command: "bash ./launcher_prod.sh"
+    labels:
+      - traefik.enable=true
+      - traefik.docker.network=frontend
+      - traefik.http.routers.alon_nginx.tls.certresolver=myresolver
+      - traefik.http.routers.alon_nginx.rule=Host(`$DOMAIN`)
 
