@@ -12,15 +12,15 @@ services:
     env_file: .env
     networks:
       - frontend
-#      - backend-drf
-    command: "bash ./launcher_prod.sh"
+#      - backend
+    command: ["python", "manage.py", "runserver", "0.0.0.0:8080"]
     labels:
       - traefik.enable=true
       - traefik.docker.network=frontend
       - traefik.http.routers.alon_nginx.tls.certresolver=myresolver
       - traefik.http.routers.alon_nginx.rule=Host(`$DOMAIN`)
 
-  networks:
-    frontend:
-      name: 'frontend'
-      external: true
+networks:
+  frontend:
+    name: "frontend"
+    external: true
