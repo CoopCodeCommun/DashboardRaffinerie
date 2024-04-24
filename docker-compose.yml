@@ -1,0 +1,26 @@
+services:
+
+  outgi:
+    hostname: outgi
+    container_name: outgi
+    build: .
+    user: pilot
+    restart: always
+    volumes:
+      - "./database:/DashboardRaffinerie/database"
+    working_dir: /DashboardRaffinerie
+    env_file: .env
+    networks:
+      - frontend
+#      - backend
+    command: ["python", "manage.py", "runserver", "0.0.0.0:8080"]
+    labels:
+      - traefik.enable=true
+      - traefik.docker.network=frontend
+      - traefik.http.routers.alon_nginx.tls.certresolver=myresolver
+      - traefik.http.routers.alon_nginx.rule=Host(`$DOMAIN`)
+
+networks:
+  frontend:
+    name: "frontend"
+    external: true

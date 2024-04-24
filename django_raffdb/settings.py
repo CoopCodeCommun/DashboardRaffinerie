@@ -21,7 +21,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/4.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-&@s+-qt!e_f75iv*h7ud4fs3yi1jv4fcl2v4cx*iayw_7urdbr'
+SECRET_KEY = os.environ.get('SECRET_KEY', 'django-insecure-&@s+-qt!e_f75iv*h7ud4fs3yi1jv4fcl2v4cx*iayw_7urdbr')
 FERNET_KEY = os.environ.get('FERNET_KEY', 'WcpG29CrdUZ2yeiJ-plBjPWJ9GjNwCEVa-hyJ8ACiqc=')
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
@@ -99,7 +99,7 @@ WSGI_APPLICATION = 'django_raffdb.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+        'NAME': BASE_DIR / 'database/db.sqlite3', #  BASE_DIR is equal path ../
     }
 }
 
