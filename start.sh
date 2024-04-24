@@ -9,7 +9,7 @@ poetry run python3 manage.py migrate
 #poetry run python3 manage.py collectstatic --noinput
 #poetry run python3 manage.py install
 
-poetry run python3 manage.py runserver 0.0.0.0:80
+poetry run python3 manage.py runserver 0.0.0.0:8080
 
 #sleep infinity
 #echo "Run GUNICORN"
