@@ -27,9 +27,3 @@ WORKDIR /DashboardRaffinerie
 
 # initialisation of poetry
 RUN poetry install
-
-# # Expose port 8080
-EXPOSE 8080
-
-# # Start Django's development server
-CMD ["python", "manage.py", "runserver", "0.0.0.0:8080"]
