@@ -17,11 +17,10 @@ services:
     labels:
       - traefik.enable=true
       - traefik.docker.network=frontend
-      - traefik.http.routers.alon_nginx.tls.certresolver=myresolver
-      - traefik.http.routers.alon_nginx.rule=Host(`$DOMAIN`)
-      - traefik.http.services.test_machine.loadbalancer.server.port=8080
+      - traefik.http.routers.outgi.tls.certresolver=myresolver
+      - traefik.http.routers.outgi.rule=Host(`$DOMAIN`)
+      - traefik.http.services.outgi.loadbalancer.server.port=8080
 
 networks:
   frontend:
-    name: "frontend"
     external: true
