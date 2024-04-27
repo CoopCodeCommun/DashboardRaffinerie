@@ -1,5 +1,4 @@
 services:
-
   outgi:
     hostname: outgi
     container_name: outgi
@@ -7,9 +6,12 @@ services:
     user: pilot
     restart: always
     volumes:
-      - "./database:/DashboardRaffinerie/database"
+      - ./database:/DashboardRaffinerie/database
+      - ./://DashboardRaffinerie
     working_dir: /DashboardRaffinerie
     env_file: .env
+    ports:
+      - 8965:8965
     networks:
       - frontend
 #      - backend
@@ -19,7 +21,7 @@ services:
       - traefik.docker.network=frontend
       - traefik.http.routers.outgi.tls.certresolver=myresolver
       - traefik.http.routers.outgi.rule=Host(`$DOMAIN`)
-      - traefik.http.services.outgi.loadbalancer.server.port=8080
+      - traefik.http.services.outgi.loadbalancer.server.port=8965
 
 networks:
   frontend:

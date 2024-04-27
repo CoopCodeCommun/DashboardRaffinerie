@@ -6,7 +6,7 @@ echo "Poetry install ok"
 poetry run python3 manage.py migrate
 poetry run python3 manage.py popdb
 
-poetry run python3 manage.py runserver 0.0.0.0:8080
+poetry run python3 manage.py runserver 0.0.0.0:8965
 
 #echo "sleep infinity"
 #sleep infinity
