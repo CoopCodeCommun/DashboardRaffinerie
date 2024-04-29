@@ -32,10 +32,11 @@ if DEBUG:
         "http://0.0.0.0",
         "http://localhost",
         'https://dashboard.laraffinerie.re',
+        'https://outgi.betabillet.tech',
     ]
 else:
     ALLOWED_HOSTS = ['dashboard.laraffinerie.re']
-    CSRF_TRUSTED_ORIGINS = ['https://dashboard.laraffinerie.re']
+    CSRF_TRUSTED_ORIGINS = ['https://outgi.betabillet.tech']
 # Application definition
 
 INSTALLED_APPS = [
