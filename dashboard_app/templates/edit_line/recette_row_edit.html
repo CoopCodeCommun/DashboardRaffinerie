@@ -1,4 +1,5 @@
 
+
 <tr class="case_petite ligne_table" id="edit_{{ recette_serialized_data.pk }}">
 
     <td class="case_petite case_clair"> {{ recette_serialized_data.groupe_name }} </td>
@@ -8,11 +9,12 @@
     <td>
         {% include 'buttons/valid.html' with pk=recette_serialized_data.pk url2='depenses_recettes5' %}
     </td>
+
     <td>
         <i type="submit" class="fa fa-window-close-o" style="font-size:22px;color:red"
-        hx-get="/suivi_budg/depenses_recettes/{{ recette_serialized_data.pk }}/?cancel=true"
+        hx-get="/suivi_budg/depenses_recettes5/{{ recette_serialized_data.pk }}/?cancel=true"
         hx-target="closest tr"
-        hx-swap="innerHTML"
+        hx-swap="outerHTML"
         ></i>
     </td>
 </tr>
