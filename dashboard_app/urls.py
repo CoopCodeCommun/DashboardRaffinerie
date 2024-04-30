@@ -70,7 +70,6 @@ urlpatterns = [
     path('reload_account_from_odoo/', reload_account_from_odoo.as_view(), name="reload_account_from_odoo"),
 
     # Pages de l'application Front de Julien :
-    path('suivi_budgetaire/', suivi_budgetaire, name='suivi_budgetaire'),
     path('julienjs/suivi_budgetaire/', julienjs_suivi_budgetaire, name='julienjs'),
 
     # Pour afficher une ligne editable :

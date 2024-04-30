@@ -28,6 +28,7 @@ from dashboard_app.serializers import (AccountAnalyticGroupSerializer, RealcostS
         RealCostIntSpendSerializer, PrestationsVentsRecettesIntSerializer,OrganizationalChartSerializer,
         TransactionSerializer)
 from dashboard_app.models import AccountAccount
+from dashboard_app.data import data
 from cryptography.fernet import Fernet
 from rest_framework.viewsets import ViewSet
 
@@ -64,6 +65,9 @@ def julienjs_suivi_budgetaire(request):
     context = {}
     return render(request, 'pages_html/suivi_budgetaire.html', context=context)
     pass
+
+
+
 
 
 def edit_tableau_generique(request, table, index):
@@ -174,6 +178,7 @@ def calculate_sub_total( model, calcul_object,recettes,prev_real=""):
 class PrevisionBudgetCaringViewset(viewsets.ModelViewSet): #PrevisionBudgetCaringViewset
     def list(self, request):
         data_cost = {'CAR':{}, 'IN_S':{},'EX_S':{},'SP_I':{}}
+        print(f"Dataaaaa:  {data.membres_du_collectif}")
         data_cost2 = {'CAR':{}, 'IN_S':{},'EX_S':{},'SP_I':{}}
         data_recette =  {'PP':{},'PV':{},'PR_IN':{},
                          'RP':{},'RV':{},'RR_IN':{}}
@@ -226,7 +231,7 @@ class PrevisionBudgetCaringViewset(viewsets.ModelViewSet): #PrevisionBudgetCarin
                                 'amount', True, 'P')
         sub_tot_recettes_b = calculate_sub_total(PrestationsVentsRecettesInt,
                                                  'amount',True, 'R')
-        print("Subtotal Recettes Reeles:   ",sub_tot_recettes_b['R_IN'])
+
 
         base_template = "dashboard/partial.html" if request.htmx else\
             "dashboard/base.html"
@@ -1236,8 +1241,11 @@ def contacts(request):
 
 # methode that will send the list of transactions from the datas
 # that where saved on Transaction model
+
 def qonto_transaction_all(request):
     #get the tansactions from the serializer
+    if not request.user.is_authenticated:
+        return redirect('/')
     queryset = Transaction.objects.order_by('-emitted_at')
     transactions = TransactionSerializer(queryset, many=True).data
 
