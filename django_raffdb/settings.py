@@ -32,7 +32,7 @@ if DEBUG:
         "http://0.0.0.0",
         "http://localhost",
         'https://dashboard.laraffinerie.re',
-        'https://outgi.betabillet.tech',
+        'https://outgi.small.codecommun.co',
     ]
 else:
     ALLOWED_HOSTS = ['dashboard.laraffinerie.re']
