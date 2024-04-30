@@ -67,9 +67,6 @@ def julienjs_suivi_budgetaire(request):
     pass
 
 
-
-
-
 def edit_tableau_generique(request, table, index):
     table = getattr(data, table)
     ligne = table['lignes'][index]
@@ -94,6 +91,7 @@ def refactor_cost_prev(model,data_type,type,name_table,serializer, total):
     data_type['new_line_name'] = 'prevision'+type
     data_type['url1'] ='suivi_budg'
     data_type['url2'] = 'depenses_recettes'
+
 
 # Refacotr the method that will create the real cost table caring
 # and intern service
@@ -141,14 +139,12 @@ def refactor_recette(model,p_or_r,data_type,type,name_table,serializer, total):
     data_type['url2'] = 'depenses_recettes5'
 
 
-
 # Refacotr for retrive method in viewsets:
 def refactor_retrive(model,given_pk, model_serializer):
     model_obj = model.objects.get(pk=given_pk)
     serialized_obj = model_serializer(model_obj, many=False)
     if serialized_obj.is_valid:
         return serialized_obj.data
-
 
 
 # creating a refacor for destroyn selected object from all viewsets of Cost prevision
@@ -173,6 +169,7 @@ def calculate_sub_total( model, calcul_object,recettes,prev_real=""):
     recette = model.objects.values('prev_ou_reel','recette__type').annotate(subtotal=Sum(calcul_object))
     # here we construct two dictionaries with the subtotals for prevision and real cost
     return {item['recette__type']: item['subtotal'] for item in recette if item['prev_ou_reel']==prev_real}
+
 
 # creating a viewset class for Caring (bienveillance) prevision cost table
 class PrevisionBudgetCaringViewset(viewsets.ModelViewSet): #PrevisionBudgetCaringViewset
@@ -623,9 +620,6 @@ class RealInternSpendViewSet(viewsets.ModelViewSet):
         return render(request,
             'dashboard/tableau_generique_ligne_read.html',
                       context=context)
-
-
-
 
 
 # creating viewset class for recettes
@@ -1245,7 +1239,7 @@ def contacts(request):
 def qonto_transaction_all(request):
     #get the tansactions from the serializer
     if not request.user.is_authenticated:
-        return redirect('/')
+        return redirect('/admin')
     queryset = Transaction.objects.order_by('-emitted_at')
     transactions = TransactionSerializer(queryset, many=True).data
 
