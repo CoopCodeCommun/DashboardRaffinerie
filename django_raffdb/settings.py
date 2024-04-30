@@ -35,8 +35,8 @@ if DEBUG:
         'https://outgi.small.codecommun.co',
     ]
 else:
-    ALLOWED_HOSTS = ['dashboard.laraffinerie.re']
-    CSRF_TRUSTED_ORIGINS = ['https://outgi.betabillet.tech']
+    ALLOWED_HOSTS = ['dashboard.laraffinerie.re', 'outgi.small.codecommun.co']
+    CSRF_TRUSTED_ORIGINS = ['https://outgi.small.codecommun.co']
 # Application definition
 
 INSTALLED_APPS = [
