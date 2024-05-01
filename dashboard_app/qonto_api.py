@@ -9,6 +9,9 @@ from django.template.defaultfilters import slugify
 
 from dashboard_app.models import Configuration, Iban, Transaction, Category, QontoContact, Attachment, Label
 #from dashboard_app.serializers import LabelsSerializer
+# We need redirect here so we can use it at the case when we call the Transactions api and latter
+# it will avoid a bug
+from django.shortcuts import render, redirect
 
 
 class QontoApi():
@@ -100,7 +103,10 @@ class QontoApi():
 
                     print(f"ExternalTransfer {transaction.reference}")
 
-        return all_external_transfers
+        # return all_external_transfers
+
+        return redirect('admin//dashboard_app/transaction/')
+
 
     def fetch_all_transaction(self):
         # Mise à jour des IBAN
