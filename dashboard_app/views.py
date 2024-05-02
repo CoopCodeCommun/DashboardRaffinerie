@@ -175,7 +175,6 @@ def calculate_sub_total( model, calcul_object,recettes,prev_real=""):
 class PrevisionBudgetCaringViewset(viewsets.ModelViewSet): #PrevisionBudgetCaringViewset
     def list(self, request):
         data_cost = {'CAR':{}, 'IN_S':{},'EX_S':{},'SP_I':{}}
-        print(f"Dataaaaa:  {data.membres_du_collectif}")
         data_cost2 = {'CAR':{}, 'IN_S':{},'EX_S':{},'SP_I':{}}
         data_recette =  {'PP':{},'PV':{},'PR_IN':{},
                          'RP':{},'RV':{},'RR_IN':{}}
@@ -1317,3 +1316,7 @@ class lazy_loading_profil_image(APIView):
             'contact': Contact.objects.get(pk=uuid)
         }
         return render(request, 'htmx/lazy_loading.html', context=context)
+
+
+def test_columns(request):
+    return render(request, 'dashboard/pages_html/gestion_colonnes.html')
