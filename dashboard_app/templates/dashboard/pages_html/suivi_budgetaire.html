@@ -8,205 +8,243 @@
     <!-- membre + recap -->
     <section class="row">
 
-    <!-- membre du collectif -->
-    <div class="col-md-4 m-2 p-2 case rose">
-        {% include 'dashboard/section_generique.html' with titre='Membres du Collectif' %}
+        <!-- membre du collectif -->
+        <div class="col-md-4 m-2 p-2 case rose">
+            {% include 'dashboard/section_generique.html' with titre='Membres du Collectif' %}
             <div style="width: 100%; overflow-x: auto;">
-        {% include 'dashboard/tableau_generique.html' with table=data.membres_du_collectif %}
+                {% include 'dashboard/tableau_generique.html' with table=data.membres_du_collectif %}
+            </div>
         </div>
-    </div>
 
-    <!-- recap budget -->
-    <div class="col-md-7 p-2 m-2 case orange">
-        {% include 'dashboard/section_generique.html' with titre='Recapitulatif Budget' %}
-        <section class="row">
-            <div class="col-md-6 p-2 width: 100%; overflow-x: auto;">
-                {% include 'dashboard/tableau_generique.html' with table=data.recap_depenses %}
-            </div>
-            <div class="col-md-6 p-2 width: 100%; overflow-x: auto;">
-                {% include 'dashboard/tableau_generique.html' with table=data.recap_recettes %}
-            </div>
-        </section>
-
-    </div>
+        <!-- recap budget -->
+        <div class="col-md-7 p-2 m-2 case orange">
+            {% include 'dashboard/section_generique.html' with titre='Recapitulatif Budget' %}
+            <section class="row">
+                <div class="col-md-6 p-2 width: 100%; overflow-x: auto;">
+                    {% include 'dashboard/tableau_generique.html' with table=data.recap_depenses %}
+                </div>
+                <div class="col-md-6 p-2 width: 100%; overflow-x: auto;">
+                    {% include 'dashboard/tableau_generique.html' with table=data.recap_recettes %}
+                </div>
+            </section>
+        </div>
 
     </section>
 
     <!-- Suivi détaillé -->
-    <section>
-        <section>
-            <div class="jaune p-2 my-3 case">
-                {% include 'dashboard/section_generique.html' with titre='Suivi budgétaire détaillé' %}
-                <div class="contentToShowHide">
-                    <div class="row mx-1 gx-2">
-                        <!-- Dépenses -->
-                        <div class="col-md-7 p-2 case case_clair ">
-                          {% include 'dashboard/section_generique.html' with titre='Dépenses' %}
+    <div class="main container-fluid pb-3 jaune p-2 my-3 case">
+        <div>
+            {% include 'dashboard/section_generique.html' with titre='Suivi budgétaire détaillé' %}
+        </div>
+
+        <div class="row col-12 overflow-y-auto ms-auto me-auto case case_clair">
+            <!-- dépenses-->
+            <div class="col-12 col-lg-7 mb-2">
+                <!-- Dépenses -->
+                    <div>
+                        {% include 'dashboard/section_generique.html' with titre='Dépenses' %}
+                    </div>
+
+                <div class="row col-12">
+                    <!-- colonne Prévisionnel -->
+                    <div class="col-12 col-lg-3 p-0">
+                        <div style="margin: 1px; border: 0px solid #FFFFFF;">
+                            <div class="titre colonne_prev">
+                                Prévisionnel
+                            </div>
+
+                            {% include 'dashboard/section_generique.html' with titre='Bienveillance' %}
                             <div class="contentToShowHide">
+                                    <div class="col-md-4 p-2 width: 100%; overflow-x: auto;">
+                                        {% include 'dashboard/tableau_generique.html' with table=data_cost.CAR subtotal=sub_tot_prev_cost.CAR %}
+                                    </div>
+                            </div>
 
-                                <div class="case_clair">
-                                    <!-- bienveillance -->
-                                    <section class="px-2">
-                                        <div class="row">
-                                            <div class="col-md-4 p-2">
-                                                <div class="titre colonne_prev">
-                                                    Prévisionnel
-                                                </div>
-                                            </div>
-                                            <div class="col-md-8 p-2">
-                                                <div class="titre colonne_reel">
-                                                    Réel
-                                                </div>
-                                            </div>
-                                            {% include 'dashboard/section_generique.html' with titre='Bienveillance' %}
-                                            <div class="contentToShowHide">
-                                                <div class="row">
-                                                    <div class="col-md-4 p-2 width: 100%; overflow-x: auto;">
-{#                                                        {% include 'dashboard/tableau_generique.html' with table=data1.prev_cost_caring %}#}
-                                                        {% include 'dashboard/tableau_generique.html' with table=data_cost.CAR subtotal=sub_tot_prev_cost.CAR %}
-                                                    </div>
-                                                    <div class="col-md-8 p-2 width: 100%; overflow-x: auto;">
-                                                        {% include 'dashboard/tableau_generique.html' with table=data_cost2.CAR subtotal=sub_tot_real_cost_a.CAR %}
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </section>
+                            {% include 'dashboard/section_generique.html' with titre='Prestations' %}
+                            <div class="contentToShowHide">
+                                <div class="row">
+                                    <div class="col-md-6 p-2">
+                                        {% include 'dashboard/tableau_generique.html' with table=data_recette.PP subtotal=sub_tot_recettes_a.P %}
+                                    </div>
+                                </div>
+                            </div>
 
-                                    <!-- prestation interne -->
-                                    <section class="px-2">
-                                        {% include 'dashboard/section_generique.html' with titre='Prestations internes' %}
-                                        <div class="contentToShowHide">
-                                            <div class="row">
-                                                <div class="col-md-4 p-2">
-                                                    {% include 'dashboard/tableau_generique.html' with table=data_cost.IN_S subtotal=sub_tot_prev_cost.IN_S %}
-                                                </div>
-                                                <div class="col-md-8 p-2">
-                                                    {% include 'dashboard/tableau_generique.html' with table=data_cost2.IN_S subtotal=sub_tot_real_cost_a.IN_S %}
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </section>
+                            <!-- prestation externe -->
+                            {% include 'dashboard/section_generique.html' with titre='Ventes' %}
+                            <div class="contentToShowHide">
+                                <div class="row">
+                                    <div class="col-md-6 p-2">
+                                        {% include 'dashboard/tableau_generique.html' with table=data_recette.PV subtotal=sub_tot_recettes_a.V %}
+                                    </div>
+                                </div>
+                            </div>
 
-                                    <!-- prestation externe -->
-                                    <section class="px-2">
-                                        {% include 'dashboard/section_generique.html' with titre='Prestations externes / achats' %}
-                                        <div class="contentToShowHide">
-                                            <div class="row">
-                                                <div class="col-md-4 p-2">
-                                                    {% include 'dashboard/tableau_generique.html' with table=data_cost.EX_S subtotal=sub_tot_prev_cost.EX_S %}
-                                                </div>
-                                                <div class="col-md-8 p-2">
-                                                    {% include 'dashboard/tableau_generique.html' with table=data_cost2.EX_S subtotal=sub_tot_real_cost_b%}
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </section>
-
-                                    <!-- dépenses internes -->
-                                    <section class="px-2">
-                                        {% include 'dashboard/section_generique.html' with titre='Dépenses internes' %}
-                                        <div class="contentToShowHide">
-                                            <div class="row">
-                                                <div class="col-md-4 p-2">
-                                                    {% include 'dashboard/tableau_generique.html' with table=data_cost.SP_I subtotal=sub_tot_prev_cost.SP_I%}
-                                                </div>
-                                                <div class="col-md-8 p-2">
-                                                    {% include 'dashboard/tableau_generique.html' with table=data_cost2.SP_I subtotal=sub_tot_real_cost_c%}
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </section>
+                            <!-- dépenses internes -->
+                            {% include 'dashboard/section_generique.html' with titre='Recettes internes' %}
+                            <div class="contentToShowHide">
+                                <div class="row">
+                                    <div class="col-md-6 p-2">
+                                        {% include 'dashboard/tableau_generique.html' with table=data_recette.PR_IN subtotal=sub_tot_recettes_a.R_IN %}
+                                    </div>
                                 </div>
                             </div>
                         </div>
+                    </div>
+                    <!-- colonne Réel -->
+                    <div class="col-12 col-lg-8">
+                        <div style="margin: 1px; border: 0px solid #FFFFFF;">
+                            <div class="titre colonne_reel">
+                                Réel
+                            </div>
 
-                        <!-- recette -->
-                        <section class="col-md-5 p-2 case case_clair">
-                            {% include 'dashboard/section_generique.html' with titre='Recettes' %}
+                            {% include 'dashboard/section_generique.html' with titre='Bienveillance' %}
                             <div class="contentToShowHide">
-                                <div class="case_clair">
-                                    <!-- Subventions aap -->
-                                    <section class="px-2">
-                                        <div class="row">
-                                            <div class="col-md-6 p-2">
-                                                <div class="titre colonne_prev">
-                                                    Prévisionnel
-                                                </div>
-                                            </div>
-                                            <div class="col-md-6 p-2">
-                                                <div class="titre colonne_reel">
-                                                    Réel
-                                                </div>
-                                            </div>
-
-                                            {% include 'dashboard/section_generique.html' with titre='Subventions / Appels à projet' %}
-                                            <div class="contentToShowHide">
-                                                <div class="row">
-                                                    <div class="col-md-6 p-2">
-                                                        {% include 'dashboard/tableau_generique.html' with table=data.subvention_prev %}
-                                                    </div>
-                                                    <div class="col-md-6 p-2">
-                                                        {% include 'dashboard/tableau_generique.html' with table=data.subvention_real %}
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </section>
-
-                                    <!-- Prestations -->
-                                    <section class="px-2">
-                                        {% include 'dashboard/section_generique.html' with titre='Prestations' %}
-                                        <div class="contentToShowHide">
-                                            <div class="row">
-                                                <div class="col-md-6 p-2">
-                                                    {% include 'dashboard/tableau_generique.html' with table=data_recette.PP subtotal=sub_tot_recettes_a.P %}
-                                                </div>
-                                                <div class="col-md-6 p-2">
-                                                    {% include 'dashboard/tableau_generique.html' with table=data_recette.RP subtotal=sub_tot_recettes_b.P%}
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </section>
-
-                                    <!-- Ventes -->
-                                    <section class="px-2">
-                                        {% include 'dashboard/section_generique.html' with titre='Ventes' %}
-                                        <div class="contentToShowHide">
-                                            <div class="row">
-                                                <div class="col-md-6 p-2">
-                                                    {% include 'dashboard/tableau_generique.html' with table=data_recette.PV subtotal=sub_tot_recettes_a.V %}
-                                                </div>
-                                                <div class="col-md-6 p-2">
-                                                    {% include 'dashboard/tableau_generique.html' with table=data_recette.RV subtotal=sub_tot_recettes_b.V%}
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </section>
-
-                                    <!-- Recettes internes -->
-                                    <section class="px-2">
-                                        {% include 'dashboard/section_generique.html' with titre='Recettes internes' %}
-                                        <div class="contentToShowHide">
-                                            <div class="row">
-                                                <div class="col-md-6 p-2">
-                                                    {% include 'dashboard/tableau_generique.html' with table=data_recette.PR_IN subtotal=sub_tot_recettes_a.R_IN%}
-                                                </div>
-                                                <div class="col-md-6 p-2">
-                                                    {% include 'dashboard/tableau_generique.html' with table=data_recette.RR_IN subtotal=sub_tot_recettes_b.R_IN %}
-                                                </div>
-                                            </div>
-                                      </div>
-                                    </section>
+                                <div class="row">
+                                    <div class="col-md-8 p-2 width: 100%; overflow-x: auto;">
+                                        {% include 'dashboard/tableau_generique.html' with table=data_cost2.CAR subtotal=sub_tot_real_cost_a.CAR %}
+                                    </div>
                                 </div>
                             </div>
-                        </section>
+
+                            <!-- prestation interne -->
+                            {% include 'dashboard/section_generique.html' with titre='Prestations internes' %}
+                            <div class="contentToShowHide">
+                                <div class="row">
+                                    <div class="col-md-8 p-2">
+                                        {% include 'dashboard/tableau_generique.html' with table=data_cost2.IN_S subtotal=sub_tot_real_cost_a.IN_S %}
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- prestation externe -->
+                            {% include 'dashboard/section_generique.html' with titre='Prestations externes / achats' %}
+                            <div class="contentToShowHide">
+                                <div class="row">
+
+                                    <div class="col-md-8 p-2">
+                                        {% include 'dashboard/tableau_generique.html' with table=data_cost2.EX_S subtotal=sub_tot_real_cost_b %}
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- dépenses internes -->
+                            {% include 'dashboard/section_generique.html' with titre='Dépenses internes' %}
+                            <div class="contentToShowHide">
+                                <div class="row">
+                                    <div class="col-md-8 p-2">
+                                        {% include 'dashboard/tableau_generique.html' with table=data_cost2.SP_I subtotal=sub_tot_real_cost_c %}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
-        </section>
-  </section>
 
+            <!-- recettes-->
+            <div class="col-12 col-lg-5 mb-2">
+                <div>
+                    {% include 'dashboard/section_generique.html' with titre='Recettes' %}
+                </div>
+                <div class="row col-12">
+                    <!-- colonne Prévisionnel -->
+                    <div class="col-12 col-lg-6">
+                        <div style="margin: 1px; border: 0px solid #FFFFFF;">
+                            <div class="titre colonne_prev">
+                                Prévisionnel
+                            </div>
+                            {% include 'dashboard/section_generique.html' with titre='Subventions / Appels à projet' %}
+                            <div class="contentToShowHide">
+                                <div class="row">
+                                    <div class="col-md-6 p-2">
+                                        {% include 'dashboard/tableau_generique.html' with table=data.subvention_prev %}
+                                    </div>
+                                </div>
+                            </div>
+
+
+                            {% include 'dashboard/section_generique.html' with titre='Prestations internes' %}
+                            <div class="contentToShowHide">
+                                <div class="row">
+                                    <div class="col-md-4 p-2">
+                                        {% include 'dashboard/tableau_generique.html' with table=data_cost.IN_S subtotal=sub_tot_prev_cost.IN_S %}
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- prestation externe -->
+                            {% include 'dashboard/section_generique.html' with titre='Prestations externes / achats' %}
+                            <div class="contentToShowHide">
+                                <div class="row">
+                                    <div class="col-md-4 p-2">
+                                        {% include 'dashboard/tableau_generique.html' with table=data_cost.EX_S subtotal=sub_tot_prev_cost.EX_S %}
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- dépenses internes -->
+                            {% include 'dashboard/section_generique.html' with titre='Dépenses internes' %}
+                            <div class="contentToShowHide">
+                                <div class="row">
+                                    <div class="col-md-4 p-2">
+                                        {% include 'dashboard/tableau_generique.html' with table=data_cost.SP_I subtotal=sub_tot_prev_cost.SP_I %}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- colonne Réel -->
+                    <div class="col-12 col-lg-6">
+                        <div style="margin: 1px; border: 0px solid #FFFFFF;">
+                            <div class="titre colonne_reel">
+                                Réel
+                            </div>
+
+                            {% include 'dashboard/section_generique.html' with titre='Prestations internes' %}
+
+                            <div class="contentToShowHide">
+                                <div class="row">
+                                    <div class="col-md-6 p-2">
+                                        {% include 'dashboard/tableau_generique.html' with table=data.subvention_real %}
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- prestation interne -->
+                            {% include 'dashboard/section_generique.html' with titre='Prestations' %}
+                            <div class="contentToShowHide">
+                                <div class="row">
+                                    <div class="col-md-6 p-2">
+                                        {% include 'dashboard/tableau_generique.html' with table=data_recette.RP subtotal=sub_tot_recettes_b.P %}
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- prestation externe -->
+                            {% include 'dashboard/section_generique.html' with titre='Ventes' %}
+                            <div class="contentToShowHide">
+                                <div class="row">
+                                    <div class="col-md-6 p-2">
+                                        {% include 'dashboard/tableau_generique.html' with table=data_recette.RV subtotal=sub_tot_recettes_b.V %}
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- dépenses internes -->
+                            {% include 'dashboard/section_generique.html' with titre='Recettes internes' %}
+                            <div class="contentToShowHide">
+                                <div class="row">
+                                    <div class="col-md-6 p-2">
+                                        {% include 'dashboard/tableau_generique.html' with table=data_recette.RR_IN subtotal=sub_tot_recettes_b.R_IN %}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 
 
 {% endblock content %}
