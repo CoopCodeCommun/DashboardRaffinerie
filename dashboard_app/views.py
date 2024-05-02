@@ -1316,7 +1316,3 @@ class lazy_loading_profil_image(APIView):
             'contact': Contact.objects.get(pk=uuid)
         }
         return render(request, 'htmx/lazy_loading.html', context=context)
-
-
-def test_columns(request):
-    return render(request, 'dashboard/pages_html/gestion_colonnes.html')
