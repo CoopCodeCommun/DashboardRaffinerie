@@ -87,7 +87,5 @@ urlpatterns = [
     path('api/', include(router.urls)),
     # La page d'exemple d'implémentation de l'API
     path('api_exemple/', api_exemple, name='api_exemple'),
-
     path('', index, name='index'),
-    path('test_columns', views.test_columns, name='test_columns')
 ]
