@@ -47,9 +47,9 @@
 
                 <div class="row col-12">
                     <!-- colonne Prévisionnel -->
-                    <div class="col-12 col-lg-3 p-0">
+                    <div class="col-12 col-lg-4 p-0">
                         <div style="margin: 1px; border: 0px solid #FFFFFF;">
-                            <div class="titre colonne_prev">
+                            <div class="titre colonne_prev p-0">
                                 Prévisionnel
                             </div>
 
@@ -83,7 +83,7 @@
                             {% include 'dashboard/section_generique.html' with titre='Recettes internes' %}
                             <div class="contentToShowHide">
                                 <div class="row">
-                                    <div class="col-md-6 p-2">
+                                    <div class="col-md-7 p-1">
                                         {% include 'dashboard/tableau_generique.html' with table=data_recette.PR_IN subtotal=sub_tot_recettes_a.R_IN %}
                                     </div>
                                 </div>
@@ -91,7 +91,7 @@
                         </div>
                     </div>
                     <!-- colonne Réel -->
-                    <div class="col-12 col-lg-8">
+                    <div class="col-12 col-lg-7">
                         <div style="margin: 1px; border: 0px solid #FFFFFF;">
                             <div class="titre colonne_reel">
                                 Réel
