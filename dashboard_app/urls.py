@@ -2,13 +2,15 @@ from django.conf import settings
 from django.urls import path, include
 from .views import contacts, lazy_loading_profil_image, \
     reload_contact_from_odoo, odoo_account, reload_account_from_odoo, \
-    AccountAnalyticGroupAPI, OdooContactsAPI, julienjs_suivi_budgetaire, edit_tableau_generique
-from .views import index, suivi_budgetaire, send_subventions, organigramme, repertoire, objectifs_indicateurs, api_exemple, tableau_de_bord_perso
+    AccountAnalyticGroupAPI, OdooContactsAPI, julienjs_suivi_budgetaire, edit_tableau_generique, Organigramme
+from .views import index, suivi_budgetaire, send_subventions, repertoire, objectifs_indicateurs, api_exemple, tableau_de_bord_perso
 from rest_framework import routers
 
 router = routers.DefaultRouter()
 router.register(r'account_analytic_group', AccountAnalyticGroupAPI, basename='account_analytic_group_api')
 router.register(r'odoo_contacts', OdooContactsAPI, basename='odoo_contacts_api')
+
+router.register('organigramme', Organigramme, basename='organigramme')
 
 urlpatterns = [
     # Pages d'exemple HTMX:
@@ -27,8 +29,9 @@ urlpatterns = [
     # Pour afficher une ligne editable :
     path('edit_tableau_generique/<str:table>/<int:index>/', edit_tableau_generique, name='edit_tableau_generique'),
 
-    # A bosser :)
-    path('organigramme/', organigramme, name='organigramme'),
+    # Commenté car remplacé par la route viewset
+    # path('organigramme/', organigramme, name='organigramme'),
+
     path('tableau_de_bord_perso/', tableau_de_bord_perso, name='tableau_de_bord_perso'),
     path('subventions/', send_subventions, name='subventions'),
     path('repertoire/', repertoire, name='repertoire'),
@@ -42,4 +45,4 @@ urlpatterns = [
     path('api_exemple/', api_exemple, name='api_exemple'),
 
     path('', index, name='index'),
-]
+] + router.urls

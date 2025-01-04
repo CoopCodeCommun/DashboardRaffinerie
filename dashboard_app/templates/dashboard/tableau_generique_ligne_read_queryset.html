@@ -1,0 +1,33 @@
+{% load my_filters %}
+
+{# chaque objet est une ligne #}
+<tr class="case_petite ligne_table">
+    {# L'objet est un dictionnaire avec avec fields : valeur #}
+    {% for field, value in object.items %}
+        {# dans le model, on peut définir le field comme editable true ou false #}
+        {% if field|is_editable:table.model %}
+            {% if value|is_bool %}
+                <!-- Création d'une case à cocher éditable -->
+                <td class="case_petite case_fonce" style="text-align: center;">
+                    <input type="checkbox" {% if value %} checked {% endif %}/>
+                </td>
+            {% else %}
+                <!-- Création d'un champ input pour les autres types de données -->
+                <td>
+                    <input type="text" value="{{ value }}" class="case_petite case_clair"/>
+                </td>
+            {% endif %}
+
+        {# si non editable, mais booléen : #}
+        {% elif value|is_bool %}
+            <!-- Affichage d'une case à cocher non éditable -->
+            <td class="case_petite case_fonce" style="text-align: center;">
+                <input type="checkbox" {% if value %} checked {% endif %} disabled/>
+            </td>
+        {# si non editable et texte #}
+        {% else %}
+            <!-- Affichage normal pour les autres types de données -->
+            <td>{{ value }}</td>
+        {% endif %}
+    {% endfor %}
+</tr>

@@ -9,20 +9,25 @@ from django.utils.translation import gettext_lazy as _
 class CustomUser(AbstractUser):
     uuid = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False, db_index=True)
     email = models.EmailField(max_length=100, unique=True, verbose_name="Email")
-    name = models.CharField(max_length=100, blank=True, null=True, verbose_name="Le Nom")
+    name = models.CharField(max_length=100, blank=True, null=True, verbose_name="Nom")
+    compta_admin = models.BooleanField(default=False)
 
+    ### Choix multiples :
     BENEFICIEAIRE, USER_QONTO = 'B', 'UQ'
     TYPE = [
         (BENEFICIEAIRE, 'Bénéficiaire'),
         (USER_QONTO, 'Utilisateur Qonto')
     ]
-    type = models.CharField(
-        max_length=3,
-        choices=TYPE,
-        default=USER_QONTO,
-        verbose_name="Type d'utilisateur"
-                            )
-    compta_admin = models.BooleanField(default=False)
+    type = models.CharField(max_length=3,
+                            choices=TYPE,
+                            default=USER_QONTO,
+                            verbose_name="Type d'utilisateur")
+
+    ### Depuis data organigrame
+    presta_interne = models.BooleanField(default=False, verbose_name="Presta interne")
+    garant_du_cadre = models.BooleanField(default=False, verbose_name="Garant du cadre")
+    ref_budg = models.BooleanField(default=False, verbose_name="Référent budget / subvention")
+    ref_tache = models.BooleanField(default=False, verbose_name="Référent tâche planning")
 
 
 # creating provisional contact model for stimualtion:
@@ -36,4 +41,3 @@ class ContactProvisional(models.Model):
 
     def __str__(self):
         return self.name
-
