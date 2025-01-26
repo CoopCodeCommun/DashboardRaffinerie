@@ -25,6 +25,7 @@ django-tables2 = "^2.6.0"
 requests = "^2"
 cryptography = "^44"
 stripe = "^11.4.1"
+django-unfold = "^0.45.0"
 
 
 [build-system]

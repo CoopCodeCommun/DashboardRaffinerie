@@ -1,5 +1,8 @@
+
+
 from django.contrib import admin
-from django.db.models import Count
+from unfold.admin import ModelAdmin
+
 
 from dashboard_app.models import (Contact, Badge, Configuration, AccountAnalyticGroup,
         Groupe, Pole, Project, Action, PrevisionCost, RealCost, RealCostExternService,
@@ -8,7 +11,8 @@ from solo.admin import SingletonModelAdmin
 
 
 # admin model for groupe:
-class GroupeAdmin(admin.ModelAdmin):
+@admin.register(Groupe)
+class GroupeAdmin(ModelAdmin):
     # liste d'affichage dans l'interface admin
     list_display = ('name', 'code', 'visible')
 
@@ -24,9 +28,8 @@ class GroupeAdmin(admin.ModelAdmin):
     def has_change_permission(self, request, obj=None):
         return True
 
-admin.site.register(Groupe, GroupeAdmin)
-
-class PoleAdmin(admin.ModelAdmin):
+@admin.register(Pole)
+class PoleAdmin(ModelAdmin):
     # liste d'affichage dans l'interface admin
     list_display = ('name', 'code', 'user', 'type', 'visible')
 
@@ -42,11 +45,11 @@ class PoleAdmin(admin.ModelAdmin):
     def has_change_permission(self, request, obj=None):
         return True
 
-admin.site.register(Pole, PoleAdmin)
 
 
 # create admin for project model
-class ProjectAdmin(admin.ModelAdmin):
+@admin.register(Project)
+class ProjectAdmin(ModelAdmin):
     list_display = ('name', 'code','pol_name', 'user', 'finished')
     # filter project by the fields ple and user
     list_filter = ('pole__name', 'user')
@@ -68,11 +71,11 @@ class ProjectAdmin(admin.ModelAdmin):
 
     pol_name.short_description = 'Le nom du Pôle'
 
-admin.site.register(Project, ProjectAdmin)
 
 
 # create admin for Action model
-class ActionAdmin(admin.ModelAdmin):
+@admin.register(Action)
+class ActionAdmin(ModelAdmin):
     # the fields of action admin
     list_display = ('name', 'code', 'user', 'finished', 'project')
 
@@ -88,11 +91,11 @@ class ActionAdmin(admin.ModelAdmin):
     def has_change_permission(self, request, obj=None):
         return True
 
-admin.site.register(Action, ActionAdmin)
 
 
 # admin for Previsional Cost
-class PrevisionCostAdmin(admin.ModelAdmin):
+@admin.register(PrevisionCost)
+class PrevisionCostAdmin(ModelAdmin):
     # list of fields
     list_display = ('titled','amount','type')
 
@@ -109,11 +112,11 @@ class PrevisionCostAdmin(admin.ModelAdmin):
     def has_change_permission(self, request, obj=None):
         return True
 
-admin.site.register(PrevisionCost, PrevisionCostAdmin)
 
 
 # Creating an admin for the real costs of bienveillance or intern service (prestation)
-class RealCostAdmin(admin.ModelAdmin):
+@admin.register(RealCost)
+class RealCostAdmin(ModelAdmin):
     #creating the list of fields
     list_display = ('type_depense', 'user', 'date', 'proposition', 'validated', 'invoiced', 'paid')
 
@@ -136,11 +139,11 @@ class RealCostAdmin(admin.ModelAdmin):
 
     type_depense.short_description = 'Dépenses réeles'
 
-admin.site.register(RealCost, RealCostAdmin)
 
 
 # admin class extern presta puchases
-class RealCostExternServiceAdmin(admin.ModelAdmin):
+@admin.register(RealCostExternService)
+class RealCostExternServiceAdmin(ModelAdmin):
     #list of fields
     list_display = ('titled', 'type_depense', 'contact', 'date', 'validated', 'payed')
     #filter
@@ -160,11 +163,10 @@ class RealCostExternServiceAdmin(admin.ModelAdmin):
     def has_change_permission(self, request, obj=None):
         return True
 
-admin.site.register(RealCostExternService, RealCostExternServiceAdmin)
-
 
 # admin for admin interne service
-class RealCostInternSpendingAdmin(admin.ModelAdmin):
+@admin.register(RealCostInternSpending)
+class RealCostInternSpendingAdmin(ModelAdmin):
     #fields
     list_display = ('pole_name', 'type_depense', 'amount', 'date_cost')
 
@@ -192,12 +194,9 @@ class RealCostInternSpendingAdmin(admin.ModelAdmin):
         return True
 
 
-
-admin.site.register(RealCostInternSpending, RealCostInternSpendingAdmin)
-
-
 # creating admin for Recettes
-class PrestationsVentsRecettesIntAdmin(admin.ModelAdmin):
+@admin.register(PrestationsVentsRecettesInt)
+class PrestationsVentsRecettesIntAdmin(ModelAdmin):
     # list of fields
     list_display = ('prev_ou_reel', 'group_name', 'recette_type', 'date', 'montant')
 
@@ -226,11 +225,11 @@ class PrestationsVentsRecettesIntAdmin(admin.ModelAdmin):
     def has_change_permission(self, request, obj=None):
         return True
 
-admin.site.register(PrestationsVentsRecettesInt, PrestationsVentsRecettesIntAdmin)
 
 
 # admin for Grant model (subventions)
-class GrantAdmin(admin.ModelAdmin):
+@admin.register(Grant)
+class GrantAdmin(ModelAdmin):
     # fields of grant model
     list_display = ('label', 'referee', 'amount',
                     'account_date_automatic', 'account_date',
@@ -249,10 +248,20 @@ class GrantAdmin(admin.ModelAdmin):
     def has_change_permission(self, request, obj=None):
         return True
 
-admin.site.register(Grant, GrantAdmin)
 
+@admin.register(Contact)
+class ContactAdmin(ModelAdmin):
+    pass
 
-admin.site.register(Contact)
-admin.site.register(Badge)
-admin.site.register(Configuration, SingletonModelAdmin)
-admin.site.register(AccountAnalyticGroup)
+@admin.register(Badge)
+class BadgeAdmin(ModelAdmin):
+    pass
+
+@admin.register(AccountAnalyticGroup)
+class AccountAnalyticGroupAdmin(ModelAdmin):
+    pass
+
+@admin.register(Configuration)
+class ConfigurationAdmin(ModelAdmin, SingletonModelAdmin):
+    pass
+
