@@ -68,6 +68,9 @@ class Contact(models.Model):
                              on_delete=models.PROTECT,
                              null=True, blank=True)
 
+    # def nom_complet(self):
+    #     return "self.name + self.prenom"
+
     def bienveillance_a_valider(self):
         return random.randint(0, 100)
 
